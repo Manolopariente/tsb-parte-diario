@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TSB — Parte Diario</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -136,6 +137,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
   </div>
 </div>
 <script>
+var API = "https://script.google.com/macros/s/AKfycbyCRn32pNeZTkbdqxyOZFT9qwZdyBGAQZ5hSyapM8eqXkKGaijWWerBGH48Q9blUzsX/exec";
 var supervisores=[];
 var todosEquipos=[];
 var equiposDelParte=[];
@@ -143,11 +145,8 @@ var supervisorActual=null;
 var yacimientoActual="";
 
 function fechaArgentina(d){
-  var dia=String(d.getDate()).padStart(2,'0');
-  var mes=String(d.getMonth()+1).padStart(2,'0');
-  return dia+'/'+mes+'/'+d.getFullYear();
+  return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();
 }
-
 function fechaBanner(d){
   var dias=['DOMINGO','LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO'];
   var meses=['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
@@ -155,8 +154,9 @@ function fechaBanner(d){
 }
 
 window.onload=function(){
-  google.script.run
-    .withSuccessHandler(function(data){
+  fetch(API+'?action=getSupervisores')
+    .then(function(r){return r.json();})
+    .then(function(data){
       supervisores=data;
       var sel=document.getElementById('sel-supervisor');
       sel.innerHTML='<option value="">— Selecciona tu nombre —</option>';
@@ -168,21 +168,17 @@ window.onload=function(){
         opt.dataset.nombre=s.nombre;
         sel.appendChild(opt);
       });
-      google.script.run
-        .withSuccessHandler(function(eqs){
-          todosEquipos=eqs;
-          document.getElementById('login-loading').style.display='none';
-          document.getElementById('login-form').style.display='block';
-        })
-        .withFailureHandler(function(e){
-          document.getElementById('login-loading').innerHTML='<div class="error-msg">Error equipos: '+e.message+'</div>';
-        })
-        .getEquipos();
+      return fetch(API+'?action=getEquipos');
     })
-    .withFailureHandler(function(e){
-      document.getElementById('login-loading').innerHTML='<div class="error-msg">Error supervisores: '+e.message+'</div>';
+    .then(function(r){return r.json();})
+    .then(function(data){
+      todosEquipos=data;
+      document.getElementById('login-loading').style.display='none';
+      document.getElementById('login-form').style.display='block';
     })
-    .getSupervisores();
+    .catch(function(){
+      document.getElementById('login-loading').innerHTML='<div class="error-msg">Error al cargar. Verifica tu conexion.</div>';
+    });
 };
 
 function hacerLogin(){
@@ -203,8 +199,7 @@ function hacerLogin(){
 
 function mostrarError(msg){
   var e=document.getElementById('login-error');
-  e.textContent=msg;
-  e.style.display='block';
+  e.textContent=msg;e.style.display='block';
 }
 
 function irAlParte(){
@@ -216,8 +211,9 @@ function irAlParte(){
   document.getElementById('banner-fecha').textContent=fechaBanner(hoy);
   document.getElementById('parte-loading').style.display='block';
   document.getElementById('parte-contenido').style.display='none';
-  google.script.run
-    .withSuccessHandler(function(ultimoParte){
+  fetch(API+'?action=getUltimoParte&yacimiento='+encodeURIComponent(yacimientoActual))
+    .then(function(r){return r.json();})
+    .then(function(ultimoParte){
       if(ultimoParte&&ultimoParte.length>0){
         equiposDelParte=ultimoParte.map(function(u){
           var eq=todosEquipos.find(function(e){return e.interno===u.interno;});
@@ -232,13 +228,12 @@ function irAlParte(){
       document.getElementById('parte-loading').style.display='none';
       document.getElementById('parte-contenido').style.display='block';
     })
-    .withFailureHandler(function(){
+    .catch(function(){
       equiposDelParte=[];
       renderizarEquipos();
       document.getElementById('parte-loading').style.display='none';
       document.getElementById('parte-contenido').style.display='block';
-    })
-    .getUltimoParte(yacimientoActual);
+    });
 }
 
 function renderizarEquipos(){
@@ -310,8 +305,9 @@ function guardarParte(){
   var fecha=fechaArgentina(ahora);
   var hora=String(ahora.getHours()).padStart(2,'0')+':'+String(ahora.getMinutes()).padStart(2,'0');
   var payload={fecha:fecha,hora:hora,yacimiento:yacimientoActual,cliente:'YPF',supervisor:supervisorActual.nombre,equipos:equiposDelParte};
-  google.script.run
-    .withSuccessHandler(function(data){
+  fetch(API+'?action=guardarParteCompleto',{method:'POST',body:JSON.stringify(payload)})
+    .then(function(r){return r.json();})
+    .then(function(data){
       if(data.ok){
         var op=equiposDelParte.filter(function(e){return e.estado==='Operativo';}).length;
         var nop=equiposDelParte.length-op;
@@ -325,11 +321,10 @@ function guardarParte(){
         mostrarScreen('screen-confirmacion');
       }else{throw new Error('error');}
     })
-    .withFailureHandler(function(){
+    .catch(function(){
       btn.textContent='CONFIRMAR Y GUARDAR PARTE';btn.disabled=false;
       alert('Error al guardar. Verifica tu conexion.');
-    })
-    .guardarParteCompleto(payload);
+    });
 }
 
 function mostrarScreen(id){
