@@ -20,116 +20,38 @@
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--gris);color:var(--texto);min-height:100vh;}
 .screen{display:none;}.screen.active{display:block;}
 
-/* LOGIN */
-.login-bg{
-  min-height:100vh;
-  background:url('TOPA1.jpeg') center center/cover no-repeat;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-.login-overlay{
-  position:absolute;
-  top:0;left:0;right:0;bottom:0;
-  background:linear-gradient(180deg,rgba(10,30,70,0.7) 0%,rgba(10,30,70,0.85) 100%);
-}
-.login-box{
-  position:relative;
-  z-index:2;
-  width:100%;
-  max-width:400px;
-}
-.login-logo-wrap{
-  text-align:center;
-  margin-bottom:24px;
-}
-.login-logo-wrap img{
-  height:60px;
-  filter:brightness(0) invert(1);
-  margin-bottom:12px;
-}
-.login-titulo{
-  color:white;
-  font-size:13px;
-  font-weight:500;
-  letter-spacing:2px;
-  text-transform:uppercase;
-  opacity:0.85;
-}
-.login-subtitulo{
-  color:rgba(255,255,255,0.6);
-  font-size:11px;
-  margin-top:4px;
-  letter-spacing:1px;
-}
-.login-card{
-  background:rgba(255,255,255,0.97);
-  border-radius:16px;
-  padding:28px 24px;
-  box-shadow:0 20px 60px rgba(0,0,0,0.4);
-}
-.login-card-title{
-  font-size:18px;
-  font-weight:700;
-  color:var(--azul);
-  margin-bottom:20px;
-  text-align:center;
-  letter-spacing:0.5px;
-}
+.login-bg{min-height:100vh;background:url('TOPA1.jpeg') center center/cover no-repeat;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;}
+.login-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(10,30,70,0.75) 0%,rgba(10,30,70,0.88) 100%);}
+.login-box{position:relative;z-index:2;width:100%;max-width:400px;}
+.login-logo-wrap{text-align:center;margin-bottom:24px;}
+.login-titulo{color:white;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;opacity:0.9;margin-top:10px;}
+.login-subtitulo{color:rgba(255,255,255,0.6);font-size:11px;margin-top:4px;letter-spacing:1px;}
+.login-card{background:rgba(255,255,255,0.97);border-radius:16px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+.login-card-title{font-size:18px;font-weight:700;color:var(--azul);margin-bottom:20px;text-align:center;letter-spacing:0.5px;}
 
-/* TOPBAR */
-.topbar{
-  background:var(--azul);
-  padding:0 16px;
-  height:56px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  position:sticky;
-  top:0;
-  z-index:100;
-  box-shadow:0 2px 8px rgba(0,0,0,0.2);
-}
-.topbar-logo{height:28px;filter:brightness(0) invert(1);}
+.topbar{background:var(--azul);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.2);}
 .topbar-info{text-align:right;}
 .topbar-title{color:white;font-size:13px;font-weight:700;letter-spacing:1px;}
 .topbar-sub{color:rgba(255,255,255,0.7);font-size:11px;margin-top:1px;}
 .btn-salir{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;}
 
-/* CONTENIDO */
 .contenido{padding:16px;max-width:500px;margin:auto;}
-
-/* BANNER */
-.info-banner{
-  background:linear-gradient(135deg,var(--azul),var(--azul2));
-  border-radius:14px;
-  padding:16px 20px;
-  margin-bottom:16px;
-  color:white;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  box-shadow:0 4px 12px rgba(26,95,168,0.3);
-}
+.info-banner{background:linear-gradient(135deg,var(--azul),var(--azul2));border-radius:14px;padding:16px 20px;margin-bottom:16px;color:white;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 12px rgba(26,95,168,0.3);}
 .info-banner-data h3{font-size:20px;font-weight:800;letter-spacing:0.5px;}
 .info-banner-data p{font-size:12px;opacity:0.75;margin-top:3px;}
-.info-banner-fecha{text-align:right;font-size:12px;opacity:0.85;line-height:1.5;}
+.info-banner-fecha{text-align:right;font-size:12px;opacity:0.85;line-height:1.6;}
 
-/* FORMS */
 label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.8px;}
 select,input{width:100%;padding:13px 16px;border:1.5px solid var(--borde);border-radius:10px;font-size:15px;color:var(--texto);background:white;margin-bottom:14px;appearance:none;-webkit-appearance:none;transition:border-color .2s;}
 select:focus,input:focus{outline:none;border-color:var(--azul);}
 .pin-input{text-align:center;font-size:28px;font-weight:700;letter-spacing:10px;color:var(--azul);}
 
-/* BOTONES */
 .btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:0.5px;transition:opacity .2s;}
 .btn:active{opacity:0.85;}
 .btn-primary{background:linear-gradient(135deg,var(--azul),var(--azul2));color:white;box-shadow:0 4px 12px rgba(26,95,168,0.3);}
 .btn-success{background:linear-gradient(135deg,var(--verde),var(--verde2));color:white;margin-top:8px;box-shadow:0 4px 12px rgba(74,156,63,0.3);}
 .btn-outline{background:white;color:var(--azul);border:2px solid var(--azul);margin-bottom:12px;}
 
-/* EQUIPOS */
 .equipo-item{background:white;border:2px solid var(--borde);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,0.06);}
 .equipo-item.operativo{border-color:#b8ddb4;background:#f5fbf4;}
 .equipo-item.no-operativo{border-color:#ffbdbd;background:#fff5f5;}
@@ -144,21 +66,16 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .obs-input{width:100%;padding:10px 12px;border:1.5px solid var(--borde);border-radius:8px;font-size:14px;resize:none;font-family:inherit;color:var(--texto);}
 .btn-quitar{background:none;border:none;color:#bbb;font-size:12px;cursor:pointer;margin-top:6px;padding:0;font-weight:500;}
 
-/* BUSCADOR */
 .buscador{position:sticky;top:56px;background:var(--gris);padding:10px 16px;z-index:50;}
 .buscador input{margin:0;border-radius:12px;background:white;}
-
-/* LISTA EQUIPOS */
 .equipo-lista-item{background:white;border:1.5px solid var(--borde);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
 .btn-agregar-eq{background:var(--azul);color:white;border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;}
 
-/* CONFIRMACION */
 .confirm-icon{text-align:center;font-size:72px;margin:24px 0 16px;}
 .confirm-titulo{text-align:center;font-size:24px;font-weight:800;color:var(--azul);margin-bottom:8px;}
 .confirm-sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:24px;}
 .confirm-card{background:white;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
 
-/* LOADING */
 .loading{text-align:center;padding:40px 20px;color:var(--muted);}
 .spinner{width:36px;height:36px;border:3px solid var(--borde);border-top-color:var(--azul);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -175,7 +92,11 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
     <div class="login-overlay"></div>
     <div class="login-box">
       <div class="login-logo-wrap">
-        <img src="membrete (2).JPG" alt="TSB">
+        <!-- LOGO TSB SVG -->
+        <svg width="120" height="48" viewBox="0 0 120 48" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="0,40 20,8 40,40" fill="#4a9c3f"/>
+          <text x="48" y="38" font-family="Arial,sans-serif" font-weight="900" font-size="32" fill="white" letter-spacing="2">TSB</text>
+        </svg>
         <div class="login-titulo">Control Operativo de Flota</div>
         <div class="login-subtitulo">Contrato 4900100500 — YPF</div>
       </div>
@@ -210,7 +131,10 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 <!-- PARTE -->
 <div id="screen-parte" class="screen">
   <div class="topbar">
-    <img src="membrete (2).JPG" alt="TSB" class="topbar-logo">
+    <svg width="80" height="32" viewBox="0 0 120 48" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="0,40 20,8 40,40" fill="#4a9c3f"/>
+      <text x="48" y="38" font-family="Arial,sans-serif" font-weight="900" font-size="32" fill="white" letter-spacing="2">TSB</text>
+    </svg>
     <div class="topbar-info">
       <div class="topbar-title">PARTE DIARIO</div>
       <div class="topbar-sub" id="topbar-info"></div>
@@ -239,7 +163,10 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 <!-- AGREGAR EQUIPO -->
 <div id="screen-agregar" class="screen">
   <div class="topbar">
-    <img src="membrete (2).JPG" alt="TSB" class="topbar-logo">
+    <svg width="80" height="32" viewBox="0 0 120 48" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="0,40 20,8 40,40" fill="#4a9c3f"/>
+      <text x="48" y="38" font-family="Arial,sans-serif" font-weight="900" font-size="32" fill="white" letter-spacing="2">TSB</text>
+    </svg>
     <div class="topbar-info">
       <div class="topbar-title">AGREGAR EQUIPO</div>
       <div class="topbar-sub">Buscá por interno o tipo</div>
@@ -257,7 +184,10 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 <!-- CONFIRMACION -->
 <div id="screen-confirmacion" class="screen">
   <div class="topbar">
-    <img src="membrete (2).JPG" alt="TSB" class="topbar-logo">
+    <svg width="80" height="32" viewBox="0 0 120 48" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="0,40 20,8 40,40" fill="#4a9c3f"/>
+      <text x="48" y="38" font-family="Arial,sans-serif" font-weight="900" font-size="32" fill="white" letter-spacing="2">TSB</text>
+    </svg>
     <div class="topbar-title" style="color:white;">PARTE DIARIO</div>
     <div></div>
   </div>
@@ -440,7 +370,7 @@ function guardarParte(){
     })
     .catch(function(){
       btn.textContent='✓ CONFIRMAR Y GUARDAR PARTE';btn.disabled=false;
-      alert('Error al guardar. Verificá tu conexión e intentá de nuevo.');
+      alert('Error al guardar. Verificá tu conexión.');
     });
 }
 
