@@ -9,12 +9,9 @@
 :root{
   --azul:#1e3070;--azul2:#152558;--verde:#8dc63f;--verde2:#6fa832;
   --rojo:#e53935;--gris:#f0f2f5;--borde:#d1d9e6;--texto:#1a2340;--muted:#6b7a99;
-  --amarillo:#f59e0b;
 }
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--gris);color:var(--texto);min-height:100vh;}
 .screen{display:none;}.screen.active{display:block;}
-
-/* LOGIN */
 .login-bg{min-height:100vh;background:url('TOPA1.jpeg') center center/cover no-repeat;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;}
 .login-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(10,20,60,0.82) 0%,rgba(10,20,60,0.93) 100%);}
 .login-box{position:relative;z-index:2;width:100%;max-width:400px;}
@@ -25,7 +22,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .login-card{background:rgba(255,255,255,0.97);border-radius:16px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.45);}
 .login-card-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:20px;text-align:center;}
 .error-msg{background:#ffebee;color:var(--rojo);padding:12px 16px;border-radius:10px;font-size:14px;margin-bottom:12px;text-align:center;font-weight:500;}
-label-form{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.8px;}
 .form-label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.8px;}
 select,input{width:100%;padding:13px 16px;border:1.5px solid var(--borde);border-radius:10px;font-size:15px;color:var(--texto);background:white;margin-bottom:14px;appearance:none;-webkit-appearance:none;}
 select:focus,input:focus{outline:none;border-color:var(--azul);}
@@ -33,28 +29,19 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .btn:active{opacity:0.85;}
 .btn-primary{background:linear-gradient(135deg,var(--azul),var(--azul2));color:white;box-shadow:0 4px 12px rgba(30,48,112,0.3);}
 .btn-success{background:linear-gradient(135deg,var(--verde),var(--verde2));color:white;box-shadow:0 4px 12px rgba(141,198,63,0.3);}
-.btn-outline{background:white;color:var(--azul);border:2px solid var(--azul);}
 .back-link{display:block;text-align:center;margin-top:16px;color:rgba(255,255,255,0.7);font-size:13px;text-decoration:none;}
-
-/* CAMBIO PASSWORD */
 .cambio-card{background:rgba(255,255,255,0.97);border-radius:16px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.45);}
 .cambio-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:8px;text-align:center;}
 .cambio-sub{font-size:13px;color:var(--muted);margin-bottom:20px;text-align:center;}
-
-/* TOPBAR */
 .topbar{background:var(--azul);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.25);}
 .topbar img{height:28px;filter:brightness(0) invert(1);}
 .topbar-info{text-align:right;}
 .topbar-title{color:white;font-size:13px;font-weight:700;letter-spacing:1px;}
 .topbar-sub{color:rgba(255,255,255,0.7);font-size:11px;margin-top:1px;}
 .btn-salir{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;}
-
-/* DASHBOARD */
 .dash{padding:16px;max-width:600px;margin:auto;}
 .actualizacion{text-align:right;font-size:11px;color:var(--muted);margin-bottom:12px;}
 .btn-refresh{background:var(--azul);color:white;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;margin-left:8px;}
-
-/* KPI CARDS */
 .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .kpi-card{background:white;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);}
 .kpi-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
@@ -63,8 +50,6 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .kpi-verde .kpi-val{color:var(--verde2);}
 .kpi-rojo .kpi-val{color:var(--rojo);}
 .kpi-azul .kpi-val{color:var(--azul);}
-
-/* OBJETIVO */
 .objetivo-card{background:white;border-radius:14px;padding:18px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;}
 .objetivo-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
 .objetivo-titulo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
@@ -82,8 +67,6 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .barra-fill.riesgo{background:linear-gradient(90deg,#f59e0b,#d97706);}
 .barra-fill.bajo{background:linear-gradient(90deg,var(--rojo),#c62828);}
 .barra-pct{text-align:center;font-size:12px;font-weight:700;color:var(--muted);margin-top:6px;}
-
-/* YACIMIENTOS */
 .seccion-titulo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
 .yac-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .yac-card{background:white;border-radius:12px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.06);border:2px solid var(--borde);}
@@ -103,7 +86,16 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .yac-stat-val.nop{color:var(--rojo);}
 .yac-stat-label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
 .yac-fecha{font-size:10px;color:var(--muted);margin-top:6px;}
-
+/* COMPOSICION FLOTA */
+.flota-card{background:white;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;}
+.flota-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gris);}
+.flota-row:last-child{border-bottom:none;}
+.flota-tipo{font-size:13px;font-weight:600;color:var(--texto);flex:1;}
+.flota-total{font-size:16px;font-weight:900;color:var(--azul);width:28px;text-align:center;}
+.flota-chips{display:flex;gap:6px;}
+.chip{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;}
+.chip-op{background:#e8f5e9;color:#2e7d32;}
+.chip-nop{background:#ffebee;color:var(--rojo);}
 /* CAIDOS */
 .caido-item{background:white;border-radius:12px;padding:14px;margin-bottom:8px;box-shadow:0 2px 6px rgba(0,0,0,0.06);border-left:4px solid var(--rojo);}
 .caido-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
@@ -111,8 +103,6 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .caido-dias{background:#ffebee;color:var(--rojo);font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;}
 .caido-tipo{font-size:12px;color:var(--muted);margin-bottom:4px;}
 .caido-obs{font-size:13px;color:var(--texto);}
-
-/* LOADING */
 .loading{text-align:center;padding:40px 20px;color:var(--muted);}
 .spinner{width:36px;height:36px;border:3px solid var(--borde);border-top-color:var(--azul);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -183,37 +173,25 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
     </div>
     <button class="btn-salir" onclick="salir()">Salir</button>
   </div>
-
   <div class="dash">
     <div id="dash-loading" class="loading"><div class="spinner"></div>Cargando datos...</div>
     <div id="dash-contenido" style="display:none;">
-
-      <div class="actualizacion" id="txt-actualizacion">
-        Actualizado: —
-        <button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button>
-      </div>
-
-      <!-- KPIs -->
+      <div class="actualizacion" id="txt-actualizacion">Actualizado: —<button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button></div>
       <div class="kpi-grid" id="kpi-grid"></div>
-
-      <!-- OBJETIVO -->
       <div class="objetivo-card" id="objetivo-card"></div>
-
-      <!-- YACIMIENTOS -->
+      <div class="seccion-titulo">Composición de flota en campo</div>
+      <div class="flota-card" id="flota-card"></div>
       <div class="seccion-titulo">Estado por yacimiento</div>
       <div class="yac-grid" id="yac-grid"></div>
-
-      <!-- EQUIPOS CAIDOS -->
       <div class="seccion-titulo" id="titulo-caidos">Equipos fuera de servicio</div>
       <div id="lista-caidos"></div>
-
     </div>
   </div>
 </div>
 
 <script>
-var API="https://script.google.com/macros/s/AKfycbzEBGvNsGP4Bdz2EvLEXKX0QHjpZBoO8vv5O6RPAe2DG2TasObkxSCx8cmnCXN7-qah/exec";
-var usuarios=[], usuarioActual=null;
+var API="https://script.google.com/macros/s/AKfycbwLBHuiJqt44qtnjP2DKn46uZiNnKWu88KfJR6FjUxsGG80bsX5RY1rejJW_Bsty_yA/exec";
+var usuarios=[],usuarioActual=null;
 
 function fmtPeso(n){
   if(n>=1000000000)return '$'+(n/1000000000).toFixed(2).replace('.',',')+'B';
@@ -252,13 +230,8 @@ function hacerLogin(){
   if(!user){errEl.textContent='Usuario no encontrado';errEl.style.display='block';return;}
   if(String(user.password)!==String(pass)){errEl.textContent='Contraseña incorrecta';errEl.style.display='block';return;}
   usuarioActual=user;
-  if(user.debeCambiar){
-    mostrarScreen('screen-cambio');
-  }else{
-    mostrarScreen('screen-dash');
-    document.getElementById('topbar-usuario').textContent=user.nombre;
-    cargarDashboard();
-  }
+  if(user.debeCambiar){mostrarScreen('screen-cambio');}
+  else{mostrarScreen('screen-dash');document.getElementById('topbar-usuario').textContent=user.nombre;cargarDashboard();}
 }
 
 function cambiarPassword(){
@@ -268,25 +241,17 @@ function cambiarPassword(){
   errEl.style.display='none';
   if(nueva.length<6){errEl.textContent='La contraseña debe tener al menos 6 caracteres';errEl.style.display='block';return;}
   if(nueva!==confirma){errEl.textContent='Las contraseñas no coinciden';errEl.style.display='block';return;}
-  fetch(API+'?action=cambiarPasswordDashboard',{
-    method:'POST',
-    body:JSON.stringify({id:usuarioActual.id,nuevaPassword:nueva})
-  })
+  fetch(API+'?action=cambiarPasswordDashboard',{method:'POST',body:JSON.stringify({id:usuarioActual.id,nuevaPassword:nueva})})
     .then(function(r){return r.json();})
     .then(function(data){
       if(data.ok){
-        usuarioActual.password=nueva;
-        usuarioActual.debeCambiar=false;
+        usuarioActual.password=nueva;usuarioActual.debeCambiar=false;
         mostrarScreen('screen-dash');
         document.getElementById('topbar-usuario').textContent=usuarioActual.nombre;
         cargarDashboard();
-      }else{
-        errEl.textContent='Error al guardar. Intentá de nuevo.';errEl.style.display='block';
-      }
+      }else{errEl.textContent='Error al guardar';errEl.style.display='block';}
     })
-    .catch(function(){
-      errEl.textContent='Error de conexión';errEl.style.display='block';
-    });
+    .catch(function(){errEl.textContent='Error de conexión';errEl.style.display='block';});
 }
 
 function cargarDashboard(){
@@ -308,24 +273,20 @@ function cargarDashboard(){
 function renderDashboard(d){
   document.getElementById('txt-actualizacion').innerHTML='Actualizado: '+d.fechaActualizacion+'<button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button>';
 
-  // KPIs flota total
+  // KPIs
   var totalOp=0,totalNop=0;
-  Object.values(d.estadoFlota).forEach(function(yac){
-    totalOp+=yac.operativos;
-    totalNop+=yac.caidos;
-  });
+  Object.values(d.estadoFlota).forEach(function(yac){totalOp+=yac.operativos;totalNop+=yac.caidos;});
   var total=totalOp+totalNop;
   var pctOp=total>0?Math.round(totalOp/total*100):0;
-
   document.getElementById('kpi-grid').innerHTML=
     '<div class="kpi-card kpi-verde"><div class="kpi-label">Operativos</div><div class="kpi-val">'+totalOp+'</div><div class="kpi-sub">equipos en campo</div></div>'+
     '<div class="kpi-card kpi-rojo"><div class="kpi-label">Fuera de servicio</div><div class="kpi-val">'+totalNop+'</div><div class="kpi-sub">equipos caídos</div></div>'+
-    '<div class="kpi-card kpi-azul"><div class="kpi-label">Total flota</div><div class="kpi-val">'+total+'</div><div class="kpi-sub">equipos activos</div></div>'+
-    '<div class="kpi-card '+(pctOp>=80?'kpi-verde':pctOp>=60?'':'kpi-rojo')+'"><div class="kpi-label">Operatividad</div><div class="kpi-val">'+pctOp+'%</div><div class="kpi-sub">del período</div></div>';
+    '<div class="kpi-card kpi-azul"><div class="kpi-label">Total flota</div><div class="kpi-val">'+total+'</div><div class="kpi-sub">equipos en campo</div></div>'+
+    '<div class="kpi-card '+(pctOp>=80?'kpi-verde':pctOp>=60?'kpi-azul':'kpi-rojo')+'"><div class="kpi-label">Operatividad</div><div class="kpi-val">'+pctOp+'%</div><div class="kpi-sub">del total</div></div>';
 
   // Objetivo
-  var pct=Math.min(Math.round(d.acumulado/d.objetivo*100),100);
   var pctReal=Math.round(d.acumulado/d.objetivo*100);
+  var pct=Math.min(pctReal,100);
   var estadoBadge=pctReal>=90?'badge-bien':pctReal>=70?'badge-riesgo':'badge-bajo';
   var estadoTxt=pctReal>=90?'En objetivo':pctReal>=70?'En riesgo':'Por debajo';
   var barraClass=pctReal>=90?'':pctReal>=70?'riesgo':'bajo';
@@ -340,6 +301,46 @@ function renderDashboard(d){
     '</div>'+
     '<div class="barra-wrap"><div class="barra-fill '+barraClass+'" style="width:'+pct+'%"></div></div>'+
     '<div class="barra-pct">'+pctReal+'% del objetivo</div>';
+
+  // Composición de flota
+  var flotaMap={};
+  d.equiposCaidos.forEach(function(eq){
+    var tipo=limpiarTipo(eq.tipo);
+    if(!flotaMap[tipo])flotaMap[tipo]={total:0,op:0,nop:0};
+    flotaMap[tipo].total++;flotaMap[tipo].nop++;
+  });
+  Object.values(d.estadoFlota).forEach(function(yac){
+    yac.equipos&&yac.equipos.forEach&&yac.equipos.forEach(function(eq){
+      var tipo=limpiarTipo(eq.tipo);
+      if(!flotaMap[tipo])flotaMap[tipo]={total:0,op:0,nop:0};
+      flotaMap[tipo].total++;
+      if(eq.estado==='Operativo')flotaMap[tipo].op++;else flotaMap[tipo].nop++;
+    });
+  });
+  // Armarlo desde estadoFlota que sí tiene equipos
+  var flotaMap2={};
+  if(d.flotaPorTipo){
+    d.flotaPorTipo.forEach(function(f){
+      flotaMap2[f.tipo]={total:f.total,op:f.op,nop:f.nop};
+    });
+  }
+  var flotaHtml='';
+  if(d.flotaPorTipo&&d.flotaPorTipo.length>0){
+    d.flotaPorTipo.forEach(function(f){
+      flotaHtml+=
+        '<div class="flota-row">'+
+          '<span class="flota-tipo">'+f.tipo+'</span>'+
+          '<span class="flota-total">'+f.total+'</span>'+
+          '<div class="flota-chips">'+
+            '<span class="chip chip-op">'+f.op+' op</span>'+
+            (f.nop>0?'<span class="chip chip-nop">'+f.nop+' caído'+(f.nop>1?'s':'')+'</span>':'')+
+          '</div>'+
+        '</div>';
+    });
+  }else{
+    flotaHtml='<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px 0;">Sin datos de partes cargados</div>';
+  }
+  document.getElementById('flota-card').innerHTML=flotaHtml;
 
   // Yacimientos
   var YACS=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez'];
@@ -359,11 +360,7 @@ function renderDashboard(d){
           '<div class="yac-fecha">Parte: '+info.fecha+'</div>'+
         '</div>';
     }else{
-      yacHtml+=
-        '<div class="yac-card gris">'+
-          '<div class="yac-header"><div class="yac-dot dot-gris"></div><div class="yac-nombre">'+nombre+'</div></div>'+
-          '<div style="font-size:12px;color:var(--muted);margin-top:4px;">Sin partes cargados</div>'+
-        '</div>';
+      yacHtml+='<div class="yac-card gris"><div class="yac-header"><div class="yac-dot dot-gris"></div><div class="yac-nombre">'+nombre+'</div></div><div style="font-size:12px;color:var(--muted);margin-top:4px;">Sin partes cargados</div></div>';
     }
   });
   document.getElementById('yac-grid').innerHTML=yacHtml;
@@ -378,15 +375,17 @@ function renderDashboard(d){
     titulo.style.display='block';
     lista.innerHTML=d.equiposCaidos.map(function(eq){
       return '<div class="caido-item">'+
-        '<div class="caido-header">'+
-          '<div class="caido-interno">'+eq.interno+'</div>'+
-          '<span class="caido-dias">'+eq.diasCaido+(eq.diasCaido===1?' día':' días')+'</span>'+
-        '</div>'+
+        '<div class="caido-header"><div class="caido-interno">'+eq.interno+'</div><span class="caido-dias">'+eq.diasCaido+(eq.diasCaido===1?' día':' días')+'</span></div>'+
         '<div class="caido-tipo">'+eq.tipo+'</div>'+
         (eq.obs?'<div class="caido-obs">'+eq.obs+'</div>':'')+
       '</div>';
     }).join('');
   }
+}
+
+function limpiarTipo(tipo){
+  if(!tipo)return'Sin tipo';
+  return tipo.replace(/^TARIFA [AC] /i,'').replace(/\[.*\]/,'').trim();
 }
 
 function mostrarScreen(id){
