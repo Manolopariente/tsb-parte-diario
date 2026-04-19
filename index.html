@@ -79,12 +79,12 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .oncall-toggle-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;}
 .oncall-toggle-label{font-size:14px;font-weight:700;color:var(--texto);}
 .oncall-detalle{background:white;border:1.5px solid var(--borde);border-radius:12px;padding:14px 16px;margin-bottom:8px;display:none;}
-.oncall-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gris);}
+.oncall-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gris);cursor:pointer;}
 .oncall-row:last-child{border-bottom:none;padding-bottom:0;}
-.oncall-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;}
+.oncall-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;pointer-events:none;}
 .oncall-row-label{font-size:14px;font-weight:600;flex:1;}
 .oncall-cant{display:none;align-items:center;gap:6px;}
-.oncall-cant input{width:70px;margin:0;padding:8px 10px;font-size:14px;font-weight:700;}
+.oncall-cant input{width:70px;margin:0;padding:8px 10px;font-size:14px;font-weight:700;pointer-events:all;cursor:text;}
 .oncall-unit{font-size:12px;font-weight:700;color:var(--muted);}
 .buscador{position:sticky;top:56px;background:var(--gris);padding:10px 16px;z-index:50;}
 .buscador input{margin:0;border-radius:12px;background:white;}
@@ -184,31 +184,31 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
         <span class="oncall-toggle-label">¿Hubo servicios adicionales hoy?</span>
       </label>
       <div id="oncall-detalle" class="oncall-detalle">
-        <div class="oncall-row">
-          <input type="checkbox" id="chk-carreton" onchange="setOnCall('carreton',this.checked)">
+        <div class="oncall-row" onclick="toggleCarreton()">
+          <input type="checkbox" id="chk-carreton">
           <span class="oncall-row-label">🚚 Camión carretón <span style="font-weight:400;font-size:12px;color:var(--muted);">(tarifa día)</span></span>
         </div>
-        <div class="oncall-row">
-          <input type="checkbox" id="chk-hormigon" onchange="toggleCantidad('hormigon',this.checked)">
+        <div class="oncall-row" onclick="toggleOncallRow('hormigon',event)">
+          <input type="checkbox" id="chk-hormigon">
           <span class="oncall-row-label">🪨 Hormigón</span>
           <div class="oncall-cant" id="wrap-hormigon">
-            <input type="number" min="0" step="0.1" placeholder="0" onchange="setOnCallCantidad('hormigonM3',parseFloat(this.value)||0)">
+            <input type="number" min="0" step="0.1" placeholder="0" onclick="event.stopPropagation()" onchange="setOnCallCantidad('hormigonM3',parseFloat(this.value)||0)">
             <span class="oncall-unit">m³</span>
           </div>
         </div>
-        <div class="oncall-row">
-          <input type="checkbox" id="chk-geomembrana" onchange="toggleCantidad('geomembrana',this.checked)">
+        <div class="oncall-row" onclick="toggleOncallRow('geomembrana',event)">
+          <input type="checkbox" id="chk-geomembrana">
           <span class="oncall-row-label">🟦 Geomembrana</span>
           <div class="oncall-cant" id="wrap-geomembrana">
-            <input type="number" min="0" step="0.1" placeholder="0" onchange="setOnCallCantidad('geomembranaM2',parseFloat(this.value)||0)">
+            <input type="number" min="0" step="0.1" placeholder="0" onclick="event.stopPropagation()" onchange="setOnCallCantidad('geomembranaM2',parseFloat(this.value)||0)">
             <span class="oncall-unit">m²</span>
           </div>
         </div>
-        <div class="oncall-row">
-          <input type="checkbox" id="chk-malla" onchange="toggleCantidad('malla',this.checked)">
+        <div class="oncall-row" onclick="toggleOncallRow('malla',event)">
+          <input type="checkbox" id="chk-malla">
           <span class="oncall-row-label">🕸️ Malla antiaves</span>
           <div class="oncall-cant" id="wrap-malla">
-            <input type="number" min="0" step="0.1" placeholder="0" onchange="setOnCallCantidad('mallaM2',parseFloat(this.value)||0)">
+            <input type="number" min="0" step="0.1" placeholder="0" onclick="event.stopPropagation()" onchange="setOnCallCantidad('mallaM2',parseFloat(this.value)||0)">
             <span class="oncall-unit">m²</span>
           </div>
         </div>
@@ -271,6 +271,23 @@ function fechaBanner(d){
 function hoyInput(){var h=new Date();return h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'-'+String(h.getDate()).padStart(2,'0');}
 function inputToArgentina(v){var p=v.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
 function borradorKey(){return 'tsb_draft_'+yacimientoActual+'_'+fechaGuardar;}
+
+function toggleCarreton(){
+  onCallData.carreton=!onCallData.carreton;
+  document.getElementById('chk-carreton').checked=onCallData.carreton;
+  autoguardar();
+}
+
+function toggleOncallRow(tipo,event){
+  var wrap=document.getElementById('wrap-'+tipo);
+  var chk=document.getElementById('chk-'+tipo);
+  var mapa={hormigon:'hormigonM3',geomembrana:'geomembranaM2',malla:'mallaM2'};
+  var activo=!chk.checked;
+  chk.checked=activo;
+  wrap.style.display=activo?'flex':'none';
+  if(!activo)onCallData[mapa[tipo]]=0;
+  autoguardar();
+}
 
 window.onload=function(){
   fetch(API+'?action=getSupervisores')
@@ -467,14 +484,6 @@ function quitarEquipo(idx){equiposDelParte.splice(idx,1);renderizarEquipos();aut
 function onAdicionales(checked){
   onCallData.hayAdicionales=checked;
   document.getElementById('oncall-detalle').style.display=checked?'block':'none';
-  autoguardar();
-}
-function setOnCall(campo,val){onCallData[campo]=val;autoguardar();}
-function toggleCantidad(tipo,checked){
-  var wrap=document.getElementById('wrap-'+tipo);
-  if(wrap)wrap.style.display=checked?'flex':'none';
-  var map={hormigon:'hormigonM3',geomembrana:'geomembranaM2',malla:'mallaM2'};
-  if(!checked&&map[tipo])onCallData[map[tipo]]=0;
   autoguardar();
 }
 function setOnCallCantidad(campo,val){onCallData[campo]=val;autoguardar();}
