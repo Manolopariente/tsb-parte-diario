@@ -20,79 +20,364 @@
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--gris);color:var(--texto);min-height:100vh;}
 .screen{display:none;}.screen.active{display:block;}
 
-.topbar{background:var(--azul);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;color:white;}
+.login-bg{min-height:100vh;background:url('TOPA1.jpeg') center center/cover no-repeat;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;}
+.login-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(10,20,60,0.78) 0%,rgba(10,20,60,0.90) 100%);}
+.login-box{position:relative;z-index:2;width:100%;max-width:400px;}
+.login-logo-wrap{text-align:center;margin-bottom:24px;}
+.login-logo-wrap img{height:64px;filter:brightness(0) invert(1);}
+.login-titulo{color:white;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;opacity:0.9;margin-top:12px;}
+.login-subtitulo{color:rgba(255,255,255,0.55);font-size:11px;margin-top:4px;letter-spacing:1px;}
+.login-card{background:rgba(255,255,255,0.97);border-radius:16px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.45);}
+.login-card-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:20px;text-align:center;letter-spacing:0.5px;}
+
+.topbar{background:var(--azul);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.25);}
+.topbar img{height:28px;filter:brightness(0) invert(1);}
+.topbar-info{text-align:right;}
+.topbar-title{color:white;font-size:13px;font-weight:700;letter-spacing:1px;}
+.topbar-sub{color:rgba(255,255,255,0.7);font-size:11px;margin-top:1px;}
+.btn-salir{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;}
+
 .contenido{padding:16px;max-width:500px;margin:auto;}
+.info-banner{background:linear-gradient(135deg,var(--azul),var(--azul2));border-radius:14px;padding:16px 20px;margin-bottom:16px;color:white;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 12px rgba(30,48,112,0.3);}
+.info-banner-data h3{font-size:20px;font-weight:800;letter-spacing:0.5px;}
+.info-banner-data p{font-size:12px;opacity:0.75;margin-top:3px;}
+.info-banner-fecha{text-align:right;font-size:12px;opacity:0.85;line-height:1.6;}
 
-.info-banner{background:var(--azul);border-radius:14px;padding:16px;margin-bottom:16px;color:white;}
-.info-banner-fecha{margin-top:10px;}
+label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.8px;}
+select,input{width:100%;padding:13px 16px;border:1.5px solid var(--borde);border-radius:10px;font-size:15px;color:var(--texto);background:white;margin-bottom:14px;appearance:none;-webkit-appearance:none;transition:border-color .2s;}
+select:focus,input:focus{outline:none;border-color:var(--azul);}
+.pin-input{text-align:center;font-size:28px;font-weight:700;letter-spacing:10px;color:var(--azul);}
 
-input[type="date"]{padding:6px;border-radius:6px;border:none;}
+.btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:0.5px;transition:opacity .2s;}
+.btn:active{opacity:0.85;}
+.btn-primary{background:linear-gradient(135deg,var(--azul),var(--azul2));color:white;box-shadow:0 4px 12px rgba(30,48,112,0.3);}
+.btn-success{background:linear-gradient(135deg,var(--verde),var(--verde2));color:white;margin-top:8px;box-shadow:0 4px 12px rgba(141,198,63,0.3);}
+.btn-outline{background:white;color:var(--azul);border:2px solid var(--azul);margin-bottom:12px;}
 
-.btn{width:100%;padding:12px;border:none;border-radius:8px;background:var(--verde);color:white;margin-top:10px;}
+.equipo-item{background:white;border:2px solid var(--borde);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,0.06);}
+.equipo-item.operativo{border-color:#c5e89a;background:#f7fbf0;}
+.equipo-item.no-operativo{border-color:#ffbdbd;background:#fff5f5;}
+.equipo-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.equipo-interno{font-size:22px;font-weight:900;color:var(--azul);letter-spacing:0.5px;}
+.equipo-tipo{font-size:12px;color:var(--muted);margin-top:2px;font-weight:500;}
+.equipo-categoria{font-size:11px;color:var(--muted);background:var(--gris);padding:4px 10px;border-radius:20px;font-weight:600;}
+.toggle-estado{display:flex;border-radius:10px;overflow:hidden;border:1.5px solid var(--borde);margin-bottom:10px;}
+.toggle-btn{flex:1;padding:11px;border:none;font-size:13px;font-weight:700;cursor:pointer;background:white;color:var(--muted);transition:.15s;}
+.toggle-btn.active-op{background:var(--verde);color:white;}
+.toggle-btn.active-nop{background:var(--rojo);color:white;}
+.obs-input{width:100%;padding:10px 12px;border:1.5px solid var(--borde);border-radius:8px;font-size:14px;resize:none;font-family:inherit;color:var(--texto);}
+.btn-quitar{background:none;border:none;color:#bbb;font-size:12px;cursor:pointer;margin-top:6px;padding:0;font-weight:500;}
 
+.buscador{position:sticky;top:56px;background:var(--gris);padding:10px 16px;z-index:50;}
+.buscador input{margin:0;border-radius:12px;background:white;}
+.equipo-lista-item{background:white;border:1.5px solid var(--borde);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.btn-agregar-eq{background:var(--azul);color:white;border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;}
+
+.confirm-icon{text-align:center;font-size:72px;margin:24px 0 16px;}
+.confirm-titulo{text-align:center;font-size:24px;font-weight:800;color:var(--azul);margin-bottom:8px;}
+.confirm-sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:24px;}
+.confirm-card{background:white;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+
+.loading{text-align:center;padding:40px 20px;color:var(--muted);}
+.spinner{width:36px;height:36px;border:3px solid var(--borde);border-top-color:var(--azul);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.error-msg{background:#ffebee;color:var(--rojo);padding:12px 16px;border-radius:10px;font-size:14px;margin-bottom:12px;text-align:center;font-weight:500;}
+.seccion-titulo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.divider{height:1px;background:var(--borde);margin:16px 0;}
 </style>
 </head>
 <body>
 
-<div class="topbar">PARTE DIARIO</div>
-
-<div class="contenido">
-
-<div class="info-banner">
-  <div>Seleccionar fecha del parte</div>
-  <div class="info-banner-fecha">
-    <input type="date" id="fechaParte">
-    <div id="fechaTexto"></div>
+<!-- LOGIN -->
+<div id="screen-login" class="screen active">
+  <div class="login-bg">
+    <div class="login-overlay"></div>
+    <div class="login-box">
+      <div class="login-logo-wrap">
+        <img src="logo.png" alt="TSB">
+        <div class="login-titulo">Control Operativo de Flota</div>
+        <div class="login-subtitulo">Contrato 4900100500 — YPF</div>
+      </div>
+      <div class="login-card">
+        <div class="login-card-title">Ingreso de Supervisores</div>
+        <div id="login-loading" class="loading" style="padding:20px 0;">
+          <div class="spinner"></div>
+          Cargando sistema...
+        </div>
+        <div id="login-form" style="display:none;">
+          <div id="login-error" class="error-msg" style="display:none;"></div>
+          <label>Yacimiento</label>
+          <select id="sel-yacimiento">
+            <option value="">— Seleccioná un yacimiento —</option>
+            <option>Señal Picada</option>
+            <option>BDT - NAR</option>
+            <option>Obras</option>
+            <option>Lomita</option>
+            <option>Puesto Hernandez</option>
+          </select>
+          <label>Supervisor</label>
+          <select id="sel-supervisor"><option value="">— Seleccioná tu nombre —</option></select>
+          <label>PIN de acceso</label>
+          <input type="password" inputmode="numeric" maxlength="6" id="inp-pin" class="pin-input" placeholder="••••">
+          <button class="btn btn-primary" onclick="hacerLogin()">INGRESAR AL SISTEMA</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<button class="btn" onclick="guardarParte()">GUARDAR PARTE</button>
+<!-- PARTE -->
+<div id="screen-parte" class="screen">
+  <div class="topbar">
+    <img src="logo.png" alt="TSB">
+    <div class="topbar-info">
+      <div class="topbar-title">PARTE DIARIO</div>
+      <div class="topbar-sub" id="topbar-info"></div>
+    </div>
+    <button class="btn-salir" onclick="salir()">Salir</button>
+  </div>
+  <div class="contenido" style="padding-top:16px;">
+    <div class="info-banner">
+      <div class="info-banner-data">
+        <h3 id="banner-yacimiento"></h3>
+        <p id="banner-supervisor"></p>
+      </div>
+      <div class="info-banner-fecha" id="banner-fecha"></div>
+    </div>
+    <div id="parte-loading" class="loading"><div class="spinner"></div>Cargando equipos...</div>
+    <div id="parte-contenido" style="display:none;">
+      <div class="seccion-titulo" id="titulo-equipos">Equipos del parte</div>
+      <div id="lista-equipos"></div>
+      <div class="divider"></div>
+      <button class="btn btn-outline" onclick="irAgregarEquipo()">+ Agregar equipo</button>
+      <button class="btn btn-success" onclick="guardarParte()">✓ CONFIRMAR Y GUARDAR PARTE</button>
+    </div>
+  </div>
+</div>
 
+<!-- AGREGAR EQUIPO -->
+<div id="screen-agregar" class="screen">
+  <div class="topbar">
+    <img src="logo.png" alt="TSB">
+    <div class="topbar-info">
+      <div class="topbar-title">AGREGAR EQUIPO</div>
+      <div class="topbar-sub">Buscá por interno o tipo</div>
+    </div>
+    <button class="btn-salir" onclick="volverAlParte()">← Volver</button>
+  </div>
+  <div class="buscador">
+    <input type="search" id="inp-buscar" placeholder="🔍  1448, TRACTOR, PICK UP..." oninput="filtrarEquipos()">
+  </div>
+  <div class="contenido" style="padding-top:8px;">
+    <div id="lista-todos-equipos"></div>
+  </div>
+</div>
+
+<!-- CONFIRMACION -->
+<div id="screen-confirmacion" class="screen">
+  <div class="topbar">
+    <img src="logo.png" alt="TSB">
+    <div class="topbar-title" style="color:white;margin-right:auto;margin-left:16px;">PARTE DIARIO</div>
+    <div></div>
+  </div>
+  <div class="contenido" style="padding-top:30px;">
+    <div class="confirm-icon">✅</div>
+    <div class="confirm-titulo">Parte registrado</div>
+    <div class="confirm-sub" id="confirm-detalle"></div>
+    <div class="confirm-card" id="confirm-resumen"></div>
+    <button class="btn btn-primary" onclick="resetear()">CARGAR OTRO PARTE</button>
+  </div>
 </div>
 
 <script>
-
 var API="https://script.google.com/macros/s/AKfycbyCRn32pNeZTkbdqxyOZFT9qwZdyBGAQZ5hSyapM8eqXkKGaijWWerBGH48Q9blUzsX/exec";
+var supervisores=[],todosEquipos=[],equiposDelParte=[],supervisorActual=null,yacimientoActual="";
 
-function fechaArgentinaDesdeISO(f){
-  var p=f.split("-");
-  return p[2]+"/"+p[1]+"/"+p[0];
+function fechaArgentina(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();}
+function fechaBanner(d){
+  var dias=['DOMINGO','LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO'];
+  var meses=['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+  return dias[d.getDay()]+' '+d.getDate()+' DE '+meses[d.getMonth()]+'<br>'+d.getFullYear();
 }
 
 window.onload=function(){
-  var hoy=new Date().toISOString().split("T")[0];
-  document.getElementById("fechaParte").value=hoy;
-  actualizarFecha();
+  fetch(API+'?action=getSupervisores')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      supervisores=data;
+      var sel=document.getElementById('sel-supervisor');
+      sel.innerHTML='<option value="">— Seleccioná tu nombre —</option>';
+      supervisores.forEach(function(s){
+        var opt=document.createElement('option');
+        opt.value=String(s.id);opt.textContent=s.nombre;
+        opt.dataset.pin=String(s.pin);opt.dataset.nombre=s.nombre;
+        sel.appendChild(opt);
+      });
+      return fetch(API+'?action=getEquipos');
+    })
+    .then(function(r){return r.json();})
+    .then(function(data){
+      todosEquipos=data;
+      document.getElementById('login-loading').style.display='none';
+      document.getElementById('login-form').style.display='block';
+    })
+    .catch(function(){
+      document.getElementById('login-loading').innerHTML='<div class="error-msg">Error al cargar. Verificá tu conexión.</div>';
+    });
+};
+
+function hacerLogin(){
+  document.getElementById('login-error').style.display='none';
+  var yac=document.getElementById('sel-yacimiento').value;
+  var supId=document.getElementById('sel-supervisor').value;
+  var pin=document.getElementById('inp-pin').value.trim();
+  if(!yac){mostrarError('Seleccioná un yacimiento');return;}
+  if(!supId){mostrarError('Seleccioná tu nombre');return;}
+  if(!pin){mostrarError('Ingresá tu PIN');return;}
+  var supOpt=document.querySelector('#sel-supervisor option[value="'+supId+'"]');
+  if(!supOpt){mostrarError('Supervisor no encontrado');return;}
+  if(String(supOpt.dataset.pin)!==String(pin)){mostrarError('PIN incorrecto');return;}
+  supervisorActual={id:supId,nombre:supOpt.dataset.nombre};
+  yacimientoActual=yac;
+  irAlParte();
 }
 
-document.getElementById("fechaParte").addEventListener("change",actualizarFecha);
+function mostrarError(msg){var e=document.getElementById('login-error');e.textContent=msg;e.style.display='block';}
 
-function actualizarFecha(){
-  var f=document.getElementById("fechaParte").value;
-  document.getElementById("fechaTexto").innerText=fechaArgentinaDesdeISO(f);
+function irAlParte(){
+  mostrarScreen('screen-parte');
+  var hoy=new Date();
+  document.getElementById('topbar-info').textContent=supervisorActual.nombre;
+  document.getElementById('banner-yacimiento').textContent=yacimientoActual;
+  document.getElementById('banner-supervisor').textContent=supervisorActual.nombre;
+  document.getElementById('banner-fecha').innerHTML=fechaBanner(hoy);
+  document.getElementById('parte-loading').style.display='block';
+  document.getElementById('parte-contenido').style.display='none';
+  fetch(API+'?action=getUltimoParte&yacimiento='+encodeURIComponent(yacimientoActual))
+    .then(function(r){return r.json();})
+    .then(function(u){
+      if(u&&u.length>0){
+        equiposDelParte=u.map(function(x){
+          var eq=todosEquipos.find(function(e){return e.interno===x.interno;});
+          return{interno:x.interno,tipo:eq?eq.tipo:'',categoria:eq?eq.categoria:'',estado:x.estado,observaciones:''};
+        });
+        document.getElementById('titulo-equipos').textContent='Confirmá o modificá el estado de hoy';
+      }else{
+        equiposDelParte=[];
+        document.getElementById('titulo-equipos').textContent='Sin parte anterior — agregá los equipos';
+      }
+      renderizarEquipos();
+      document.getElementById('parte-loading').style.display='none';
+      document.getElementById('parte-contenido').style.display='block';
+    })
+    .catch(function(){
+      equiposDelParte=[];renderizarEquipos();
+      document.getElementById('parte-loading').style.display='none';
+      document.getElementById('parte-contenido').style.display='block';
+    });
 }
+
+function renderizarEquipos(){
+  var lista=document.getElementById('lista-equipos');
+  if(equiposDelParte.length===0){lista.innerHTML='<div class="loading" style="padding:20px 0;">Sin equipos. Usá "+ Agregar equipo".</div>';return;}
+  lista.innerHTML='';
+  equiposDelParte.forEach(function(eq,idx){
+    var esOp=eq.estado==='Operativo';
+    var div=document.createElement('div');
+    div.className='equipo-item '+(esOp?'operativo':'no-operativo');
+    div.innerHTML=
+      '<div class="equipo-header"><div><div class="equipo-interno">'+eq.interno+'</div><div class="equipo-tipo">'+eq.tipo+'</div></div><div class="equipo-categoria">'+(eq.categoria?eq.categoria.split('[')[0].trim():'')+'</div></div>'+
+      '<div class="toggle-estado">'+
+        '<button class="toggle-btn '+(esOp?'active-op':'')+'" onclick="setEstado('+idx+',\'Operativo\')">✓ OPERATIVO</button>'+
+        '<button class="toggle-btn '+(!esOp?'active-nop':'')+'" onclick="setEstado('+idx+',\'No operativo\')">✗ FUERA DE SERVICIO</button>'+
+      '</div>'+
+      '<textarea class="obs-input" rows="2" placeholder="Observaciones del equipo..." onchange="setObs('+idx+',this.value)">'+(eq.observaciones||'')+'</textarea>'+
+      '<button class="btn-quitar" onclick="quitarEquipo('+idx+')">✕ Quitar del parte</button>';
+    lista.appendChild(div);
+  });
+}
+
+function setEstado(idx,estado){equiposDelParte[idx].estado=estado;renderizarEquipos();}
+function setObs(idx,val){equiposDelParte[idx].observaciones=val;}
+function quitarEquipo(idx){equiposDelParte.splice(idx,1);renderizarEquipos();}
+
+function irAgregarEquipo(){mostrarScreen('screen-agregar');document.getElementById('inp-buscar').value='';filtrarEquipos();}
+
+function filtrarEquipos(){
+  var q=document.getElementById('inp-buscar').value.toLowerCase().trim();
+  var cargados=equiposDelParte.map(function(e){return e.interno;});
+  var filtrados=todosEquipos.filter(function(e){
+    if(cargados.indexOf(e.interno)>-1)return false;
+    if(!q)return true;
+    return e.interno.indexOf(q)>-1||e.tipo.toLowerCase().indexOf(q)>-1||e.categoria.toLowerCase().indexOf(q)>-1;
+  });
+  var lista=document.getElementById('lista-todos-equipos');
+  if(filtrados.length===0){lista.innerHTML='<div class="loading">No se encontraron equipos.</div>';return;}
+  lista.innerHTML='';
+  filtrados.forEach(function(eq){
+    var div=document.createElement('div');
+    div.className='equipo-lista-item';
+    div.innerHTML='<div><div style="font-size:18px;font-weight:800;color:var(--azul);">'+eq.interno+'</div><div style="font-size:12px;color:var(--muted);margin-top:2px;">'+eq.tipo+' — '+(eq.categoria?eq.categoria.split('[')[0].trim():'')+'</div></div><button class="btn-agregar-eq" onclick="agregarEquipo(\''+eq.interno+'\')">+ Agregar</button>';
+    lista.appendChild(div);
+  });
+}
+
+function agregarEquipo(interno){
+  var eq=todosEquipos.find(function(e){return e.interno===interno;});
+  if(!eq)return;
+  equiposDelParte.push({interno:eq.interno,tipo:eq.tipo,categoria:eq.categoria,estado:'Operativo',observaciones:''});
+  volverAlParte();
+}
+
+function volverAlParte(){mostrarScreen('screen-parte');renderizarEquipos();}
 
 function guardarParte(){
-
-  var fechaISO=document.getElementById("fechaParte").value;
-  var fecha=fechaArgentinaDesdeISO(fechaISO);
-
-  var payload={
-    fecha:fecha,
-    yacimiento:"Señal Picada",
-    supervisor:"Supervisor",
-    equipos:[]
-  };
-
-  fetch(API+"?action=guardarParteCompleto",{
-    method:"POST",
-    body:JSON.stringify(payload)
-  })
-  .then(()=>alert("Guardado con fecha: "+fecha))
-  .catch(()=>alert("Error al guardar"));
+  if(equiposDelParte.length===0){alert('No hay equipos en el parte. Agregá al menos uno.');return;}
+  var btn=document.querySelector('#screen-parte .btn-success');
+  btn.textContent='Guardando...';btn.disabled=true;
+  var ahora=new Date();
+  var fecha=fechaArgentina(ahora);
+  var hora=String(ahora.getHours()).padStart(2,'0')+':'+String(ahora.getMinutes()).padStart(2,'0');
+  var payload={fecha:fecha,hora:hora,yacimiento:yacimientoActual,cliente:'YPF',supervisor:supervisorActual.nombre,equipos:equiposDelParte};
+  fetch(API+'?action=guardarParteCompleto',{method:'POST',body:JSON.stringify(payload)})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data.ok){
+        var op=equiposDelParte.filter(function(e){return e.estado==='Operativo';}).length;
+        var nop=equiposDelParte.length-op;
+        document.getElementById('confirm-detalle').textContent=fecha+' — '+yacimientoActual+' — '+supervisorActual.nombre;
+        document.getElementById('confirm-resumen').innerHTML=
+          '<div style="display:flex;gap:12px;justify-content:center;padding:8px 0;">'+
+          '<div style="text-align:center;flex:1;"><div style="font-size:40px;font-weight:900;color:var(--verde);">'+op+'</div><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;">OPERATIVOS</div></div>'+
+          '<div style="width:1px;background:var(--borde);"></div>'+
+          '<div style="text-align:center;flex:1;"><div style="font-size:40px;font-weight:900;color:var(--rojo);">'+nop+'</div><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;">FUERA DE SERV.</div></div>'+
+          '<div style="width:1px;background:var(--borde);"></div>'+
+          '<div style="text-align:center;flex:1;"><div style="font-size:40px;font-weight:900;color:var(--azul);">'+equiposDelParte.length+'</div><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;">TOTAL</div></div>'+
+          '</div>';
+        mostrarScreen('screen-confirmacion');
+      }else{throw new Error('error');}
+    })
+    .catch(function(){
+      btn.textContent='✓ CONFIRMAR Y GUARDAR PARTE';btn.disabled=false;
+      alert('Error al guardar. Verificá tu conexión.');
+    });
 }
 
-</script>
+function mostrarScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
 
+function salir(){if(confirm('¿Salir de la sesión?')){resetear();}}
+
+function resetear(){
+  supervisorActual=null;yacimientoActual='';equiposDelParte=[];
+  document.getElementById('inp-pin').value='';
+  document.getElementById('sel-yacimiento').value='';
+  document.getElementById('sel-supervisor').innerHTML='<option value="">— Seleccioná tu nombre —</option>';
+  mostrarScreen('screen-login');
+}
+</script>
 </body>
 </html>
