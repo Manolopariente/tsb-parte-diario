@@ -1,1 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSB — Dashboard Gerencial</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --azul:#1e3070;--azul2:#152558;--verde:#8dc63f;--verde2:#6fa832;
+  --rojo:#e53935;--gris:#f0f2f5;--borde:#d1d9e6;--texto:#1a2340;--muted:#6b7a99;
+  --amarillo:#f59e0b;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--gris);color:var(--texto);min-height:100vh;}
+.screen{display:none;}.screen.active{display:block;}
 
+/* LOGIN */
+.login-bg{min-height:100vh;background:url('TOPA1.jpeg') center center/cover no-repeat;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;}
+.login-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(10,20,60,0.82) 0%,rgba(10,20,60,0.93) 100%);}
+.login-box{position:relative;z-index:2;width:100%;max-width:400px;}
+.login-logo-wrap{text-align:center;margin-bottom:24px;}
+.login-logo-wrap img{height:64px;filter:brightness(0) invert(1);}
+.login-titulo{color:white;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;opacity:0.9;margin-top:12px;}
+.login-subtitulo{color:rgba(255,255,255,0.55);font-size:11px;margin-top:4px;letter-spacing:1px;}
+.login-card{background:rgba(255,255,255,0.97);border-radius:16px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.45);}
+.login-card-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:20px;text-align:center;}
+.error-msg{background:#ffebee;color:var(--rojo);padding:12px 16px;border-radius:10px;font-size:14px;margin-bottom:12px;text-align:center;font-weight:500;}
+label-form{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.8px;}
+.form-label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.8px;}
+select,input{width:100%;padding:13px 16px;border:1.5px solid var(--borde);border-radius:10px;font-size:15px;color:var(--texto);background:white;margin-bottom:14px;appearance:none;-webkit-appearance:none;}
+select:focus,input:focus{outline:none;border-color:var(--azul);}
+.btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;}
+.btn:active{opacity:0.85;}
+.btn-primary{background:linear-gradient(135deg,var(--azul),var(--azul2));color:white;box-shadow:0 4px 12px rgba(30,48,112,0.3);}
+.btn-success{background:linear-gradient(135deg,var(--verde),var(--verde2));color:white;box-shadow:0 4px 12px rgba(141,198,63,0.3);}
+.btn-outline{background:white;color:var(--azul);border:2px solid var(--azul);}
+.back-link{display:block;text-align:center;margin-top:16px;color:rgba(255,255,255,0.7);font-size:13px;text-decoration:none;}
+
+/* CAMBIO PASSWORD */
+.cambio-card{background:rgba(255,255,255,0.97);border-radius:16px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.45);}
+.cambio-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:8px;text-align:center;}
+.cambio-sub{font-size:13px;color:var(--muted);margin-bottom:20px;text-align:center;}
+
+/* TOPBAR */
+.topbar{background:var(--azul);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.25);}
+.topbar img{height:28px;filter:brightness(0) invert(1);}
+.topbar-info{text-align:right;}
+.topbar-title{color:white;font-size:13px;font-weight:700;letter-spacing:1px;}
+.topbar-sub{color:rgba(255,255,255,0.7);font-size:11px;margin-top:1px;}
+.btn-salir{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;}
+
+/* DASHBOARD */
+.dash{padding:16px;max-width:600px;margin:auto;}
+.actualizacion{text-align:right;font-size:11px;color:var(--muted);margin-bottom:12px;}
+.btn-refresh{background:var(--azul);color:white;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;margin-left:8px;}
+
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.kpi-card{background:white;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);}
+.kpi-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.kpi-val{font-size:32px;font-weight:900;line-height:1;}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+.kpi-verde .kpi-val{color:var(--verde2);}
+.kpi-rojo .kpi-val{color:var(--rojo);}
+.kpi-azul .kpi-val{color:var(--azul);}
+
+/* OBJETIVO */
+.objetivo-card{background:white;border-radius:14px;padding:18px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;}
+.objetivo-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+.objetivo-titulo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.objetivo-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;}
+.badge-bien{background:#e8f5e9;color:#2e7d32;}
+.badge-riesgo{background:#fff8e1;color:#f57f17;}
+.badge-bajo{background:#ffebee;color:var(--rojo);}
+.objetivo-montos{display:flex;justify-content:space-between;margin-bottom:10px;}
+.objetivo-monto-item{text-align:center;}
+.objetivo-monto-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;}
+.objetivo-monto-val{font-size:18px;font-weight:900;color:var(--azul);}
+.objetivo-monto-val.acum{color:var(--verde2);}
+.barra-wrap{background:var(--gris);border-radius:20px;height:14px;overflow:hidden;}
+.barra-fill{height:100%;border-radius:20px;transition:width .6s ease;background:linear-gradient(90deg,var(--verde),var(--verde2));}
+.barra-fill.riesgo{background:linear-gradient(90deg,#f59e0b,#d97706);}
+.barra-fill.bajo{background:linear-gradient(90deg,var(--rojo),#c62828);}
+.barra-pct{text-align:center;font-size:12px;font-weight:700;color:var(--muted);margin-top:6px;}
+
+/* YACIMIENTOS */
+.seccion-titulo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.yac-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.yac-card{background:white;border-radius:12px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.06);border:2px solid var(--borde);}
+.yac-card.verde{border-color:#c5e89a;background:#f7fbf0;}
+.yac-card.rojo{border-color:#ffbdbd;background:#fff5f5;}
+.yac-card.gris{border-color:var(--borde);background:white;}
+.yac-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.yac-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.dot-verde{background:var(--verde2);}
+.dot-rojo{background:var(--rojo);}
+.dot-gris{background:#bbb;}
+.yac-nombre{font-size:13px;font-weight:700;color:var(--texto);}
+.yac-stats{display:flex;gap:8px;}
+.yac-stat{text-align:center;flex:1;}
+.yac-stat-val{font-size:20px;font-weight:900;}
+.yac-stat-val.op{color:var(--verde2);}
+.yac-stat-val.nop{color:var(--rojo);}
+.yac-stat-label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+.yac-fecha{font-size:10px;color:var(--muted);margin-top:6px;}
+
+/* CAIDOS */
+.caido-item{background:white;border-radius:12px;padding:14px;margin-bottom:8px;box-shadow:0 2px 6px rgba(0,0,0,0.06);border-left:4px solid var(--rojo);}
+.caido-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.caido-interno{font-size:18px;font-weight:900;color:var(--azul);}
+.caido-dias{background:#ffebee;color:var(--rojo);font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.caido-tipo{font-size:12px;color:var(--muted);margin-bottom:4px;}
+.caido-obs{font-size:13px;color:var(--texto);}
+
+/* LOADING */
+.loading{text-align:center;padding:40px 20px;color:var(--muted);}
+.spinner{width:36px;height:36px;border:3px solid var(--borde);border-top-color:var(--azul);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.divider{height:1px;background:var(--borde);margin:16px 0;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="screen-login" class="screen active">
+  <div class="login-bg">
+    <div class="login-overlay"></div>
+    <div class="login-box">
+      <div class="login-logo-wrap">
+        <img src="logo.png" alt="TSB">
+        <div class="login-titulo">Dashboard Gerencial</div>
+        <div class="login-subtitulo">Contrato 4900100500 — YPF</div>
+      </div>
+      <div class="login-card">
+        <div class="login-card-title">Acceso Gerencial</div>
+        <div id="login-loading" class="loading" style="padding:20px 0;">
+          <div class="spinner"></div>Cargando...
+        </div>
+        <div id="login-form" style="display:none;">
+          <div id="login-error" class="error-msg" style="display:none;"></div>
+          <span class="form-label">Usuario</span>
+          <select id="sel-usuario"><option value="">— Seleccioná tu nombre —</option></select>
+          <span class="form-label">Contraseña</span>
+          <input type="password" id="inp-password" placeholder="Contraseña" onkeydown="if(event.key==='Enter')hacerLogin()">
+          <button class="btn btn-primary" onclick="hacerLogin()">INGRESAR</button>
+        </div>
+      </div>
+      <a href="index.html" class="back-link">← Volver al ingreso de supervisores</a>
+    </div>
+  </div>
+</div>
+
+<!-- CAMBIO DE CONTRASEÑA -->
+<div id="screen-cambio" class="screen">
+  <div class="login-bg">
+    <div class="login-overlay"></div>
+    <div class="login-box">
+      <div class="login-logo-wrap">
+        <img src="logo.png" alt="TSB">
+        <div class="login-titulo">Seguridad</div>
+      </div>
+      <div class="cambio-card">
+        <div class="cambio-title">Cambiá tu contraseña</div>
+        <div class="cambio-sub">Es tu primer ingreso. Por seguridad establecé una contraseña nueva.</div>
+        <div id="cambio-error" class="error-msg" style="display:none;"></div>
+        <span class="form-label">Nueva contraseña</span>
+        <input type="password" id="inp-nueva" placeholder="Mínimo 6 caracteres">
+        <span class="form-label">Confirmá la contraseña</span>
+        <input type="password" id="inp-confirma" placeholder="Repetí la contraseña">
+        <button class="btn btn-success" onclick="cambiarPassword()">GUARDAR Y CONTINUAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="screen-dash" class="screen">
+  <div class="topbar">
+    <img src="logo.png" alt="TSB">
+    <div class="topbar-info">
+      <div class="topbar-title">DASHBOARD</div>
+      <div class="topbar-sub" id="topbar-usuario"></div>
+    </div>
+    <button class="btn-salir" onclick="salir()">Salir</button>
+  </div>
+
+  <div class="dash">
+    <div id="dash-loading" class="loading"><div class="spinner"></div>Cargando datos...</div>
+    <div id="dash-contenido" style="display:none;">
+
+      <div class="actualizacion" id="txt-actualizacion">
+        Actualizado: —
+        <button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-grid" id="kpi-grid"></div>
+
+      <!-- OBJETIVO -->
+      <div class="objetivo-card" id="objetivo-card"></div>
+
+      <!-- YACIMIENTOS -->
+      <div class="seccion-titulo">Estado por yacimiento</div>
+      <div class="yac-grid" id="yac-grid"></div>
+
+      <!-- EQUIPOS CAIDOS -->
+      <div class="seccion-titulo" id="titulo-caidos">Equipos fuera de servicio</div>
+      <div id="lista-caidos"></div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+var API="https://script.google.com/macros/s/AKfycbzEBGvNsGP4Bdz2EvLEXKX0QHjpZBoO8vv5O6RPAe2DG2TasObkxSCx8cmnCXN7-qah/exec";
+var usuarios=[], usuarioActual=null;
+
+function fmtPeso(n){
+  if(n>=1000000000)return '$'+(n/1000000000).toFixed(2).replace('.',',')+'B';
+  if(n>=1000000)return '$'+(n/1000000).toFixed(1).replace('.',',')+'M';
+  return '$'+Math.round(n).toLocaleString('es-AR');
+}
+
+window.onload=function(){
+  fetch(API+'?action=getDashboardUsers')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      usuarios=data;
+      var sel=document.getElementById('sel-usuario');
+      sel.innerHTML='<option value="">— Seleccioná tu nombre —</option>';
+      usuarios.forEach(function(u){
+        var opt=document.createElement('option');
+        opt.value=String(u.id);opt.textContent=u.nombre;
+        sel.appendChild(opt);
+      });
+      document.getElementById('login-loading').style.display='none';
+      document.getElementById('login-form').style.display='block';
+    })
+    .catch(function(){
+      document.getElementById('login-loading').innerHTML='<div class="error-msg">Error al cargar. Verificá tu conexión.</div>';
+    });
+};
+
+function hacerLogin(){
+  var userId=document.getElementById('sel-usuario').value;
+  var pass=document.getElementById('inp-password').value.trim();
+  var errEl=document.getElementById('login-error');
+  errEl.style.display='none';
+  if(!userId){errEl.textContent='Seleccioná tu nombre';errEl.style.display='block';return;}
+  if(!pass){errEl.textContent='Ingresá tu contraseña';errEl.style.display='block';return;}
+  var user=usuarios.find(function(u){return String(u.id)===userId;});
+  if(!user){errEl.textContent='Usuario no encontrado';errEl.style.display='block';return;}
+  if(String(user.password)!==String(pass)){errEl.textContent='Contraseña incorrecta';errEl.style.display='block';return;}
+  usuarioActual=user;
+  if(user.debeCambiar){
+    mostrarScreen('screen-cambio');
+  }else{
+    mostrarScreen('screen-dash');
+    document.getElementById('topbar-usuario').textContent=user.nombre;
+    cargarDashboard();
+  }
+}
+
+function cambiarPassword(){
+  var nueva=document.getElementById('inp-nueva').value.trim();
+  var confirma=document.getElementById('inp-confirma').value.trim();
+  var errEl=document.getElementById('cambio-error');
+  errEl.style.display='none';
+  if(nueva.length<6){errEl.textContent='La contraseña debe tener al menos 6 caracteres';errEl.style.display='block';return;}
+  if(nueva!==confirma){errEl.textContent='Las contraseñas no coinciden';errEl.style.display='block';return;}
+  fetch(API+'?action=cambiarPasswordDashboard',{
+    method:'POST',
+    body:JSON.stringify({id:usuarioActual.id,nuevaPassword:nueva})
+  })
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data.ok){
+        usuarioActual.password=nueva;
+        usuarioActual.debeCambiar=false;
+        mostrarScreen('screen-dash');
+        document.getElementById('topbar-usuario').textContent=usuarioActual.nombre;
+        cargarDashboard();
+      }else{
+        errEl.textContent='Error al guardar. Intentá de nuevo.';errEl.style.display='block';
+      }
+    })
+    .catch(function(){
+      errEl.textContent='Error de conexión';errEl.style.display='block';
+    });
+}
+
+function cargarDashboard(){
+  document.getElementById('dash-loading').style.display='block';
+  document.getElementById('dash-contenido').style.display='none';
+  fetch(API+'?action=getDashboardData')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d.ok)throw new Error('error');
+      renderDashboard(d);
+      document.getElementById('dash-loading').style.display='none';
+      document.getElementById('dash-contenido').style.display='block';
+    })
+    .catch(function(){
+      document.getElementById('dash-loading').innerHTML='<div class="error-msg">Error al cargar datos. <button class="btn-refresh" onclick="cargarDashboard()">Reintentar</button></div>';
+    });
+}
+
+function renderDashboard(d){
+  document.getElementById('txt-actualizacion').innerHTML='Actualizado: '+d.fechaActualizacion+'<button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button>';
+
+  // KPIs flota total
+  var totalOp=0,totalNop=0;
+  Object.values(d.estadoFlota).forEach(function(yac){
+    totalOp+=yac.operativos;
+    totalNop+=yac.caidos;
+  });
+  var total=totalOp+totalNop;
+  var pctOp=total>0?Math.round(totalOp/total*100):0;
+
+  document.getElementById('kpi-grid').innerHTML=
+    '<div class="kpi-card kpi-verde"><div class="kpi-label">Operativos</div><div class="kpi-val">'+totalOp+'</div><div class="kpi-sub">equipos en campo</div></div>'+
+    '<div class="kpi-card kpi-rojo"><div class="kpi-label">Fuera de servicio</div><div class="kpi-val">'+totalNop+'</div><div class="kpi-sub">equipos caídos</div></div>'+
+    '<div class="kpi-card kpi-azul"><div class="kpi-label">Total flota</div><div class="kpi-val">'+total+'</div><div class="kpi-sub">equipos activos</div></div>'+
+    '<div class="kpi-card '+(pctOp>=80?'kpi-verde':pctOp>=60?'':'kpi-rojo')+'"><div class="kpi-label">Operatividad</div><div class="kpi-val">'+pctOp+'%</div><div class="kpi-sub">del período</div></div>';
+
+  // Objetivo
+  var pct=Math.min(Math.round(d.acumulado/d.objetivo*100),100);
+  var pctReal=Math.round(d.acumulado/d.objetivo*100);
+  var estadoBadge=pctReal>=90?'badge-bien':pctReal>=70?'badge-riesgo':'badge-bajo';
+  var estadoTxt=pctReal>=90?'En objetivo':pctReal>=70?'En riesgo':'Por debajo';
+  var barraClass=pctReal>=90?'':pctReal>=70?'riesgo':'bajo';
+  document.getElementById('objetivo-card').innerHTML=
+    '<div class="objetivo-header">'+
+      '<div><div class="objetivo-titulo">Acumulado período</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">'+d.periodoDesde+' → '+d.periodoHasta+'</div></div>'+
+      '<span class="objetivo-badge '+estadoBadge+'">'+estadoTxt+'</span>'+
+    '</div>'+
+    '<div class="objetivo-montos">'+
+      '<div class="objetivo-monto-item"><div class="objetivo-monto-label">Acumulado</div><div class="objetivo-monto-val acum">'+fmtPeso(d.acumulado)+'</div></div>'+
+      '<div class="objetivo-monto-item"><div class="objetivo-monto-label">Objetivo</div><div class="objetivo-monto-val">'+fmtPeso(d.objetivo)+'</div></div>'+
+    '</div>'+
+    '<div class="barra-wrap"><div class="barra-fill '+barraClass+'" style="width:'+pct+'%"></div></div>'+
+    '<div class="barra-pct">'+pctReal+'% del objetivo</div>';
+
+  // Yacimientos
+  var YACS=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez'];
+  var yacHtml='';
+  YACS.forEach(function(nombre){
+    var info=d.estadoFlota[nombre];
+    if(info){
+      var clase=info.caidos===0?'verde':info.operativos===0?'rojo':'';
+      var dotClass=info.caidos===0?'dot-verde':info.operativos===0?'dot-rojo':'dot-gris';
+      yacHtml+=
+        '<div class="yac-card '+clase+'">'+
+          '<div class="yac-header"><div class="yac-dot '+dotClass+'"></div><div class="yac-nombre">'+nombre+'</div></div>'+
+          '<div class="yac-stats">'+
+            '<div class="yac-stat"><div class="yac-stat-val op">'+info.operativos+'</div><div class="yac-stat-label">Operativos</div></div>'+
+            '<div class="yac-stat"><div class="yac-stat-val nop">'+info.caidos+'</div><div class="yac-stat-label">Caídos</div></div>'+
+          '</div>'+
+          '<div class="yac-fecha">Parte: '+info.fecha+'</div>'+
+        '</div>';
+    }else{
+      yacHtml+=
+        '<div class="yac-card gris">'+
+          '<div class="yac-header"><div class="yac-dot dot-gris"></div><div class="yac-nombre">'+nombre+'</div></div>'+
+          '<div style="font-size:12px;color:var(--muted);margin-top:4px;">Sin partes cargados</div>'+
+        '</div>';
+    }
+  });
+  document.getElementById('yac-grid').innerHTML=yacHtml;
+
+  // Equipos caídos
+  var titulo=document.getElementById('titulo-caidos');
+  var lista=document.getElementById('lista-caidos');
+  if(!d.equiposCaidos||d.equiposCaidos.length===0){
+    titulo.style.display='none';
+    lista.innerHTML='<div style="background:white;border-radius:12px;padding:16px;text-align:center;color:var(--verde2);font-weight:700;font-size:14px;margin-bottom:14px;">✓ Sin equipos fuera de servicio</div>';
+  }else{
+    titulo.style.display='block';
+    lista.innerHTML=d.equiposCaidos.map(function(eq){
+      return '<div class="caido-item">'+
+        '<div class="caido-header">'+
+          '<div class="caido-interno">'+eq.interno+'</div>'+
+          '<span class="caido-dias">'+eq.diasCaido+(eq.diasCaido===1?' día':' días')+'</span>'+
+        '</div>'+
+        '<div class="caido-tipo">'+eq.tipo+'</div>'+
+        (eq.obs?'<div class="caido-obs">'+eq.obs+'</div>':'')+
+      '</div>';
+    }).join('');
+  }
+}
+
+function mostrarScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function salir(){
+  usuarioActual=null;
+  document.getElementById('inp-password').value='';
+  document.getElementById('sel-usuario').value='';
+  document.getElementById('login-error').style.display='none';
+  mostrarScreen('screen-login');
+}
+</script>
+</body>
+</html>
