@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TSB — Parte Diario</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#1e3070">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -710,6 +713,14 @@ function resetear(){
   document.getElementById('sel-yacimiento').value='';
   document.getElementById('sel-supervisor').innerHTML='<option value="">— Seleccioná tu nombre —</option>';
   mostrarScreen('screen-login');
+}
+</script>
+
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('/tsb-parte-diario/sw.js');
+  });
 }
 </script>
 </body>
