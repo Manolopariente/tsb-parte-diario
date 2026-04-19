@@ -76,13 +76,9 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .tc-fields label{font-size:10px;margin-bottom:4px;}
 .tc-fields input,.tc-fields select{margin-bottom:0;padding:9px 10px;font-size:14px;}
 .tc-resumen{font-size:12px;font-weight:700;color:var(--azul);margin-top:8px;text-align:center;background:white;border-radius:6px;padding:7px;display:none;}
-
-/* CUSTOM CHECKBOX — sin input nativo */
 .cchk{width:26px;height:26px;border:2.5px solid var(--borde);border-radius:6px;background:white;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
 .cchk.on{background:var(--azul);border-color:var(--azul);}
 .cchk.on::after{content:'✓';color:white;font-size:16px;font-weight:900;line-height:1;}
-
-/* ONCALL */
 .oncall-fila{display:flex;align-items:center;gap:14px;padding:14px 16px;background:white;border:1.5px solid var(--borde);border-radius:12px;margin-bottom:8px;cursor:pointer;user-select:none;}
 .oncall-fila-txt{font-size:14px;font-weight:700;color:var(--texto);flex:1;}
 .oncall-fila.on{border-color:var(--azul);background:#f0f4ff;}
@@ -95,7 +91,6 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .oncall-cant{display:none;align-items:center;gap:8px;padding:6px 16px 12px 70px;}
 .oncall-cant input{width:80px;margin:0;padding:9px 10px;font-size:15px;font-weight:700;text-align:center;border:1.5px solid var(--borde);border-radius:8px;background:white;}
 .oncall-unit{font-size:13px;font-weight:700;color:var(--muted);}
-
 .buscador{position:sticky;top:56px;background:var(--gris);padding:10px 16px;z-index:50;}
 .buscador input{margin:0;border-radius:12px;background:white;}
 .equipo-lista-item{background:white;border:1.5px solid var(--borde);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
@@ -193,16 +188,11 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
       <div id="lista-equipos"></div>
       <div class="divider"></div>
       <div class="seccion-titulo">Servicios adicionales</div>
-
-      <!-- Toggle principal — custom checkbox -->
       <div class="oncall-fila" id="fila-adicionales" onclick="toggleAdicionales()">
         <div class="cchk" id="cchk-adicionales"></div>
         <span class="oncall-fila-txt">¿Hubo servicios adicionales hoy?</span>
       </div>
-
-      <!-- Servicios -->
       <div id="oncall-detalle" class="oncall-detalle">
-
         <div class="oncall-item" id="item-carreton" onclick="toggleOncallSimple('carreton')">
           <div class="cchk" id="cchk-carreton"></div>
           <svg width="40" height="26" viewBox="0 0 130 70" style="flex-shrink:0;">
@@ -219,7 +209,6 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
           <span class="oncall-item-nombre">Camión carretón</span>
           <span class="oncall-item-tag">tarifa día</span>
         </div>
-
         <div class="oncall-item" id="item-hormigon" onclick="toggleOncallCantidad('hormigon','hormigonM3')">
           <div class="cchk" id="cchk-hormigon"></div>
           <svg width="40" height="26" viewBox="0 0 115 75" style="flex-shrink:0;">
@@ -245,7 +234,6 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
           <input type="number" min="0" step="0.1" placeholder="0" oninput="setOC('hormigonM3',parseFloat(this.value)||0)">
           <span class="oncall-unit">m³</span>
         </div>
-
         <div class="oncall-item" id="item-geomembrana" onclick="toggleOncallCantidad('geomembrana','geomembranaM2')">
           <div class="cchk" id="cchk-geomembrana"></div>
           <svg width="40" height="26" viewBox="0 0 90 90" style="flex-shrink:0;">
@@ -268,7 +256,6 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
           <input type="number" min="0" step="0.1" placeholder="0" oninput="setOC('geomembranaM2',parseFloat(this.value)||0)">
           <span class="oncall-unit">m²</span>
         </div>
-
         <div class="oncall-item" id="item-malla" onclick="toggleOncallCantidad('malla','mallaM2')" style="border-bottom:none;">
           <div class="cchk" id="cchk-malla"></div>
           <svg width="40" height="26" viewBox="0 0 90 80" style="flex-shrink:0;">
@@ -292,9 +279,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
           <input type="number" min="0" step="0.1" placeholder="0" oninput="setOC('mallaM2',parseFloat(this.value)||0)">
           <span class="oncall-unit">m²</span>
         </div>
-
       </div>
-
       <div class="divider"></div>
       <button class="btn btn-outline" onclick="irAgregarEquipo()">+ Agregar equipo</button>
       <button class="btn btn-success" onclick="guardarParte()">✓ CONFIRMAR Y GUARDAR PARTE</button>
@@ -340,7 +325,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 </div>
 
 <script>
-var API="https://script.google.com/macros/s/AKfycbwQgCyA8KOXYY9skrdCzZ7TW8Gck9mn6HZneJsOvm9iWGYknsqHOMdaR7eo9U42ysn4/exec";
+var API="https://script.google.com/macros/s/AKfycbwLBHuiJqt44qtnjP2DKn46uZiNnKWu88KfJR6FjUxsGG80bsX5RY1rejJW_Bsty_yA/exec";
 var supervisores=[],todosEquipos=[],equiposDelParte=[],supervisorActual=null,yacimientoActual="";
 var fechaGuardar="",fechaInput="";
 var onCallData={hayAdicionales:false,carreton:false,hormigonM3:0,geomembranaM2:0,mallaM2:0};
@@ -357,12 +342,7 @@ function hoyInput(){var h=new Date();return h.getFullYear()+'-'+String(h.getMont
 function inputToArgentina(v){var p=v.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
 function borradorKey(){return 'tsb_draft_'+yacimientoActual+'_'+fechaGuardar;}
 
-// CUSTOM CHECK helpers
-function setCchk(id,val){
-  var el=document.getElementById(id);
-  if(!el)return;
-  if(val){el.classList.add('on');}else{el.classList.remove('on');}
-}
+function setCchk(id,val){var el=document.getElementById(id);if(!el)return;if(val){el.classList.add('on');}else{el.classList.remove('on');}}
 
 function toggleAdicionales(){
   onCallData.hayAdicionales=!onCallData.hayAdicionales;
@@ -372,7 +352,6 @@ function toggleAdicionales(){
   document.getElementById('oncall-detalle').style.display=onCallData.hayAdicionales?'block':'none';
   autoguardar();
 }
-
 function toggleOncallSimple(tipo){
   onCallData[tipo]=!onCallData[tipo];
   setCchk('cchk-'+tipo,onCallData[tipo]);
@@ -380,7 +359,6 @@ function toggleOncallSimple(tipo){
   if(onCallData[tipo])item.classList.add('on');else item.classList.remove('on');
   autoguardar();
 }
-
 function toggleOncallCantidad(tipo,campo){
   var activo=!document.getElementById('cchk-'+tipo).classList.contains('on');
   setCchk('cchk-'+tipo,activo);
@@ -392,7 +370,6 @@ function toggleOncallCantidad(tipo,campo){
   else{setTimeout(function(){wrap.querySelector('input').focus();},150);}
   autoguardar();
 }
-
 function setOC(campo,val){onCallData[campo]=val;autoguardar();}
 
 function sincronizarOnCallUI(){
@@ -405,8 +382,7 @@ function sincronizarOnCallUI(){
   if(onCallData.carreton)itemC.classList.add('on');else itemC.classList.remove('on');
   var tipos={hormigon:'hormigonM3',geomembrana:'geomembranaM2',malla:'mallaM2'};
   Object.keys(tipos).forEach(function(t){
-    var campo=tipos[t];
-    var tiene=onCallData[campo]>0;
+    var campo=tipos[t];var tiene=onCallData[campo]>0;
     setCchk('cchk-'+t,tiene);
     var item=document.getElementById('item-'+t);
     if(tiene)item.classList.add('on');else item.classList.remove('on');
