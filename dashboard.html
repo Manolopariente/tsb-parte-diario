@@ -69,18 +69,14 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .barra-fill.bajo{background:linear-gradient(90deg,var(--rojo),#c62828);}
 .barra-pct{text-align:center;font-size:12px;font-weight:700;color:var(--muted);margin-top:6px;}
 .seccion-titulo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
-
-/* MAPA */
 .mapa-card{background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;}
-.mapa-titulo{padding:12px 16px 0;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
-#mapa{height:280px;width:100%;z-index:1;}
+#mapa{height:300px;width:100%;}
 .mapa-leyenda{display:flex;gap:16px;padding:10px 16px;border-top:1px solid var(--gris);}
 .leyenda-item{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted);}
 .leyenda-dot{width:12px;height:12px;border-radius:50%;}
 .leyenda-dot.verde{background:var(--verde2);}
 .leyenda-dot.rojo{background:var(--rojo);}
 .leyenda-dot.gris{background:#bbb;}
-
 .yac-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .yac-card{background:white;border-radius:12px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.06);border:2px solid var(--borde);}
 .yac-card.verde{border-color:#c5e89a;background:#f7fbf0;}
@@ -116,7 +112,6 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .loading{text-align:center;padding:40px 20px;color:var(--muted);}
 .spinner{width:36px;height:36px;border:3px solid var(--borde);border-top-color:var(--azul);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.divider{height:1px;background:var(--borde);margin:16px 0;}
 </style>
 </head>
 <body>
@@ -187,14 +182,8 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
     <div id="dash-loading" class="loading"><div class="spinner"></div>Cargando datos...</div>
     <div id="dash-contenido" style="display:none;">
       <div class="actualizacion" id="txt-actualizacion">Actualizado: —<button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button></div>
-
-      <!-- KPIs -->
       <div class="kpi-grid" id="kpi-grid"></div>
-
-      <!-- OBJETIVO -->
       <div class="objetivo-card" id="objetivo-card"></div>
-
-      <!-- MAPA -->
       <div class="seccion-titulo">Distribución de flota — Vaca Muerta</div>
       <div class="mapa-card">
         <div id="mapa"></div>
@@ -204,16 +193,10 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
           <div class="leyenda-item"><div class="leyenda-dot gris"></div>Sin parte</div>
         </div>
       </div>
-
-      <!-- COMPOSICION FLOTA -->
       <div class="seccion-titulo">Composición de flota en campo</div>
       <div class="flota-card" id="flota-card"></div>
-
-      <!-- YACIMIENTOS -->
       <div class="seccion-titulo">Estado por yacimiento</div>
       <div class="yac-grid" id="yac-grid"></div>
-
-      <!-- CAIDOS -->
       <div class="seccion-titulo" id="titulo-caidos">Equipos fuera de servicio</div>
       <div id="lista-caidos"></div>
     </div>
@@ -223,38 +206,32 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 var API="https://script.google.com/macros/s/AKfycbwTLk4xCkOaSBnDybUL-fapwSMrP0jQnYOp4urUEqUxiQtOiKJKQPvqbbKChrOnJdpm/exec";
-var usuarios=[],usuarioActual=null,mapaIniciado=false,mapaObj=null,marcadores=[];
+var usuarios=[],usuarioActual=null,mapaObj=null,marcadores=[];
+var dataDashboard=null;
 
 var YACIMIENTOS=[
-  {nombre:'Señal Picada',  lat:-37.6759, lng:-68.1397},
-  {nombre:'BDT - NAR',     lat:-37.3687, lng:-69.0378},
-  {nombre:'Puesto Hernandez', lat:-37.2863, lng:-69.0678},
-  {nombre:'Lomita',        lat:-37.3326, lng:-69.2146},
-  {nombre:'Obras',         lat:-37.2983, lng:-69.0611}
+  {nombre:'Señal Picada',     lat:-37.6759,lng:-68.1397},
+  {nombre:'BDT - NAR',        lat:-37.3687,lng:-69.0378},
+  {nombre:'Puesto Hernandez', lat:-37.2863,lng:-69.0678},
+  {nombre:'Lomita',           lat:-37.3326,lng:-69.2146},
+  {nombre:'Obras',            lat:-37.2983,lng:-69.0611}
 ];
 
 function iconoMapa(color){
-  var c=color==='verde'?'#6fa832':color==='rojo'?'#e53935':'#999';
-  var svg='<svg xmlns="http://www.w3.org/2000/svg" width="32" height="42" viewBox="0 0 32 42">'+
-    '<path d="M16 0C7.16 0 0 7.16 0 16c0 10.5 14 26 16 26S32 26.5 32 16C32 7.16 24.84 0 16 0z" fill="'+c+'"/>'+
-    '<circle cx="16" cy="16" r="7" fill="white"/>'+
+  var c=color==='verde'?'#6fa832':color==='rojo'?'#e53935':'#999999';
+  var svg='<svg xmlns="http://www.w3.org/2000/svg" width="28" height="38" viewBox="0 0 28 38">'+
+    '<path d="M14 0C6.27 0 0 6.27 0 14c0 9.19 12.25 22.75 14 22.75S28 23.19 28 14C28 6.27 21.73 0 14 0z" fill="'+c+'"/>'+
+    '<circle cx="14" cy="14" r="6" fill="white"/>'+
   '</svg>';
-  return L.divIcon({
-    html:svg,
-    iconSize:[32,42],
-    iconAnchor:[16,42],
-    popupAnchor:[0,-42],
-    className:''
-  });
+  return L.divIcon({html:svg,iconSize:[28,38],iconAnchor:[14,38],popupAnchor:[0,-38],className:''});
 }
 
 function iniciarMapa(){
-  if(mapaIniciado)return;
+  if(mapaObj)return;
   mapaObj=L.map('mapa',{zoomControl:true,scrollWheelZoom:false}).setView([-37.45,-68.9],9);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
     attribution:'© OpenStreetMap',maxZoom:18
   }).addTo(mapaObj);
-  mapaIniciado=true;
 }
 
 function actualizarMapa(estadoFlota){
@@ -266,18 +243,13 @@ function actualizarMapa(estadoFlota){
     var color='gris';
     var popupTxt='<b>'+yac.nombre+'</b><br>Sin partes cargados';
     if(info){
-      color=info.caidos===0?'verde':info.operativos===0?'rojo':'rojo';
-      popupTxt='<b>'+yac.nombre+'</b><br>'+
-        '🟢 Operativos: '+info.operativos+'<br>'+
-        '🔴 Caídos: '+info.caidos+'<br>'+
-        'Parte: '+info.fecha;
+      color=info.caidos===0?'verde':'rojo';
+      popupTxt='<b>'+yac.nombre+'</b><br>🟢 Operativos: '+info.operativos+'<br>🔴 Caídos: '+info.caidos+'<br><small>Parte: '+info.fecha+'</small>';
     }
-    var m=L.marker([yac.lat,yac.lng],{icon:iconoMapa(color)})
-      .addTo(mapaObj)
-      .bindPopup(popupTxt);
+    var m=L.marker([yac.lat,yac.lng],{icon:iconoMapa(color)}).addTo(mapaObj).bindPopup(popupTxt);
     marcadores.push(m);
   });
-  setTimeout(function(){mapaObj.invalidateSize();},200);
+  mapaObj.invalidateSize();
 }
 
 function fmtPeso(n){
@@ -318,7 +290,11 @@ function hacerLogin(){
   if(String(user.password)!==String(pass)){errEl.textContent='Contraseña incorrecta';errEl.style.display='block';return;}
   usuarioActual=user;
   if(user.debeCambiar){mostrarScreen('screen-cambio');}
-  else{mostrarScreen('screen-dash');document.getElementById('topbar-usuario').textContent=user.nombre;cargarDashboard();}
+  else{
+    mostrarScreen('screen-dash');
+    document.getElementById('topbar-usuario').textContent=user.nombre;
+    cargarDashboard();
+  }
 }
 
 function cambiarPassword(){
@@ -326,7 +302,7 @@ function cambiarPassword(){
   var confirma=document.getElementById('inp-confirma').value.trim();
   var errEl=document.getElementById('cambio-error');
   errEl.style.display='none';
-  if(nueva.length<6){errEl.textContent='La contraseña debe tener al menos 6 caracteres';errEl.style.display='block';return;}
+  if(nueva.length<6){errEl.textContent='Mínimo 6 caracteres';errEl.style.display='block';return;}
   if(nueva!==confirma){errEl.textContent='Las contraseñas no coinciden';errEl.style.display='block';return;}
   fetch(API+'?action=cambiarPasswordDashboard',{method:'POST',body:JSON.stringify({id:usuarioActual.id,nuevaPassword:nueva})})
     .then(function(r){return r.json();})
@@ -348,11 +324,14 @@ function cargarDashboard(){
     .then(function(r){return r.json();})
     .then(function(d){
       if(!d.ok)throw new Error('error');
+      dataDashboard=d;
       renderDashboard(d);
       document.getElementById('dash-loading').style.display='none';
       document.getElementById('dash-contenido').style.display='block';
-      iniciarMapa();
-      actualizarMapa(d.estadoFlota);
+      setTimeout(function(){
+        iniciarMapa();
+        actualizarMapa(d.estadoFlota);
+      },400);
     })
     .catch(function(){
       document.getElementById('dash-loading').innerHTML='<div class="error-msg">Error al cargar datos. <button class="btn-refresh" onclick="cargarDashboard()">Reintentar</button></div>';
