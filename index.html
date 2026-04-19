@@ -20,9 +20,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .login-titulo{color:white;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;opacity:0.9;margin-top:12px;}
 .login-subtitulo{color:rgba(255,255,255,0.55);font-size:11px;margin-top:4px;letter-spacing:1px;}
 .login-card{background:rgba(255,255,255,0.97);border-radius:16px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.45);}
-.login-card-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:20px;text-align:center;letter-spacing:0.5px;}
-.btn-dashboard-acceso{display:block;text-align:center;margin-top:16px;padding:13px;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.35);border-radius:12px;color:white;font-size:13px;font-weight:700;letter-spacing:0.5px;text-decoration:none;transition:background .2s;}
-.btn-dashboard-acceso:hover{background:rgba(255,255,255,0.2);}
+.login-card-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:20px;text-align:center;}
+.btn-dashboard-acceso{display:block;text-align:center;margin-top:16px;padding:13px;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.35);border-radius:12px;color:white;font-size:13px;font-weight:700;text-decoration:none;}
 .topbar{background:var(--azul);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.25);}
 .topbar img{height:28px;filter:brightness(0) invert(1);}
 .topbar-info{text-align:right;}
@@ -77,19 +76,24 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .tc-fields label{font-size:10px;margin-bottom:4px;}
 .tc-fields input,.tc-fields select{margin-bottom:0;padding:9px 10px;font-size:14px;}
 .tc-resumen{font-size:12px;font-weight:700;color:var(--azul);margin-top:8px;text-align:center;background:white;border-radius:6px;padding:7px;display:none;}
-.oncall-label-row{display:flex;align-items:center;gap:12px;padding:14px 16px;background:white;border:1.5px solid var(--borde);border-radius:12px;margin-bottom:8px;cursor:pointer;user-select:none;}
-.oncall-label-row input[type=checkbox]{width:22px;height:22px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;}
-.oncall-label-row span{font-size:14px;font-weight:700;color:var(--texto);flex:1;}
-.oncall-detalle{background:white;border:1.5px solid var(--borde);border-radius:12px;overflow:hidden;margin-bottom:8px;display:none;}
-.oncall-item-label{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid var(--gris);cursor:pointer;user-select:none;width:100%;gap:12px;}
-.oncall-item-label:last-child{border-bottom:none;}
-.oncall-item-label input[type=checkbox]{width:22px;height:22px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;}
-.oncall-icono{width:36px;height:24px;flex-shrink:0;}
-.oncall-item-label span.nombre{font-size:14px;font-weight:600;color:var(--texto);flex:1;}
-.oncall-item-tag{font-size:11px;font-weight:600;color:var(--muted);background:var(--gris);padding:3px 8px;border-radius:20px;white-space:nowrap;}
-.oncall-cant{display:none;align-items:center;gap:6px;padding:4px 16px 12px 90px;}
+
+/* ONCALL — sin label wrapping, todo por JS */
+.oncall-fila{display:flex;align-items:center;gap:12px;padding:14px 16px;background:white;border:1.5px solid var(--borde);border-radius:12px;margin-bottom:8px;cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,0.05);}
+.oncall-fila:active{background:var(--gris);}
+.oncall-chk{width:24px;height:24px;accent-color:var(--azul);pointer-events:none;flex-shrink:0;}
+.oncall-fila-label{font-size:14px;font-weight:700;color:var(--texto);flex:1;pointer-events:none;}
+.oncall-detalle{background:white;border:1.5px solid var(--borde);border-radius:12px;margin-bottom:8px;display:none;overflow:hidden;}
+.oncall-item{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--gris);cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,0.05);}
+.oncall-item:last-child{border-bottom:none;}
+.oncall-item:active{background:var(--gris);}
+.oncall-item-chk{width:24px;height:24px;accent-color:var(--azul);pointer-events:none;flex-shrink:0;}
+.oncall-item svg{pointer-events:none;flex-shrink:0;}
+.oncall-item-nombre{font-size:14px;font-weight:600;color:var(--texto);flex:1;pointer-events:none;}
+.oncall-item-tag{font-size:11px;font-weight:600;color:var(--muted);background:var(--gris);padding:3px 8px;border-radius:20px;pointer-events:none;}
+.oncall-cant{display:none;align-items:center;gap:8px;padding:6px 16px 12px 64px;}
 .oncall-cant input{width:80px;margin:0;padding:9px 10px;font-size:15px;font-weight:700;text-align:center;border:1.5px solid var(--borde);border-radius:8px;background:white;}
 .oncall-unit{font-size:12px;font-weight:700;color:var(--muted);}
+
 .buscador{position:sticky;top:56px;background:var(--gris);padding:10px 16px;z-index:50;}
 .buscador input{margin:0;border-radius:12px;background:white;}
 .equipo-lista-item{background:white;border:1.5px solid var(--borde);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
@@ -97,7 +101,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .confirm-icon{text-align:center;font-size:72px;margin:24px 0 16px;}
 .confirm-titulo{text-align:center;font-size:24px;font-weight:800;color:var(--azul);margin-bottom:8px;}
 .confirm-sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:8px;}
-.confirm-estado-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:0.5px;margin-bottom:20px;}
+.confirm-estado-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:20px;}
 .badge-ok{background:#e8f5e9;color:#2e7d32;}
 .badge-pendiente{background:#fff8e1;color:#f57f17;}
 .confirm-card{background:white;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
@@ -110,70 +114,6 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 </style>
 </head>
 <body>
-
-<!-- SVG ICONOS REUTILIZABLES -->
-<svg style="display:none">
-  <symbol id="ico-carreton" viewBox="0 0 130 70">
-    <rect x="0" y="42" width="130" height="14" rx="2" fill="#1e3070"/>
-    <rect x="0" y="14" width="30" height="30" rx="3" fill="#1e3070"/>
-    <rect x="4" y="18" width="20" height="12" rx="2" fill="#6fa832"/>
-    <rect x="28" y="34" width="102" height="10" rx="1" fill="#2a4090"/>
-    <rect x="55" y="18" width="42" height="17" rx="3" fill="#8dc63f"/>
-    <rect x="63" y="10" width="20" height="10" rx="2" fill="#6fa832"/>
-    <circle cx="16" cy="58" r="9" fill="#222"/><circle cx="16" cy="58" r="4" fill="#888"/>
-    <circle cx="65" cy="58" r="9" fill="#222"/><circle cx="65" cy="58" r="4" fill="#888"/>
-    <circle cx="108" cy="58" r="9" fill="#222"/><circle cx="108" cy="58" r="4" fill="#888"/>
-  </symbol>
-  <symbol id="ico-hormigon" viewBox="0 0 115 75">
-    <rect x="0" y="50" width="110" height="14" rx="2" fill="#1e3070"/>
-    <rect x="0" y="22" width="30" height="30" rx="3" fill="#1e3070"/>
-    <rect x="4" y="26" width="20" height="12" rx="2" fill="#6fa832"/>
-    <rect x="28" y="42" width="82" height="10" rx="1" fill="#2a4090"/>
-    <ellipse cx="45" cy="34" rx="10" ry="18" fill="#777"/>
-    <rect x="45" y="16" width="40" height="36" rx="2" fill="#888"/>
-    <ellipse cx="85" cy="34" rx="10" ry="18" fill="#999"/>
-    <line x1="45" y1="22" x2="85" y2="22" stroke="#aaa" stroke-width="1.2"/>
-    <line x1="45" y1="30" x2="85" y2="30" stroke="#aaa" stroke-width="1.2"/>
-    <line x1="45" y1="38" x2="85" y2="38" stroke="#aaa" stroke-width="1.2"/>
-    <line x1="45" y1="46" x2="85" y2="46" stroke="#aaa" stroke-width="1.2"/>
-    <polygon points="85,20 100,34 85,48" fill="#666"/>
-    <rect x="50" y="50" width="8" height="6" rx="1" fill="#666"/>
-    <rect x="72" y="50" width="8" height="6" rx="1" fill="#666"/>
-    <circle cx="15" cy="66" r="8" fill="#222"/><circle cx="15" cy="66" r="3" fill="#888"/>
-    <circle cx="80" cy="66" r="8" fill="#222"/><circle cx="80" cy="66" r="3" fill="#888"/>
-    <circle cx="100" cy="66" r="8" fill="#222"/><circle cx="100" cy="66" r="3" fill="#888"/>
-  </symbol>
-  <symbol id="ico-geomembrana" viewBox="0 0 90 90">
-    <ellipse cx="16" cy="45" rx="16" ry="40" fill="#222"/>
-    <ellipse cx="16" cy="45" rx="9" ry="30" fill="#444"/>
-    <ellipse cx="16" cy="45" rx="4" ry="14" fill="#666"/>
-    <rect x="16" y="5" width="55" height="80" rx="1" fill="#2a2a2a"/>
-    <ellipse cx="71" cy="45" rx="16" ry="40" fill="#333"/>
-    <ellipse cx="71" cy="45" rx="9" ry="30" fill="#4a4a4a"/>
-    <line x1="16" y1="18" x2="71" y2="18" stroke="#555" stroke-width="1.2"/>
-    <line x1="16" y1="30" x2="71" y2="30" stroke="#555" stroke-width="1.2"/>
-    <line x1="16" y1="42" x2="71" y2="42" stroke="#555" stroke-width="1.2"/>
-    <line x1="16" y1="54" x2="71" y2="54" stroke="#555" stroke-width="1.2"/>
-    <line x1="16" y1="66" x2="71" y2="66" stroke="#555" stroke-width="1.2"/>
-    <line x1="16" y1="78" x2="71" y2="78" stroke="#555" stroke-width="1.2"/>
-  </symbol>
-  <symbol id="ico-malla" viewBox="0 0 90 80">
-    <rect x="0" y="10" width="90" height="60" rx="4" fill="none" stroke="#1e3070" stroke-width="2"/>
-    <line x1="18" y1="10" x2="18" y2="70" stroke="#1e3070" stroke-width="1.5"/>
-    <line x1="36" y1="10" x2="36" y2="70" stroke="#1e3070" stroke-width="1.5"/>
-    <line x1="54" y1="10" x2="54" y2="70" stroke="#1e3070" stroke-width="1.5"/>
-    <line x1="72" y1="10" x2="72" y2="70" stroke="#1e3070" stroke-width="1.5"/>
-    <line x1="0" y1="27" x2="90" y2="27" stroke="#1e3070" stroke-width="1.5"/>
-    <line x1="0" y1="44" x2="90" y2="44" stroke="#1e3070" stroke-width="1.5"/>
-    <line x1="0" y1="61" x2="90" y2="61" stroke="#1e3070" stroke-width="1.5"/>
-    <ellipse cx="45" cy="38" rx="8" ry="6" fill="#8dc63f"/>
-    <circle cx="51" cy="33" r="4" fill="#8dc63f"/>
-    <polygon points="54,32 58,33 54,35" fill="#e0a020"/>
-    <circle cx="53" cy="32" r="1" fill="#333"/>
-    <path d="M38 37 Q42 30 48 36" fill="#6fa832"/>
-    <path d="M37 40 Q33 42 36 45" fill="none" stroke="#6fa832" stroke-width="2"/>
-  </symbol>
-</svg>
 
 <!-- LOGIN -->
 <div id="screen-login" class="screen active">
@@ -208,7 +148,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
           <button class="btn btn-primary" onclick="hacerLogin()">INGRESAR AL SISTEMA</button>
         </div>
       </div>
-      <a href="dashboard.html" class="btn-dashboard-acceso">📊 Acceso Dashboard Gerencial</a>
+      <a href="dashboard.html" class="btn-dashboard-acceso">📊 Acceso Gerencial</a>
     </div>
   </div>
 </div>
@@ -252,41 +192,96 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
       <div class="divider"></div>
       <div class="seccion-titulo">Servicios adicionales</div>
 
-      <label class="oncall-label-row">
-        <input type="checkbox" id="chk-adicionales" onchange="onAdicionalesChange(this.checked)">
-        <span>¿Hubo servicios adicionales hoy?</span>
-      </label>
+      <!-- Toggle principal -->
+      <div class="oncall-fila" onclick="toggleAdicionales()">
+        <input type="checkbox" class="oncall-chk" id="chk-adicionales">
+        <span class="oncall-fila-label">¿Hubo servicios adicionales hoy?</span>
+      </div>
 
+      <!-- Servicios -->
       <div id="oncall-detalle" class="oncall-detalle">
-        <label class="oncall-item-label">
-          <input type="checkbox" id="chk-carreton" onchange="onCarreton(this.checked)">
-          <svg class="oncall-icono" viewBox="0 0 130 70"><use href="#ico-carreton"/></svg>
-          <span class="nombre">Camión carretón</span>
+        <div class="oncall-item" onclick="toggleOncallSimple('carreton')">
+          <input type="checkbox" class="oncall-item-chk" id="chk-carreton">
+          <svg width="36" height="24" viewBox="0 0 130 70">
+            <rect x="0" y="42" width="130" height="14" rx="2" fill="#1e3070"/>
+            <rect x="0" y="14" width="30" height="30" rx="3" fill="#1e3070"/>
+            <rect x="4" y="18" width="20" height="12" rx="2" fill="#6fa832"/>
+            <rect x="28" y="34" width="102" height="10" rx="1" fill="#2a4090"/>
+            <rect x="55" y="18" width="42" height="17" rx="3" fill="#8dc63f"/>
+            <rect x="63" y="10" width="20" height="10" rx="2" fill="#6fa832"/>
+            <circle cx="16" cy="58" r="9" fill="#222"/><circle cx="16" cy="58" r="4" fill="#888"/>
+            <circle cx="65" cy="58" r="9" fill="#222"/><circle cx="65" cy="58" r="4" fill="#888"/>
+            <circle cx="108" cy="58" r="9" fill="#222"/><circle cx="108" cy="58" r="4" fill="#888"/>
+          </svg>
+          <span class="oncall-item-nombre">Camión carretón</span>
           <span class="oncall-item-tag">tarifa día</span>
-        </label>
-        <label class="oncall-item-label">
-          <input type="checkbox" id="chk-hormigon" onchange="onOncallItem('hormigon','hormigonM3',this.checked)">
-          <svg class="oncall-icono" viewBox="0 0 115 75"><use href="#ico-hormigon"/></svg>
-          <span class="nombre">Hormigón</span>
-        </label>
+        </div>
+        <div class="oncall-item" onclick="toggleOncallCantidad('hormigon','hormigonM3')">
+          <input type="checkbox" class="oncall-item-chk" id="chk-hormigon">
+          <svg width="36" height="24" viewBox="0 0 115 75">
+            <rect x="0" y="50" width="110" height="14" rx="2" fill="#1e3070"/>
+            <rect x="0" y="22" width="30" height="30" rx="3" fill="#1e3070"/>
+            <rect x="4" y="26" width="20" height="12" rx="2" fill="#6fa832"/>
+            <rect x="28" y="42" width="82" height="10" rx="1" fill="#2a4090"/>
+            <ellipse cx="45" cy="34" rx="10" ry="18" fill="#777"/>
+            <rect x="45" y="16" width="40" height="36" rx="2" fill="#888"/>
+            <ellipse cx="85" cy="34" rx="10" ry="18" fill="#999"/>
+            <line x1="45" y1="22" x2="85" y2="22" stroke="#aaa" stroke-width="1.2"/>
+            <line x1="45" y1="30" x2="85" y2="30" stroke="#aaa" stroke-width="1.2"/>
+            <line x1="45" y1="38" x2="85" y2="38" stroke="#aaa" stroke-width="1.2"/>
+            <line x1="45" y1="46" x2="85" y2="46" stroke="#aaa" stroke-width="1.2"/>
+            <polygon points="85,20 100,34 85,48" fill="#666"/>
+            <circle cx="15" cy="66" r="8" fill="#222"/><circle cx="15" cy="66" r="3" fill="#888"/>
+            <circle cx="80" cy="66" r="8" fill="#222"/><circle cx="80" cy="66" r="3" fill="#888"/>
+            <circle cx="100" cy="66" r="8" fill="#222"/><circle cx="100" cy="66" r="3" fill="#888"/>
+          </svg>
+          <span class="oncall-item-nombre">Hormigón</span>
+        </div>
         <div class="oncall-cant" id="wrap-hormigon">
           <input type="number" min="0" step="0.1" placeholder="0" oninput="setOnCallCantidad('hormigonM3',parseFloat(this.value)||0)">
           <span class="oncall-unit">m³</span>
         </div>
-        <label class="oncall-item-label">
-          <input type="checkbox" id="chk-geomembrana" onchange="onOncallItem('geomembrana','geomembranaM2',this.checked)">
-          <svg class="oncall-icono" viewBox="0 0 90 90"><use href="#ico-geomembrana"/></svg>
-          <span class="nombre">Geomembrana</span>
-        </label>
+        <div class="oncall-item" onclick="toggleOncallCantidad('geomembrana','geomembranaM2')">
+          <input type="checkbox" class="oncall-item-chk" id="chk-geomembrana">
+          <svg width="36" height="24" viewBox="0 0 90 90">
+            <ellipse cx="16" cy="45" rx="16" ry="40" fill="#222"/>
+            <ellipse cx="16" cy="45" rx="9" ry="30" fill="#444"/>
+            <ellipse cx="16" cy="45" rx="4" ry="14" fill="#666"/>
+            <rect x="16" y="5" width="55" height="80" rx="1" fill="#2a2a2a"/>
+            <ellipse cx="71" cy="45" rx="16" ry="40" fill="#333"/>
+            <ellipse cx="71" cy="45" rx="9" ry="30" fill="#4a4a4a"/>
+            <line x1="16" y1="18" x2="71" y2="18" stroke="#555" stroke-width="1.2"/>
+            <line x1="16" y1="30" x2="71" y2="30" stroke="#555" stroke-width="1.2"/>
+            <line x1="16" y1="42" x2="71" y2="42" stroke="#555" stroke-width="1.2"/>
+            <line x1="16" y1="54" x2="71" y2="54" stroke="#555" stroke-width="1.2"/>
+            <line x1="16" y1="66" x2="71" y2="66" stroke="#555" stroke-width="1.2"/>
+            <line x1="16" y1="78" x2="71" y2="78" stroke="#555" stroke-width="1.2"/>
+          </svg>
+          <span class="oncall-item-nombre">Geomembrana</span>
+        </div>
         <div class="oncall-cant" id="wrap-geomembrana">
           <input type="number" min="0" step="0.1" placeholder="0" oninput="setOnCallCantidad('geomembranaM2',parseFloat(this.value)||0)">
           <span class="oncall-unit">m²</span>
         </div>
-        <label class="oncall-item-label" style="border-bottom:none;">
-          <input type="checkbox" id="chk-malla" onchange="onOncallItem('malla','mallaM2',this.checked)">
-          <svg class="oncall-icono" viewBox="0 0 90 80"><use href="#ico-malla"/></svg>
-          <span class="nombre">Malla antiaves</span>
-        </label>
+        <div class="oncall-item" onclick="toggleOncallCantidad('malla','mallaM2')" style="border-bottom:none;">
+          <input type="checkbox" class="oncall-item-chk" id="chk-malla">
+          <svg width="36" height="24" viewBox="0 0 90 80">
+            <rect x="0" y="10" width="90" height="60" rx="4" fill="none" stroke="#1e3070" stroke-width="2"/>
+            <line x1="18" y1="10" x2="18" y2="70" stroke="#1e3070" stroke-width="1.5"/>
+            <line x1="36" y1="10" x2="36" y2="70" stroke="#1e3070" stroke-width="1.5"/>
+            <line x1="54" y1="10" x2="54" y2="70" stroke="#1e3070" stroke-width="1.5"/>
+            <line x1="72" y1="10" x2="72" y2="70" stroke="#1e3070" stroke-width="1.5"/>
+            <line x1="0" y1="27" x2="90" y2="27" stroke="#1e3070" stroke-width="1.5"/>
+            <line x1="0" y1="44" x2="90" y2="44" stroke="#1e3070" stroke-width="1.5"/>
+            <line x1="0" y1="61" x2="90" y2="61" stroke="#1e3070" stroke-width="1.5"/>
+            <ellipse cx="45" cy="38" rx="8" ry="6" fill="#8dc63f"/>
+            <circle cx="51" cy="33" r="4" fill="#8dc63f"/>
+            <polygon points="54,32 58,33 54,35" fill="#e0a020"/>
+            <circle cx="53" cy="32" r="1" fill="#333"/>
+            <path d="M38 37 Q42 30 48 36" fill="#6fa832"/>
+          </svg>
+          <span class="oncall-item-nombre">Malla antiaves</span>
+        </div>
         <div class="oncall-cant" id="wrap-malla">
           <input type="number" min="0" step="0.1" placeholder="0" oninput="setOnCallCantidad('mallaM2',parseFloat(this.value)||0)">
           <span class="oncall-unit">m²</span>
@@ -311,7 +306,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
     <button class="btn-salir" onclick="volverAlParte()">← Volver</button>
   </div>
   <div class="buscador">
-    <input type="search" id="inp-buscar" placeholder="🔍  1448, TRACTOR, PICK UP..." oninput="filtrarEquipos()">
+    <input type="search" id="inp-buscar" placeholder="🔍  Interno o tipo..." oninput="filtrarEquipos()">
   </div>
   <div class="contenido" style="padding-top:8px;">
     <div id="lista-todos-equipos"></div>
@@ -355,19 +350,30 @@ function hoyInput(){var h=new Date();return h.getFullYear()+'-'+String(h.getMont
 function inputToArgentina(v){var p=v.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
 function borradorKey(){return 'tsb_draft_'+yacimientoActual+'_'+fechaGuardar;}
 
-function onAdicionalesChange(checked){
-  onCallData.hayAdicionales=checked;
-  document.getElementById('oncall-detalle').style.display=checked?'block':'none';
+function toggleAdicionales(){
+  onCallData.hayAdicionales=!onCallData.hayAdicionales;
+  document.getElementById('chk-adicionales').checked=onCallData.hayAdicionales;
+  document.getElementById('oncall-detalle').style.display=onCallData.hayAdicionales?'block':'none';
   autoguardar();
 }
-function onCarreton(checked){onCallData.carreton=checked;autoguardar();}
-function onOncallItem(tipo,campo,checked){
+
+function toggleOncallSimple(tipo){
+  onCallData[tipo]=!onCallData[tipo];
+  document.getElementById('chk-'+tipo).checked=onCallData[tipo];
+  autoguardar();
+}
+
+function toggleOncallCantidad(tipo,campo){
+  var chk=document.getElementById('chk-'+tipo);
   var wrap=document.getElementById('wrap-'+tipo);
-  wrap.style.display=checked?'flex':'none';
-  if(!checked){onCallData[campo]=0;wrap.querySelector('input').value='';}
+  var activo=!chk.checked;
+  chk.checked=activo;
+  wrap.style.display=activo?'flex':'none';
+  if(!activo){onCallData[campo]=0;wrap.querySelector('input').value='';}
   else{setTimeout(function(){wrap.querySelector('input').focus();},150);}
   autoguardar();
 }
+
 function setOnCallCantidad(campo,val){onCallData[campo]=val;autoguardar();}
 
 function sincronizarOnCallUI(){
