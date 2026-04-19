@@ -209,7 +209,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-var API="https://script.google.com/macros/s/AKfycbwIjRIEJLep3drC_nSIvsJNogQZuI1Y79eTu-P0LfDo-ZmsnDHxZ3iLTQPJ57dAIAEg/exec";
+var API="https://script.google.com/macros/s/AKfycbyq5XbVf5nSf4p3XOm0aSaJc27XfRIxmdWus3Rd_POT-GBoqeEBVdjd2kSB8GWYFi8v/exec";
 var usuarios=[],usuarioActual=null,mapaObj=null,marcadores=[];
 
 var YACIMIENTOS=[
@@ -423,7 +423,7 @@ function renderDashboard(d){
             '</div>'+
           '</div>'+
           '<div class="yac-meta">'+
-            '<span class="yac-supervisor">👤 '+( info.supervisor||'—')+'</span>'+
+            '<span class="yac-supervisor">👤 '+(info.supervisor||'—')+'</span>'+
             '<span class="yac-fecha">'+info.fecha+'</span>'+
           '</div>'+
           '<div class="yac-flota">'+chipsHtml+'</div>'+
