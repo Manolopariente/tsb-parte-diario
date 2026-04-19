@@ -77,22 +77,24 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .tc-fields input,.tc-fields select{margin-bottom:0;padding:9px 10px;font-size:14px;}
 .tc-resumen{font-size:12px;font-weight:700;color:var(--azul);margin-top:8px;text-align:center;background:white;border-radius:6px;padding:7px;display:none;}
 
-/* ONCALL — sin label wrapping, todo por JS */
-.oncall-fila{display:flex;align-items:center;gap:12px;padding:14px 16px;background:white;border:1.5px solid var(--borde);border-radius:12px;margin-bottom:8px;cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,0.05);}
-.oncall-fila:active{background:var(--gris);}
-.oncall-chk{width:24px;height:24px;accent-color:var(--azul);pointer-events:none;flex-shrink:0;}
-.oncall-fila-label{font-size:14px;font-weight:700;color:var(--texto);flex:1;pointer-events:none;}
+/* CUSTOM CHECKBOX — sin input nativo */
+.cchk{width:26px;height:26px;border:2.5px solid var(--borde);border-radius:6px;background:white;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.cchk.on{background:var(--azul);border-color:var(--azul);}
+.cchk.on::after{content:'✓';color:white;font-size:16px;font-weight:900;line-height:1;}
+
+/* ONCALL */
+.oncall-fila{display:flex;align-items:center;gap:14px;padding:14px 16px;background:white;border:1.5px solid var(--borde);border-radius:12px;margin-bottom:8px;cursor:pointer;user-select:none;}
+.oncall-fila-txt{font-size:14px;font-weight:700;color:var(--texto);flex:1;}
+.oncall-fila.on{border-color:var(--azul);background:#f0f4ff;}
 .oncall-detalle{background:white;border:1.5px solid var(--borde);border-radius:12px;margin-bottom:8px;display:none;overflow:hidden;}
-.oncall-item{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--gris);cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,0.05);}
+.oncall-item{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid var(--gris);cursor:pointer;user-select:none;}
 .oncall-item:last-child{border-bottom:none;}
-.oncall-item:active{background:var(--gris);}
-.oncall-item-chk{width:24px;height:24px;accent-color:var(--azul);pointer-events:none;flex-shrink:0;}
-.oncall-item svg{pointer-events:none;flex-shrink:0;}
-.oncall-item-nombre{font-size:14px;font-weight:600;color:var(--texto);flex:1;pointer-events:none;}
-.oncall-item-tag{font-size:11px;font-weight:600;color:var(--muted);background:var(--gris);padding:3px 8px;border-radius:20px;pointer-events:none;}
-.oncall-cant{display:none;align-items:center;gap:8px;padding:6px 16px 12px 64px;}
+.oncall-item.on{background:#f7fbf0;}
+.oncall-item-nombre{font-size:14px;font-weight:600;color:var(--texto);flex:1;}
+.oncall-item-tag{font-size:11px;font-weight:600;color:var(--muted);background:var(--gris);padding:3px 8px;border-radius:20px;}
+.oncall-cant{display:none;align-items:center;gap:8px;padding:6px 16px 12px 70px;}
 .oncall-cant input{width:80px;margin:0;padding:9px 10px;font-size:15px;font-weight:700;text-align:center;border:1.5px solid var(--borde);border-radius:8px;background:white;}
-.oncall-unit{font-size:12px;font-weight:700;color:var(--muted);}
+.oncall-unit{font-size:13px;font-weight:700;color:var(--muted);}
 
 .buscador{position:sticky;top:56px;background:var(--gris);padding:10px 16px;z-index:50;}
 .buscador input{margin:0;border-radius:12px;background:white;}
@@ -192,17 +194,18 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
       <div class="divider"></div>
       <div class="seccion-titulo">Servicios adicionales</div>
 
-      <!-- Toggle principal -->
-      <div class="oncall-fila" onclick="toggleAdicionales()">
-        <input type="checkbox" class="oncall-chk" id="chk-adicionales">
-        <span class="oncall-fila-label">¿Hubo servicios adicionales hoy?</span>
+      <!-- Toggle principal — custom checkbox -->
+      <div class="oncall-fila" id="fila-adicionales" onclick="toggleAdicionales()">
+        <div class="cchk" id="cchk-adicionales"></div>
+        <span class="oncall-fila-txt">¿Hubo servicios adicionales hoy?</span>
       </div>
 
       <!-- Servicios -->
       <div id="oncall-detalle" class="oncall-detalle">
-        <div class="oncall-item" onclick="toggleOncallSimple('carreton')">
-          <input type="checkbox" class="oncall-item-chk" id="chk-carreton">
-          <svg width="36" height="24" viewBox="0 0 130 70">
+
+        <div class="oncall-item" id="item-carreton" onclick="toggleOncallSimple('carreton')">
+          <div class="cchk" id="cchk-carreton"></div>
+          <svg width="40" height="26" viewBox="0 0 130 70" style="flex-shrink:0;">
             <rect x="0" y="42" width="130" height="14" rx="2" fill="#1e3070"/>
             <rect x="0" y="14" width="30" height="30" rx="3" fill="#1e3070"/>
             <rect x="4" y="18" width="20" height="12" rx="2" fill="#6fa832"/>
@@ -216,9 +219,10 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
           <span class="oncall-item-nombre">Camión carretón</span>
           <span class="oncall-item-tag">tarifa día</span>
         </div>
-        <div class="oncall-item" onclick="toggleOncallCantidad('hormigon','hormigonM3')">
-          <input type="checkbox" class="oncall-item-chk" id="chk-hormigon">
-          <svg width="36" height="24" viewBox="0 0 115 75">
+
+        <div class="oncall-item" id="item-hormigon" onclick="toggleOncallCantidad('hormigon','hormigonM3')">
+          <div class="cchk" id="cchk-hormigon"></div>
+          <svg width="40" height="26" viewBox="0 0 115 75" style="flex-shrink:0;">
             <rect x="0" y="50" width="110" height="14" rx="2" fill="#1e3070"/>
             <rect x="0" y="22" width="30" height="30" rx="3" fill="#1e3070"/>
             <rect x="4" y="26" width="20" height="12" rx="2" fill="#6fa832"/>
@@ -238,12 +242,13 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
           <span class="oncall-item-nombre">Hormigón</span>
         </div>
         <div class="oncall-cant" id="wrap-hormigon">
-          <input type="number" min="0" step="0.1" placeholder="0" oninput="setOnCallCantidad('hormigonM3',parseFloat(this.value)||0)">
+          <input type="number" min="0" step="0.1" placeholder="0" oninput="setOC('hormigonM3',parseFloat(this.value)||0)">
           <span class="oncall-unit">m³</span>
         </div>
-        <div class="oncall-item" onclick="toggleOncallCantidad('geomembrana','geomembranaM2')">
-          <input type="checkbox" class="oncall-item-chk" id="chk-geomembrana">
-          <svg width="36" height="24" viewBox="0 0 90 90">
+
+        <div class="oncall-item" id="item-geomembrana" onclick="toggleOncallCantidad('geomembrana','geomembranaM2')">
+          <div class="cchk" id="cchk-geomembrana"></div>
+          <svg width="40" height="26" viewBox="0 0 90 90" style="flex-shrink:0;">
             <ellipse cx="16" cy="45" rx="16" ry="40" fill="#222"/>
             <ellipse cx="16" cy="45" rx="9" ry="30" fill="#444"/>
             <ellipse cx="16" cy="45" rx="4" ry="14" fill="#666"/>
@@ -260,12 +265,13 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
           <span class="oncall-item-nombre">Geomembrana</span>
         </div>
         <div class="oncall-cant" id="wrap-geomembrana">
-          <input type="number" min="0" step="0.1" placeholder="0" oninput="setOnCallCantidad('geomembranaM2',parseFloat(this.value)||0)">
+          <input type="number" min="0" step="0.1" placeholder="0" oninput="setOC('geomembranaM2',parseFloat(this.value)||0)">
           <span class="oncall-unit">m²</span>
         </div>
-        <div class="oncall-item" onclick="toggleOncallCantidad('malla','mallaM2')" style="border-bottom:none;">
-          <input type="checkbox" class="oncall-item-chk" id="chk-malla">
-          <svg width="36" height="24" viewBox="0 0 90 80">
+
+        <div class="oncall-item" id="item-malla" onclick="toggleOncallCantidad('malla','mallaM2')" style="border-bottom:none;">
+          <div class="cchk" id="cchk-malla"></div>
+          <svg width="40" height="26" viewBox="0 0 90 80" style="flex-shrink:0;">
             <rect x="0" y="10" width="90" height="60" rx="4" fill="none" stroke="#1e3070" stroke-width="2"/>
             <line x1="18" y1="10" x2="18" y2="70" stroke="#1e3070" stroke-width="1.5"/>
             <line x1="36" y1="10" x2="36" y2="70" stroke="#1e3070" stroke-width="1.5"/>
@@ -283,9 +289,10 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
           <span class="oncall-item-nombre">Malla antiaves</span>
         </div>
         <div class="oncall-cant" id="wrap-malla">
-          <input type="number" min="0" step="0.1" placeholder="0" oninput="setOnCallCantidad('mallaM2',parseFloat(this.value)||0)">
+          <input type="number" min="0" step="0.1" placeholder="0" oninput="setOC('mallaM2',parseFloat(this.value)||0)">
           <span class="oncall-unit">m²</span>
         </div>
+
       </div>
 
       <div class="divider"></div>
@@ -350,43 +357,61 @@ function hoyInput(){var h=new Date();return h.getFullYear()+'-'+String(h.getMont
 function inputToArgentina(v){var p=v.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
 function borradorKey(){return 'tsb_draft_'+yacimientoActual+'_'+fechaGuardar;}
 
+// CUSTOM CHECK helpers
+function setCchk(id,val){
+  var el=document.getElementById(id);
+  if(!el)return;
+  if(val){el.classList.add('on');}else{el.classList.remove('on');}
+}
+
 function toggleAdicionales(){
   onCallData.hayAdicionales=!onCallData.hayAdicionales;
-  document.getElementById('chk-adicionales').checked=onCallData.hayAdicionales;
+  setCchk('cchk-adicionales',onCallData.hayAdicionales);
+  var fila=document.getElementById('fila-adicionales');
+  if(onCallData.hayAdicionales)fila.classList.add('on');else fila.classList.remove('on');
   document.getElementById('oncall-detalle').style.display=onCallData.hayAdicionales?'block':'none';
   autoguardar();
 }
 
 function toggleOncallSimple(tipo){
   onCallData[tipo]=!onCallData[tipo];
-  document.getElementById('chk-'+tipo).checked=onCallData[tipo];
+  setCchk('cchk-'+tipo,onCallData[tipo]);
+  var item=document.getElementById('item-'+tipo);
+  if(onCallData[tipo])item.classList.add('on');else item.classList.remove('on');
   autoguardar();
 }
 
 function toggleOncallCantidad(tipo,campo){
-  var chk=document.getElementById('chk-'+tipo);
+  var activo=!document.getElementById('cchk-'+tipo).classList.contains('on');
+  setCchk('cchk-'+tipo,activo);
+  var item=document.getElementById('item-'+tipo);
+  if(activo)item.classList.add('on');else item.classList.remove('on');
   var wrap=document.getElementById('wrap-'+tipo);
-  var activo=!chk.checked;
-  chk.checked=activo;
   wrap.style.display=activo?'flex':'none';
   if(!activo){onCallData[campo]=0;wrap.querySelector('input').value='';}
   else{setTimeout(function(){wrap.querySelector('input').focus();},150);}
   autoguardar();
 }
 
-function setOnCallCantidad(campo,val){onCallData[campo]=val;autoguardar();}
+function setOC(campo,val){onCallData[campo]=val;autoguardar();}
 
 function sincronizarOnCallUI(){
-  document.getElementById('chk-adicionales').checked=onCallData.hayAdicionales;
+  setCchk('cchk-adicionales',onCallData.hayAdicionales);
+  var fila=document.getElementById('fila-adicionales');
+  if(onCallData.hayAdicionales)fila.classList.add('on');else fila.classList.remove('on');
   document.getElementById('oncall-detalle').style.display=onCallData.hayAdicionales?'block':'none';
-  document.getElementById('chk-carreton').checked=onCallData.carreton;
+  setCchk('cchk-carreton',onCallData.carreton);
+  var itemC=document.getElementById('item-carreton');
+  if(onCallData.carreton)itemC.classList.add('on');else itemC.classList.remove('on');
   var tipos={hormigon:'hormigonM3',geomembrana:'geomembranaM2',malla:'mallaM2'};
   Object.keys(tipos).forEach(function(t){
     var campo=tipos[t];
-    var chk=document.getElementById('chk-'+t);
-    var wrap=document.getElementById('wrap-'+t);
     var tiene=onCallData[campo]>0;
-    chk.checked=tiene;wrap.style.display=tiene?'flex':'none';
+    setCchk('cchk-'+t,tiene);
+    var item=document.getElementById('item-'+t);
+    if(tiene)item.classList.add('on');else item.classList.remove('on');
+    var wrap=document.getElementById('wrap-'+t);
+    wrap.style.display=tiene?'flex':'none';
     if(tiene)wrap.querySelector('input').value=onCallData[campo];
   });
 }
@@ -444,8 +469,9 @@ function irAlParte(){
   inp.value=fechaInput;inp.max=hoyInput();
   document.getElementById('aviso-retro').style.display='none';
   document.getElementById('borrador-banner').style.display='none';
-  document.getElementById('chk-adicionales').checked=false;
   document.getElementById('oncall-detalle').style.display='none';
+  setCchk('cchk-adicionales',false);
+  document.getElementById('fila-adicionales').classList.remove('on');
   document.getElementById('topbar-info').textContent=supervisorActual.nombre;
   document.getElementById('banner-yacimiento').textContent=yacimientoActual;
   document.getElementById('banner-supervisor').textContent=supervisorActual.nombre;
