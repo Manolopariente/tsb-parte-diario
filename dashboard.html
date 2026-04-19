@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TSB — Dashboard Gerencial</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -33,7 +34,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .cambio-card{background:rgba(255,255,255,0.97);border-radius:16px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.45);}
 .cambio-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:8px;text-align:center;}
 .cambio-sub{font-size:13px;color:var(--muted);margin-bottom:20px;text-align:center;}
-.topbar{background:var(--azul);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.25);}
+.topbar{background:var(--azul);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,0.25);}
 .topbar img{height:28px;filter:brightness(0) invert(1);}
 .topbar-info{text-align:right;}
 .topbar-title{color:white;font-size:13px;font-weight:700;letter-spacing:1px;}
@@ -68,11 +69,22 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .barra-fill.bajo{background:linear-gradient(90deg,var(--rojo),#c62828);}
 .barra-pct{text-align:center;font-size:12px;font-weight:700;color:var(--muted);margin-top:6px;}
 .seccion-titulo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+
+/* MAPA */
+.mapa-card{background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;}
+.mapa-titulo{padding:12px 16px 0;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+#mapa{height:280px;width:100%;z-index:1;}
+.mapa-leyenda{display:flex;gap:16px;padding:10px 16px;border-top:1px solid var(--gris);}
+.leyenda-item{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted);}
+.leyenda-dot{width:12px;height:12px;border-radius:50%;}
+.leyenda-dot.verde{background:var(--verde2);}
+.leyenda-dot.rojo{background:var(--rojo);}
+.leyenda-dot.gris{background:#bbb;}
+
 .yac-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .yac-card{background:white;border-radius:12px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.06);border:2px solid var(--borde);}
 .yac-card.verde{border-color:#c5e89a;background:#f7fbf0;}
 .yac-card.rojo{border-color:#ffbdbd;background:#fff5f5;}
-.yac-card.gris{border-color:var(--borde);background:white;}
 .yac-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 .yac-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
 .dot-verde{background:var(--verde2);}
@@ -86,7 +98,6 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .yac-stat-val.nop{color:var(--rojo);}
 .yac-stat-label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
 .yac-fecha{font-size:10px;color:var(--muted);margin-top:6px;}
-/* COMPOSICION FLOTA */
 .flota-card{background:white;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;}
 .flota-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gris);}
 .flota-row:last-child{border-bottom:none;}
@@ -96,7 +107,6 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .chip{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;}
 .chip-op{background:#e8f5e9;color:#2e7d32;}
 .chip-nop{background:#ffebee;color:var(--rojo);}
-/* CAIDOS */
 .caido-item{background:white;border-radius:12px;padding:14px;margin-bottom:8px;box-shadow:0 2px 6px rgba(0,0,0,0.06);border-left:4px solid var(--rojo);}
 .caido-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
 .caido-interno{font-size:18px;font-weight:900;color:var(--azul);}
@@ -177,26 +187,103 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
     <div id="dash-loading" class="loading"><div class="spinner"></div>Cargando datos...</div>
     <div id="dash-contenido" style="display:none;">
       <div class="actualizacion" id="txt-actualizacion">Actualizado: —<button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button></div>
+
+      <!-- KPIs -->
       <div class="kpi-grid" id="kpi-grid"></div>
+
+      <!-- OBJETIVO -->
       <div class="objetivo-card" id="objetivo-card"></div>
+
+      <!-- MAPA -->
+      <div class="seccion-titulo">Distribución de flota — Vaca Muerta</div>
+      <div class="mapa-card">
+        <div id="mapa"></div>
+        <div class="mapa-leyenda">
+          <div class="leyenda-item"><div class="leyenda-dot verde"></div>Operativo</div>
+          <div class="leyenda-item"><div class="leyenda-dot rojo"></div>Fuera de servicio</div>
+          <div class="leyenda-item"><div class="leyenda-dot gris"></div>Sin parte</div>
+        </div>
+      </div>
+
+      <!-- COMPOSICION FLOTA -->
       <div class="seccion-titulo">Composición de flota en campo</div>
       <div class="flota-card" id="flota-card"></div>
+
+      <!-- YACIMIENTOS -->
       <div class="seccion-titulo">Estado por yacimiento</div>
       <div class="yac-grid" id="yac-grid"></div>
+
+      <!-- CAIDOS -->
       <div class="seccion-titulo" id="titulo-caidos">Equipos fuera de servicio</div>
       <div id="lista-caidos"></div>
     </div>
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 var API="https://script.google.com/macros/s/AKfycbwTLk4xCkOaSBnDybUL-fapwSMrP0jQnYOp4urUEqUxiQtOiKJKQPvqbbKChrOnJdpm/exec";
-var usuarios=[],usuarioActual=null;
+var usuarios=[],usuarioActual=null,mapaIniciado=false,mapaObj=null,marcadores=[];
+
+var YACIMIENTOS=[
+  {nombre:'Señal Picada',  lat:-37.6759, lng:-68.1397},
+  {nombre:'BDT - NAR',     lat:-37.3687, lng:-69.0378},
+  {nombre:'Puesto Hernandez', lat:-37.2863, lng:-69.0678},
+  {nombre:'Lomita',        lat:-37.3326, lng:-69.2146},
+  {nombre:'Obras',         lat:-37.2983, lng:-69.0611}
+];
+
+function iconoMapa(color){
+  var c=color==='verde'?'#6fa832':color==='rojo'?'#e53935':'#999';
+  var svg='<svg xmlns="http://www.w3.org/2000/svg" width="32" height="42" viewBox="0 0 32 42">'+
+    '<path d="M16 0C7.16 0 0 7.16 0 16c0 10.5 14 26 16 26S32 26.5 32 16C32 7.16 24.84 0 16 0z" fill="'+c+'"/>'+
+    '<circle cx="16" cy="16" r="7" fill="white"/>'+
+  '</svg>';
+  return L.divIcon({
+    html:svg,
+    iconSize:[32,42],
+    iconAnchor:[16,42],
+    popupAnchor:[0,-42],
+    className:''
+  });
+}
+
+function iniciarMapa(){
+  if(mapaIniciado)return;
+  mapaObj=L.map('mapa',{zoomControl:true,scrollWheelZoom:false}).setView([-37.45,-68.9],9);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'© OpenStreetMap',maxZoom:18
+  }).addTo(mapaObj);
+  mapaIniciado=true;
+}
+
+function actualizarMapa(estadoFlota){
+  if(!mapaObj)return;
+  marcadores.forEach(function(m){mapaObj.removeLayer(m);});
+  marcadores=[];
+  YACIMIENTOS.forEach(function(yac){
+    var info=estadoFlota[yac.nombre];
+    var color='gris';
+    var popupTxt='<b>'+yac.nombre+'</b><br>Sin partes cargados';
+    if(info){
+      color=info.caidos===0?'verde':info.operativos===0?'rojo':'rojo';
+      popupTxt='<b>'+yac.nombre+'</b><br>'+
+        '🟢 Operativos: '+info.operativos+'<br>'+
+        '🔴 Caídos: '+info.caidos+'<br>'+
+        'Parte: '+info.fecha;
+    }
+    var m=L.marker([yac.lat,yac.lng],{icon:iconoMapa(color)})
+      .addTo(mapaObj)
+      .bindPopup(popupTxt);
+    marcadores.push(m);
+  });
+  setTimeout(function(){mapaObj.invalidateSize();},200);
+}
 
 function fmtPeso(n){
-  if(n>=1000000000)return '$'+(n/1000000000).toFixed(2).replace('.',',')+'B';
-  if(n>=1000000)return '$'+(n/1000000).toFixed(1).replace('.',',')+'M';
-  return '$'+Math.round(n).toLocaleString('es-AR');
+  if(n>=1000000000)return'$'+(n/1000000000).toFixed(2).replace('.',',')+'B';
+  if(n>=1000000)return'$'+(n/1000000).toFixed(1).replace('.',',')+'M';
+  return'$'+Math.round(n).toLocaleString('es-AR');
 }
 
 window.onload=function(){
@@ -264,6 +351,8 @@ function cargarDashboard(){
       renderDashboard(d);
       document.getElementById('dash-loading').style.display='none';
       document.getElementById('dash-contenido').style.display='block';
+      iniciarMapa();
+      actualizarMapa(d.estadoFlota);
     })
     .catch(function(){
       document.getElementById('dash-loading').innerHTML='<div class="error-msg">Error al cargar datos. <button class="btn-refresh" onclick="cargarDashboard()">Reintentar</button></div>';
@@ -273,7 +362,6 @@ function cargarDashboard(){
 function renderDashboard(d){
   document.getElementById('txt-actualizacion').innerHTML='Actualizado: '+d.fechaActualizacion+'<button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button>';
 
-  // KPIs
   var totalOp=0,totalNop=0;
   Object.values(d.estadoFlota).forEach(function(yac){totalOp+=yac.operativos;totalNop+=yac.caidos;});
   var total=totalOp+totalNop;
@@ -284,7 +372,6 @@ function renderDashboard(d){
     '<div class="kpi-card kpi-azul"><div class="kpi-label">Total flota</div><div class="kpi-val">'+total+'</div><div class="kpi-sub">equipos en campo</div></div>'+
     '<div class="kpi-card '+(pctOp>=80?'kpi-verde':pctOp>=60?'kpi-azul':'kpi-rojo')+'"><div class="kpi-label">Operatividad</div><div class="kpi-val">'+pctOp+'%</div><div class="kpi-sub">del total</div></div>';
 
-  // Objetivo
   var pctReal=Math.round(d.acumulado/d.objetivo*100);
   var pct=Math.min(pctReal,100);
   var estadoBadge=pctReal>=90?'badge-bien':pctReal>=70?'badge-riesgo':'badge-bajo';
@@ -302,28 +389,6 @@ function renderDashboard(d){
     '<div class="barra-wrap"><div class="barra-fill '+barraClass+'" style="width:'+pct+'%"></div></div>'+
     '<div class="barra-pct">'+pctReal+'% del objetivo</div>';
 
-  // Composición de flota
-  var flotaMap={};
-  d.equiposCaidos.forEach(function(eq){
-    var tipo=limpiarTipo(eq.tipo);
-    if(!flotaMap[tipo])flotaMap[tipo]={total:0,op:0,nop:0};
-    flotaMap[tipo].total++;flotaMap[tipo].nop++;
-  });
-  Object.values(d.estadoFlota).forEach(function(yac){
-    yac.equipos&&yac.equipos.forEach&&yac.equipos.forEach(function(eq){
-      var tipo=limpiarTipo(eq.tipo);
-      if(!flotaMap[tipo])flotaMap[tipo]={total:0,op:0,nop:0};
-      flotaMap[tipo].total++;
-      if(eq.estado==='Operativo')flotaMap[tipo].op++;else flotaMap[tipo].nop++;
-    });
-  });
-  // Armarlo desde estadoFlota que sí tiene equipos
-  var flotaMap2={};
-  if(d.flotaPorTipo){
-    d.flotaPorTipo.forEach(function(f){
-      flotaMap2[f.tipo]={total:f.total,op:f.op,nop:f.nop};
-    });
-  }
   var flotaHtml='';
   if(d.flotaPorTipo&&d.flotaPorTipo.length>0){
     d.flotaPorTipo.forEach(function(f){
@@ -342,7 +407,6 @@ function renderDashboard(d){
   }
   document.getElementById('flota-card').innerHTML=flotaHtml;
 
-  // Yacimientos
   var YACS=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez'];
   var yacHtml='';
   YACS.forEach(function(nombre){
@@ -360,12 +424,11 @@ function renderDashboard(d){
           '<div class="yac-fecha">Parte: '+info.fecha+'</div>'+
         '</div>';
     }else{
-      yacHtml+='<div class="yac-card gris"><div class="yac-header"><div class="yac-dot dot-gris"></div><div class="yac-nombre">'+nombre+'</div></div><div style="font-size:12px;color:var(--muted);margin-top:4px;">Sin partes cargados</div></div>';
+      yacHtml+='<div class="yac-card"><div class="yac-header"><div class="yac-dot dot-gris"></div><div class="yac-nombre">'+nombre+'</div></div><div style="font-size:12px;color:var(--muted);margin-top:4px;">Sin partes cargados</div></div>';
     }
   });
   document.getElementById('yac-grid').innerHTML=yacHtml;
 
-  // Equipos caídos
   var titulo=document.getElementById('titulo-caidos');
   var lista=document.getElementById('lista-caidos');
   if(!d.equiposCaidos||d.equiposCaidos.length===0){
@@ -381,11 +444,6 @@ function renderDashboard(d){
       '</div>';
     }).join('');
   }
-}
-
-function limpiarTipo(tipo){
-  if(!tipo)return'Sin tipo';
-  return tipo.replace(/^TARIFA [AC] /i,'').replace(/\[.*\]/,'').trim();
 }
 
 function mostrarScreen(id){
