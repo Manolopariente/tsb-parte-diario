@@ -21,7 +21,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .login-subtitulo{color:rgba(255,255,255,0.55);font-size:11px;margin-top:4px;letter-spacing:1px;}
 .login-card{background:rgba(255,255,255,0.97);border-radius:16px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.45);}
 .login-card-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:20px;text-align:center;letter-spacing:0.5px;}
-.btn-dashboard-acceso{display:block;text-align:center;margin-top:16px;padding:13px;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.35);border-radius:12px;color:white;font-size:13px;font-weight:700;letter-spacing:0.5px;text-decoration:none;cursor:pointer;transition:background .2s;}
+.btn-dashboard-acceso{display:block;text-align:center;margin-top:16px;padding:13px;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.35);border-radius:12px;color:white;font-size:13px;font-weight:700;letter-spacing:0.5px;text-decoration:none;transition:background .2s;}
 .btn-dashboard-acceso:hover{background:rgba(255,255,255,0.2);}
 .topbar{background:var(--azul);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.25);}
 .topbar img{height:28px;filter:brightness(0) invert(1);}
@@ -31,7 +31,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn-salir{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;}
 .contenido{padding:16px;max-width:500px;margin:auto;}
 .info-banner{background:linear-gradient(135deg,var(--azul),var(--azul2));border-radius:14px;padding:16px 20px;margin-bottom:12px;color:white;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 12px rgba(30,48,112,0.3);}
-.info-banner-data h3{font-size:20px;font-weight:800;letter-spacing:0.5px;}
+.info-banner-data h3{font-size:20px;font-weight:800;}
 .info-banner-data p{font-size:12px;opacity:0.75;margin-top:3px;}
 .info-banner-fecha{text-align:right;font-size:12px;opacity:0.85;line-height:1.6;}
 .fecha-parte-wrap{background:white;border:1.5px solid var(--borde);border-radius:12px;padding:12px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;}
@@ -67,7 +67,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .toggle-btn.active-nop{background:var(--rojo);color:white;}
 .obs-input{width:100%;padding:10px 12px;border:1.5px solid var(--borde);border-radius:8px;font-size:14px;resize:none;font-family:inherit;color:var(--texto);}
 .btn-quitar{background:none;border:none;color:#bbb;font-size:12px;cursor:pointer;margin-top:6px;padding:0;font-weight:500;}
-.tarifa-c-wrap{margin:8px 0 8px;display:none;}
+.tarifa-c-wrap{margin:8px 0;display:none;}
 .tc-check-row{display:flex;align-items:center;gap:8px;}
 .tc-check-row input[type=checkbox]{width:17px;height:17px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;}
 .tc-check-label{font-size:13px;font-weight:700;color:var(--azul);text-transform:uppercase;letter-spacing:0.5px;cursor:pointer;}
@@ -77,18 +77,16 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .tc-fields label{font-size:10px;margin-bottom:4px;}
 .tc-fields input,.tc-fields select{margin-bottom:0;padding:9px 10px;font-size:14px;}
 .tc-resumen{font-size:12px;font-weight:700;color:var(--azul);margin-top:8px;text-align:center;background:white;border-radius:6px;padding:7px;display:none;}
-/* ONCALL MEJORADO */
+/* ONCALL */
 .oncall-header{display:flex;align-items:center;gap:12px;padding:14px 16px;background:white;border:1.5px solid var(--borde);border-radius:12px;margin-bottom:8px;cursor:pointer;user-select:none;}
-.oncall-header:active{opacity:0.85;}
 .oncall-chk-big{width:22px;height:22px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;}
 .oncall-header-label{font-size:14px;font-weight:700;color:var(--texto);flex:1;}
-.oncall-detalle{background:white;border:1.5px solid var(--borde);border-radius:12px;padding:8px 0;margin-bottom:8px;display:none;overflow:hidden;}
-.oncall-item{display:flex;align-items:center;gap:0;padding:12px 16px;border-bottom:1px solid var(--gris);cursor:pointer;user-select:none;transition:background .15s;}
+.oncall-detalle{background:white;border:1.5px solid var(--borde);border-radius:12px;overflow:hidden;margin-bottom:8px;display:none;}
+.oncall-item{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid var(--gris);gap:12px;}
 .oncall-item:last-child{border-bottom:none;}
-.oncall-item:active{background:var(--gris);}
-.oncall-item-chk{width:22px;height:22px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;margin-right:12px;pointer-events:none;}
-.oncall-item-label{font-size:14px;font-weight:600;color:var(--texto);flex:1;}
-.oncall-item-tag{font-size:11px;font-weight:600;color:var(--muted);background:var(--gris);padding:3px 8px;border-radius:20px;margin-right:8px;}
+.oncall-item input[type=checkbox]{width:22px;height:22px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;}
+.oncall-item-label{font-size:14px;font-weight:600;color:var(--texto);flex:1;cursor:pointer;}
+.oncall-item-tag{font-size:11px;font-weight:600;color:var(--muted);background:var(--gris);padding:3px 8px;border-radius:20px;}
 .oncall-cant{display:none;align-items:center;gap:6px;}
 .oncall-cant input{width:75px;margin:0;padding:9px 10px;font-size:15px;font-weight:700;text-align:center;border:1.5px solid var(--borde);border-radius:8px;background:white;}
 .oncall-unit{font-size:12px;font-weight:700;color:var(--muted);}
@@ -96,11 +94,10 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .buscador input{margin:0;border-radius:12px;background:white;}
 .equipo-lista-item{background:white;border:1.5px solid var(--borde);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
 .btn-agregar-eq{background:var(--azul);color:white;border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;}
-/* CONFIRMACION MEJORADA */
 .confirm-icon{text-align:center;font-size:72px;margin:24px 0 16px;}
 .confirm-titulo{text-align:center;font-size:24px;font-weight:800;color:var(--azul);margin-bottom:8px;}
 .confirm-sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:8px;}
-.confirm-estado-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:0.5px;margin:0 auto 20px;text-align:center;}
+.confirm-estado-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:0.5px;margin-bottom:20px;}
 .badge-ok{background:#e8f5e9;color:#2e7d32;}
 .badge-pendiente{background:#fff8e1;color:#f57f17;}
 .confirm-card{background:white;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
@@ -191,40 +188,38 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
       <div class="divider"></div>
       <div class="seccion-titulo">Servicios adicionales</div>
 
-      <!-- Toggle principal adicionales -->
       <div class="oncall-header" onclick="toggleAdicionales()">
-        <input type="checkbox" class="oncall-chk-big" id="chk-adicionales" onclick="event.stopPropagation()">
+        <input type="checkbox" class="oncall-chk-big" id="chk-adicionales" onclick="event.stopPropagation();toggleAdicionales()">
         <span class="oncall-header-label">¿Hubo servicios adicionales hoy?</span>
       </div>
 
-      <!-- Lista adicionales -->
       <div id="oncall-detalle" class="oncall-detalle">
-        <div class="oncall-item" onclick="toggleCarreton()">
-          <input type="checkbox" class="oncall-item-chk" id="chk-carreton">
-          <span class="oncall-item-label">🚚 Camión carretón</span>
+        <div class="oncall-item">
+          <input type="checkbox" id="chk-carreton" onchange="onCarreton(this.checked)">
+          <span class="oncall-item-label" onclick="document.getElementById('chk-carreton').click()">🚚 Camión carretón</span>
           <span class="oncall-item-tag">tarifa día</span>
         </div>
-        <div class="oncall-item" onclick="toggleOncallItem('hormigon', event)">
-          <input type="checkbox" class="oncall-item-chk" id="chk-hormigon">
-          <span class="oncall-item-label">🪨 Hormigón</span>
+        <div class="oncall-item">
+          <input type="checkbox" id="chk-hormigon" onchange="onOncallItem('hormigon','hormigonM3',this.checked)">
+          <span class="oncall-item-label" onclick="document.getElementById('chk-hormigon').click()">🪨 Hormigón</span>
           <div class="oncall-cant" id="wrap-hormigon">
-            <input type="number" min="0" step="0.1" placeholder="0" onclick="event.stopPropagation()" oninput="setOnCallCantidad('hormigonM3', parseFloat(this.value)||0)">
+            <input type="number" min="0" step="0.1" placeholder="0" oninput="setOnCallCantidad('hormigonM3',parseFloat(this.value)||0)" onclick="event.stopPropagation()">
             <span class="oncall-unit">m³</span>
           </div>
         </div>
-        <div class="oncall-item" onclick="toggleOncallItem('geomembrana', event)">
-          <input type="checkbox" class="oncall-item-chk" id="chk-geomembrana">
-          <span class="oncall-item-label">🟦 Geomembrana</span>
+        <div class="oncall-item">
+          <input type="checkbox" id="chk-geomembrana" onchange="onOncallItem('geomembrana','geomembranaM2',this.checked)">
+          <span class="oncall-item-label" onclick="document.getElementById('chk-geomembrana').click()">🟦 Geomembrana</span>
           <div class="oncall-cant" id="wrap-geomembrana">
-            <input type="number" min="0" step="0.1" placeholder="0" onclick="event.stopPropagation()" oninput="setOnCallCantidad('geomembranaM2', parseFloat(this.value)||0)">
+            <input type="number" min="0" step="0.1" placeholder="0" oninput="setOnCallCantidad('geomembranaM2',parseFloat(this.value)||0)" onclick="event.stopPropagation()">
             <span class="oncall-unit">m²</span>
           </div>
         </div>
-        <div class="oncall-item" onclick="toggleOncallItem('malla', event)">
-          <input type="checkbox" class="oncall-item-chk" id="chk-malla">
-          <span class="oncall-item-label">🕸️ Malla antiaves</span>
+        <div class="oncall-item">
+          <input type="checkbox" id="chk-malla" onchange="onOncallItem('malla','mallaM2',this.checked)">
+          <span class="oncall-item-label" onclick="document.getElementById('chk-malla').click()">🕸️ Malla antiaves</span>
           <div class="oncall-cant" id="wrap-malla">
-            <input type="number" min="0" step="0.1" placeholder="0" onclick="event.stopPropagation()" oninput="setOnCallCantidad('mallaM2', parseFloat(this.value)||0)">
+            <input type="number" min="0" step="0.1" placeholder="0" oninput="setOnCallCantidad('mallaM2',parseFloat(this.value)||0)" onclick="event.stopPropagation()">
             <span class="oncall-unit">m²</span>
           </div>
         </div>
@@ -280,6 +275,7 @@ var supervisores=[],todosEquipos=[],equiposDelParte=[],supervisorActual=null,yac
 var fechaGuardar="",fechaInput="";
 var onCallData={hayAdicionales:false,carreton:false,hormigonM3:0,geomembranaM2:0,mallaM2:0};
 var borradorPendiente=null;
+var _toggleAdicionalesActivo=false;
 var MOTIVOS_TC=['Viento','Lluvia','Corte de ruta','Asamblea','VTV','Control médico','Renovación de licencia','Otro'];
 
 function fechaArgentina(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();}
@@ -292,33 +288,33 @@ function hoyInput(){var h=new Date();return h.getFullYear()+'-'+String(h.getMont
 function inputToArgentina(v){var p=v.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
 function borradorKey(){return 'tsb_draft_'+yacimientoActual+'_'+fechaGuardar;}
 
-// ONCALL
 function toggleAdicionales(){
+  if(_toggleAdicionalesActivo)return;
+  _toggleAdicionalesActivo=true;
+  setTimeout(function(){_toggleAdicionalesActivo=false;},100);
   onCallData.hayAdicionales=!onCallData.hayAdicionales;
   document.getElementById('chk-adicionales').checked=onCallData.hayAdicionales;
   document.getElementById('oncall-detalle').style.display=onCallData.hayAdicionales?'block':'none';
   autoguardar();
 }
-function toggleCarreton(){
-  onCallData.carreton=!onCallData.carreton;
-  document.getElementById('chk-carreton').checked=onCallData.carreton;
+
+function onCarreton(checked){
+  onCallData.carreton=checked;
   autoguardar();
 }
-function toggleOncallItem(tipo,event){
-  var chk=document.getElementById('chk-'+tipo);
+
+function onOncallItem(tipo,campo,checked){
   var wrap=document.getElementById('wrap-'+tipo);
-  var mapa={hormigon:'hormigonM3',geomembrana:'geomembranaM2',malla:'mallaM2'};
-  var activo=!chk.checked;
-  chk.checked=activo;
-  wrap.style.display=activo?'flex':'none';
-  if(!activo){
-    onCallData[mapa[tipo]]=0;
+  wrap.style.display=checked?'flex':'none';
+  if(!checked){
+    onCallData[campo]=0;
     wrap.querySelector('input').value='';
   }else{
     setTimeout(function(){wrap.querySelector('input').focus();},100);
   }
   autoguardar();
 }
+
 function setOnCallCantidad(campo,val){onCallData[campo]=val;autoguardar();}
 
 function sincronizarOnCallUI(){
@@ -391,6 +387,8 @@ function irAlParte(){
   inp.value=fechaInput;inp.max=hoyInput();
   document.getElementById('aviso-retro').style.display='none';
   document.getElementById('borrador-banner').style.display='none';
+  document.getElementById('chk-adicionales').checked=false;
+  document.getElementById('oncall-detalle').style.display='none';
   document.getElementById('topbar-info').textContent=supervisorActual.nombre;
   document.getElementById('banner-yacimiento').textContent=yacimientoActual;
   document.getElementById('banner-supervisor').textContent=supervisorActual.nombre;
@@ -596,7 +594,6 @@ function guardarParte(){
       }else{throw new Error('error');}
     })
     .catch(function(){
-      // Si falla la conexión, guardamos como pendiente en localStorage
       guardarPendiente(payload);
       mostrarConfirmacion(false);
       btn.textContent='✓ CONFIRMAR Y GUARDAR PARTE';btn.disabled=false;
@@ -619,10 +616,10 @@ function mostrarConfirmacion(exitoso){
   document.getElementById('confirm-detalle').textContent=fechaGuardar+' — '+yacimientoActual+' — '+supervisorActual.nombre;
   var badge=document.getElementById('confirm-badge');
   if(exitoso){
-    badge.textContent='✓ Enviado al servidor correctamente';
+    badge.textContent='✓ Enviado correctamente';
     badge.className='confirm-estado-badge badge-ok';
   }else{
-    badge.textContent='⚠ Sin conexión — se enviará automáticamente cuando vuelva la señal';
+    badge.textContent='⚠ Sin conexión — se enviará cuando vuelva la señal';
     badge.className='confirm-estado-badge badge-pendiente';
   }
   var oncallRes='';
