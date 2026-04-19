@@ -77,23 +77,27 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .leyenda-dot.verde{background:var(--verde2);}
 .leyenda-dot.rojo{background:var(--rojo);}
 .leyenda-dot.gris{background:#bbb;}
-.yac-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.yac-card{background:white;border-radius:12px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.06);border:2px solid var(--borde);}
+.yac-card{background:white;border-radius:12px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.06);border:2px solid var(--borde);margin-bottom:10px;}
 .yac-card.verde{border-color:#c5e89a;background:#f7fbf0;}
 .yac-card.rojo{border-color:#ffbdbd;background:#fff5f5;}
-.yac-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.yac-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.yac-header-izq{display:flex;align-items:center;gap:8px;}
 .yac-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
 .dot-verde{background:var(--verde2);}
 .dot-rojo{background:var(--rojo);}
 .dot-gris{background:#bbb;}
-.yac-nombre{font-size:13px;font-weight:700;color:var(--texto);}
-.yac-stats{display:flex;gap:8px;}
-.yac-stat{text-align:center;flex:1;}
-.yac-stat-val{font-size:20px;font-weight:900;}
-.yac-stat-val.op{color:var(--verde2);}
-.yac-stat-val.nop{color:var(--rojo);}
-.yac-stat-label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
-.yac-fecha{font-size:10px;color:var(--muted);margin-top:6px;}
+.yac-nombre{font-size:14px;font-weight:700;color:var(--texto);}
+.yac-totales{display:flex;gap:6px;}
+.yac-tot{font-size:12px;font-weight:700;padding:3px 8px;border-radius:20px;}
+.yac-tot.op{background:#e8f5e9;color:#2e7d32;}
+.yac-tot.nop{background:#ffebee;color:var(--rojo);}
+.yac-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.yac-supervisor{font-size:11px;color:var(--muted);font-weight:600;}
+.yac-fecha{font-size:11px;color:var(--muted);}
+.yac-flota{display:flex;flex-wrap:wrap;gap:6px;}
+.yac-equipo-chip{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;border:1.5px solid;}
+.yac-equipo-chip.op{background:#f0faf0;color:#2e7d32;border-color:#c5e89a;}
+.yac-equipo-chip.nop{background:#fff0f0;color:var(--rojo);border-color:#ffbdbd;}
 .flota-card{background:white;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;}
 .flota-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gris);}
 .flota-row:last-child{border-bottom:none;}
@@ -196,7 +200,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
       <div class="seccion-titulo">Composición de flota en campo</div>
       <div class="flota-card" id="flota-card"></div>
       <div class="seccion-titulo">Estado por yacimiento</div>
-      <div class="yac-grid" id="yac-grid"></div>
+      <div id="yac-lista"></div>
       <div class="seccion-titulo" id="titulo-caidos">Equipos fuera de servicio</div>
       <div id="lista-caidos"></div>
     </div>
@@ -205,9 +209,8 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-var API="https://script.google.com/macros/s/AKfycbwTLk4xCkOaSBnDybUL-fapwSMrP0jQnYOp4urUEqUxiQtOiKJKQPvqbbKChrOnJdpm/exec";
+var API="https://script.google.com/macros/s/AKfycbwIjRIEJLep3drC_nSIvsJNogQZuI1Y79eTu-P0LfDo-ZmsnDHxZ3iLTQPJ57dAIAEg/exec";
 var usuarios=[],usuarioActual=null,mapaObj=null,marcadores=[];
-var dataDashboard=null;
 
 var YACIMIENTOS=[
   {nombre:'Señal Picada',     lat:-37.6759,lng:-68.1397},
@@ -244,12 +247,21 @@ function actualizarMapa(estadoFlota){
     var popupTxt='<b>'+yac.nombre+'</b><br>Sin partes cargados';
     if(info){
       color=info.caidos===0?'verde':'rojo';
-      popupTxt='<b>'+yac.nombre+'</b><br>🟢 Operativos: '+info.operativos+'<br>🔴 Caídos: '+info.caidos+'<br><small>Parte: '+info.fecha+'</small>';
+      popupTxt='<b>'+yac.nombre+'</b><br>'+
+        '🟢 Operativos: '+info.operativos+'<br>'+
+        '🔴 Caídos: '+info.caidos+'<br>'+
+        (info.supervisor?'👤 '+info.supervisor+'<br>':'')+
+        '<small>Parte: '+info.fecha+'</small>';
     }
     var m=L.marker([yac.lat,yac.lng],{icon:iconoMapa(color)}).addTo(mapaObj).bindPopup(popupTxt);
     marcadores.push(m);
   });
   mapaObj.invalidateSize();
+}
+
+function limpiarTipo(tipo){
+  if(!tipo)return'Sin tipo';
+  return tipo.replace(/^TARIFA [AC] /i,'').replace(/\[.*\]/,'').trim();
 }
 
 function fmtPeso(n){
@@ -290,11 +302,7 @@ function hacerLogin(){
   if(String(user.password)!==String(pass)){errEl.textContent='Contraseña incorrecta';errEl.style.display='block';return;}
   usuarioActual=user;
   if(user.debeCambiar){mostrarScreen('screen-cambio');}
-  else{
-    mostrarScreen('screen-dash');
-    document.getElementById('topbar-usuario').textContent=user.nombre;
-    cargarDashboard();
-  }
+  else{mostrarScreen('screen-dash');document.getElementById('topbar-usuario').textContent=user.nombre;cargarDashboard();}
 }
 
 function cambiarPassword(){
@@ -324,14 +332,10 @@ function cargarDashboard(){
     .then(function(r){return r.json();})
     .then(function(d){
       if(!d.ok)throw new Error('error');
-      dataDashboard=d;
       renderDashboard(d);
       document.getElementById('dash-loading').style.display='none';
       document.getElementById('dash-contenido').style.display='block';
-      setTimeout(function(){
-        iniciarMapa();
-        actualizarMapa(d.estadoFlota);
-      },400);
+      setTimeout(function(){iniciarMapa();actualizarMapa(d.estadoFlota);},400);
     })
     .catch(function(){
       document.getElementById('dash-loading').innerHTML='<div class="error-msg">Error al cargar datos. <button class="btn-refresh" onclick="cargarDashboard()">Reintentar</button></div>';
@@ -382,7 +386,7 @@ function renderDashboard(d){
         '</div>';
     });
   }else{
-    flotaHtml='<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px 0;">Sin datos de partes cargados</div>';
+    flotaHtml='<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px 0;">Sin datos</div>';
   }
   document.getElementById('flota-card').innerHTML=flotaHtml;
 
@@ -393,20 +397,48 @@ function renderDashboard(d){
     if(info){
       var clase=info.caidos===0?'verde':info.operativos===0?'rojo':'';
       var dotClass=info.caidos===0?'dot-verde':info.operativos===0?'dot-rojo':'dot-gris';
+      var tiposMap={};
+      if(info.equipos){
+        info.equipos.forEach(function(eq){
+          var tipo=limpiarTipo(eq.tipo);
+          if(!tiposMap[tipo])tiposMap[tipo]={op:0,nop:0};
+          if(eq.estado==='Operativo')tiposMap[tipo].op++;
+          else tiposMap[tipo].nop++;
+        });
+      }
+      var chipsHtml='';
+      Object.keys(tiposMap).forEach(function(tipo){
+        var t=tiposMap[tipo];
+        var total=t.op+t.nop;
+        var chipClass=t.nop>0?'nop':'op';
+        chipsHtml+='<span class="yac-equipo-chip '+chipClass+'">'+total+' '+tipo+'</span>';
+      });
       yacHtml+=
         '<div class="yac-card '+clase+'">'+
-          '<div class="yac-header"><div class="yac-dot '+dotClass+'"></div><div class="yac-nombre">'+nombre+'</div></div>'+
-          '<div class="yac-stats">'+
-            '<div class="yac-stat"><div class="yac-stat-val op">'+info.operativos+'</div><div class="yac-stat-label">Operativos</div></div>'+
-            '<div class="yac-stat"><div class="yac-stat-val nop">'+info.caidos+'</div><div class="yac-stat-label">Caídos</div></div>'+
+          '<div class="yac-header">'+
+            '<div class="yac-header-izq"><div class="yac-dot '+dotClass+'"></div><div class="yac-nombre">'+nombre+'</div></div>'+
+            '<div class="yac-totales">'+
+              '<span class="yac-tot op">'+info.operativos+' op</span>'+
+              (info.caidos>0?'<span class="yac-tot nop">'+info.caidos+' caído'+(info.caidos>1?'s':'')+'</span>':'')+
+            '</div>'+
           '</div>'+
-          '<div class="yac-fecha">Parte: '+info.fecha+'</div>'+
+          '<div class="yac-meta">'+
+            '<span class="yac-supervisor">👤 '+( info.supervisor||'—')+'</span>'+
+            '<span class="yac-fecha">'+info.fecha+'</span>'+
+          '</div>'+
+          '<div class="yac-flota">'+chipsHtml+'</div>'+
         '</div>';
     }else{
-      yacHtml+='<div class="yac-card"><div class="yac-header"><div class="yac-dot dot-gris"></div><div class="yac-nombre">'+nombre+'</div></div><div style="font-size:12px;color:var(--muted);margin-top:4px;">Sin partes cargados</div></div>';
+      yacHtml+=
+        '<div class="yac-card">'+
+          '<div class="yac-header">'+
+            '<div class="yac-header-izq"><div class="yac-dot dot-gris"></div><div class="yac-nombre">'+nombre+'</div></div>'+
+          '</div>'+
+          '<div style="font-size:12px;color:var(--muted);margin-top:4px;">Sin partes cargados</div>'+
+        '</div>';
     }
   });
-  document.getElementById('yac-grid').innerHTML=yacHtml;
+  document.getElementById('yac-lista').innerHTML=yacHtml;
 
   var titulo=document.getElementById('titulo-caidos');
   var lista=document.getElementById('lista-caidos');
@@ -418,7 +450,7 @@ function renderDashboard(d){
     lista.innerHTML=d.equiposCaidos.map(function(eq){
       return '<div class="caido-item">'+
         '<div class="caido-header"><div class="caido-interno">'+eq.interno+'</div><span class="caido-dias">'+eq.diasCaido+(eq.diasCaido===1?' día':' días')+'</span></div>'+
-        '<div class="caido-tipo">'+eq.tipo+'</div>'+
+        '<div class="caido-tipo">'+limpiarTipo(eq.tipo)+'</div>'+
         (eq.obs?'<div class="caido-obs">'+eq.obs+'</div>':'')+
       '</div>';
     }).join('');
