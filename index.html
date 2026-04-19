@@ -77,18 +77,18 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .tc-fields label{font-size:10px;margin-bottom:4px;}
 .tc-fields input,.tc-fields select{margin-bottom:0;padding:9px 10px;font-size:14px;}
 .tc-resumen{font-size:12px;font-weight:700;color:var(--azul);margin-top:8px;text-align:center;background:white;border-radius:6px;padding:7px;display:none;}
-/* ONCALL */
-.oncall-header{display:flex;align-items:center;gap:12px;padding:14px 16px;background:white;border:1.5px solid var(--borde);border-radius:12px;margin-bottom:8px;cursor:pointer;user-select:none;}
-.oncall-chk-big{width:22px;height:22px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;}
-.oncall-header-label{font-size:14px;font-weight:700;color:var(--texto);flex:1;}
+.oncall-label-row{display:flex;align-items:center;gap:12px;padding:14px 16px;background:white;border:1.5px solid var(--borde);border-radius:12px;margin-bottom:8px;cursor:pointer;user-select:none;}
+.oncall-label-row input[type=checkbox]{width:22px;height:22px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;}
+.oncall-label-row span{font-size:14px;font-weight:700;color:var(--texto);flex:1;}
 .oncall-detalle{background:white;border:1.5px solid var(--borde);border-radius:12px;overflow:hidden;margin-bottom:8px;display:none;}
-.oncall-item{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid var(--gris);gap:12px;}
-.oncall-item:last-child{border-bottom:none;}
-.oncall-item input[type=checkbox]{width:22px;height:22px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;}
-.oncall-item-label{font-size:14px;font-weight:600;color:var(--texto);flex:1;cursor:pointer;}
-.oncall-item-tag{font-size:11px;font-weight:600;color:var(--muted);background:var(--gris);padding:3px 8px;border-radius:20px;}
-.oncall-cant{display:none;align-items:center;gap:6px;}
-.oncall-cant input{width:75px;margin:0;padding:9px 10px;font-size:15px;font-weight:700;text-align:center;border:1.5px solid var(--borde);border-radius:8px;background:white;}
+.oncall-item-label{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid var(--gris);cursor:pointer;user-select:none;width:100%;gap:12px;}
+.oncall-item-label:last-child{border-bottom:none;}
+.oncall-item-label input[type=checkbox]{width:22px;height:22px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;}
+.oncall-icono{width:36px;height:24px;flex-shrink:0;}
+.oncall-item-label span.nombre{font-size:14px;font-weight:600;color:var(--texto);flex:1;}
+.oncall-item-tag{font-size:11px;font-weight:600;color:var(--muted);background:var(--gris);padding:3px 8px;border-radius:20px;white-space:nowrap;}
+.oncall-cant{display:none;align-items:center;gap:6px;padding:4px 16px 12px 90px;}
+.oncall-cant input{width:80px;margin:0;padding:9px 10px;font-size:15px;font-weight:700;text-align:center;border:1.5px solid var(--borde);border-radius:8px;background:white;}
 .oncall-unit{font-size:12px;font-weight:700;color:var(--muted);}
 .buscador{position:sticky;top:56px;background:var(--gris);padding:10px 16px;z-index:50;}
 .buscador input{margin:0;border-radius:12px;background:white;}
@@ -110,6 +110,70 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 </style>
 </head>
 <body>
+
+<!-- SVG ICONOS REUTILIZABLES -->
+<svg style="display:none">
+  <symbol id="ico-carreton" viewBox="0 0 130 70">
+    <rect x="0" y="42" width="130" height="14" rx="2" fill="#1e3070"/>
+    <rect x="0" y="14" width="30" height="30" rx="3" fill="#1e3070"/>
+    <rect x="4" y="18" width="20" height="12" rx="2" fill="#6fa832"/>
+    <rect x="28" y="34" width="102" height="10" rx="1" fill="#2a4090"/>
+    <rect x="55" y="18" width="42" height="17" rx="3" fill="#8dc63f"/>
+    <rect x="63" y="10" width="20" height="10" rx="2" fill="#6fa832"/>
+    <circle cx="16" cy="58" r="9" fill="#222"/><circle cx="16" cy="58" r="4" fill="#888"/>
+    <circle cx="65" cy="58" r="9" fill="#222"/><circle cx="65" cy="58" r="4" fill="#888"/>
+    <circle cx="108" cy="58" r="9" fill="#222"/><circle cx="108" cy="58" r="4" fill="#888"/>
+  </symbol>
+  <symbol id="ico-hormigon" viewBox="0 0 115 75">
+    <rect x="0" y="50" width="110" height="14" rx="2" fill="#1e3070"/>
+    <rect x="0" y="22" width="30" height="30" rx="3" fill="#1e3070"/>
+    <rect x="4" y="26" width="20" height="12" rx="2" fill="#6fa832"/>
+    <rect x="28" y="42" width="82" height="10" rx="1" fill="#2a4090"/>
+    <ellipse cx="45" cy="34" rx="10" ry="18" fill="#777"/>
+    <rect x="45" y="16" width="40" height="36" rx="2" fill="#888"/>
+    <ellipse cx="85" cy="34" rx="10" ry="18" fill="#999"/>
+    <line x1="45" y1="22" x2="85" y2="22" stroke="#aaa" stroke-width="1.2"/>
+    <line x1="45" y1="30" x2="85" y2="30" stroke="#aaa" stroke-width="1.2"/>
+    <line x1="45" y1="38" x2="85" y2="38" stroke="#aaa" stroke-width="1.2"/>
+    <line x1="45" y1="46" x2="85" y2="46" stroke="#aaa" stroke-width="1.2"/>
+    <polygon points="85,20 100,34 85,48" fill="#666"/>
+    <rect x="50" y="50" width="8" height="6" rx="1" fill="#666"/>
+    <rect x="72" y="50" width="8" height="6" rx="1" fill="#666"/>
+    <circle cx="15" cy="66" r="8" fill="#222"/><circle cx="15" cy="66" r="3" fill="#888"/>
+    <circle cx="80" cy="66" r="8" fill="#222"/><circle cx="80" cy="66" r="3" fill="#888"/>
+    <circle cx="100" cy="66" r="8" fill="#222"/><circle cx="100" cy="66" r="3" fill="#888"/>
+  </symbol>
+  <symbol id="ico-geomembrana" viewBox="0 0 90 90">
+    <ellipse cx="16" cy="45" rx="16" ry="40" fill="#222"/>
+    <ellipse cx="16" cy="45" rx="9" ry="30" fill="#444"/>
+    <ellipse cx="16" cy="45" rx="4" ry="14" fill="#666"/>
+    <rect x="16" y="5" width="55" height="80" rx="1" fill="#2a2a2a"/>
+    <ellipse cx="71" cy="45" rx="16" ry="40" fill="#333"/>
+    <ellipse cx="71" cy="45" rx="9" ry="30" fill="#4a4a4a"/>
+    <line x1="16" y1="18" x2="71" y2="18" stroke="#555" stroke-width="1.2"/>
+    <line x1="16" y1="30" x2="71" y2="30" stroke="#555" stroke-width="1.2"/>
+    <line x1="16" y1="42" x2="71" y2="42" stroke="#555" stroke-width="1.2"/>
+    <line x1="16" y1="54" x2="71" y2="54" stroke="#555" stroke-width="1.2"/>
+    <line x1="16" y1="66" x2="71" y2="66" stroke="#555" stroke-width="1.2"/>
+    <line x1="16" y1="78" x2="71" y2="78" stroke="#555" stroke-width="1.2"/>
+  </symbol>
+  <symbol id="ico-malla" viewBox="0 0 90 80">
+    <rect x="0" y="10" width="90" height="60" rx="4" fill="none" stroke="#1e3070" stroke-width="2"/>
+    <line x1="18" y1="10" x2="18" y2="70" stroke="#1e3070" stroke-width="1.5"/>
+    <line x1="36" y1="10" x2="36" y2="70" stroke="#1e3070" stroke-width="1.5"/>
+    <line x1="54" y1="10" x2="54" y2="70" stroke="#1e3070" stroke-width="1.5"/>
+    <line x1="72" y1="10" x2="72" y2="70" stroke="#1e3070" stroke-width="1.5"/>
+    <line x1="0" y1="27" x2="90" y2="27" stroke="#1e3070" stroke-width="1.5"/>
+    <line x1="0" y1="44" x2="90" y2="44" stroke="#1e3070" stroke-width="1.5"/>
+    <line x1="0" y1="61" x2="90" y2="61" stroke="#1e3070" stroke-width="1.5"/>
+    <ellipse cx="45" cy="38" rx="8" ry="6" fill="#8dc63f"/>
+    <circle cx="51" cy="33" r="4" fill="#8dc63f"/>
+    <polygon points="54,32 58,33 54,35" fill="#e0a020"/>
+    <circle cx="53" cy="32" r="1" fill="#333"/>
+    <path d="M38 37 Q42 30 48 36" fill="#6fa832"/>
+    <path d="M37 40 Q33 42 36 45" fill="none" stroke="#6fa832" stroke-width="2"/>
+  </symbol>
+</svg>
 
 <!-- LOGIN -->
 <div id="screen-login" class="screen active">
@@ -188,40 +252,44 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
       <div class="divider"></div>
       <div class="seccion-titulo">Servicios adicionales</div>
 
-      <div class="oncall-header" onclick="toggleAdicionales()">
-        <input type="checkbox" class="oncall-chk-big" id="chk-adicionales" onclick="event.stopPropagation();toggleAdicionales()">
-        <span class="oncall-header-label">¿Hubo servicios adicionales hoy?</span>
-      </div>
+      <label class="oncall-label-row">
+        <input type="checkbox" id="chk-adicionales" onchange="onAdicionalesChange(this.checked)">
+        <span>¿Hubo servicios adicionales hoy?</span>
+      </label>
 
       <div id="oncall-detalle" class="oncall-detalle">
-        <div class="oncall-item">
+        <label class="oncall-item-label">
           <input type="checkbox" id="chk-carreton" onchange="onCarreton(this.checked)">
-          <span class="oncall-item-label" onclick="document.getElementById('chk-carreton').click()">🚚 Camión carretón</span>
+          <svg class="oncall-icono" viewBox="0 0 130 70"><use href="#ico-carreton"/></svg>
+          <span class="nombre">Camión carretón</span>
           <span class="oncall-item-tag">tarifa día</span>
-        </div>
-        <div class="oncall-item">
+        </label>
+        <label class="oncall-item-label">
           <input type="checkbox" id="chk-hormigon" onchange="onOncallItem('hormigon','hormigonM3',this.checked)">
-          <span class="oncall-item-label" onclick="document.getElementById('chk-hormigon').click()">🪨 Hormigón</span>
-          <div class="oncall-cant" id="wrap-hormigon">
-            <input type="number" min="0" step="0.1" placeholder="0" oninput="setOnCallCantidad('hormigonM3',parseFloat(this.value)||0)" onclick="event.stopPropagation()">
-            <span class="oncall-unit">m³</span>
-          </div>
+          <svg class="oncall-icono" viewBox="0 0 115 75"><use href="#ico-hormigon"/></svg>
+          <span class="nombre">Hormigón</span>
+        </label>
+        <div class="oncall-cant" id="wrap-hormigon">
+          <input type="number" min="0" step="0.1" placeholder="0" oninput="setOnCallCantidad('hormigonM3',parseFloat(this.value)||0)">
+          <span class="oncall-unit">m³</span>
         </div>
-        <div class="oncall-item">
+        <label class="oncall-item-label">
           <input type="checkbox" id="chk-geomembrana" onchange="onOncallItem('geomembrana','geomembranaM2',this.checked)">
-          <span class="oncall-item-label" onclick="document.getElementById('chk-geomembrana').click()">🟦 Geomembrana</span>
-          <div class="oncall-cant" id="wrap-geomembrana">
-            <input type="number" min="0" step="0.1" placeholder="0" oninput="setOnCallCantidad('geomembranaM2',parseFloat(this.value)||0)" onclick="event.stopPropagation()">
-            <span class="oncall-unit">m²</span>
-          </div>
+          <svg class="oncall-icono" viewBox="0 0 90 90"><use href="#ico-geomembrana"/></svg>
+          <span class="nombre">Geomembrana</span>
+        </label>
+        <div class="oncall-cant" id="wrap-geomembrana">
+          <input type="number" min="0" step="0.1" placeholder="0" oninput="setOnCallCantidad('geomembranaM2',parseFloat(this.value)||0)">
+          <span class="oncall-unit">m²</span>
         </div>
-        <div class="oncall-item">
+        <label class="oncall-item-label" style="border-bottom:none;">
           <input type="checkbox" id="chk-malla" onchange="onOncallItem('malla','mallaM2',this.checked)">
-          <span class="oncall-item-label" onclick="document.getElementById('chk-malla').click()">🕸️ Malla antiaves</span>
-          <div class="oncall-cant" id="wrap-malla">
-            <input type="number" min="0" step="0.1" placeholder="0" oninput="setOnCallCantidad('mallaM2',parseFloat(this.value)||0)" onclick="event.stopPropagation()">
-            <span class="oncall-unit">m²</span>
-          </div>
+          <svg class="oncall-icono" viewBox="0 0 90 80"><use href="#ico-malla"/></svg>
+          <span class="nombre">Malla antiaves</span>
+        </label>
+        <div class="oncall-cant" id="wrap-malla">
+          <input type="number" min="0" step="0.1" placeholder="0" oninput="setOnCallCantidad('mallaM2',parseFloat(this.value)||0)">
+          <span class="oncall-unit">m²</span>
         </div>
       </div>
 
@@ -275,7 +343,6 @@ var supervisores=[],todosEquipos=[],equiposDelParte=[],supervisorActual=null,yac
 var fechaGuardar="",fechaInput="";
 var onCallData={hayAdicionales:false,carreton:false,hormigonM3:0,geomembranaM2:0,mallaM2:0};
 var borradorPendiente=null;
-var _toggleAdicionalesActivo=false;
 var MOTIVOS_TC=['Viento','Lluvia','Corte de ruta','Asamblea','VTV','Control médico','Renovación de licencia','Otro'];
 
 function fechaArgentina(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();}
@@ -288,33 +355,19 @@ function hoyInput(){var h=new Date();return h.getFullYear()+'-'+String(h.getMont
 function inputToArgentina(v){var p=v.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
 function borradorKey(){return 'tsb_draft_'+yacimientoActual+'_'+fechaGuardar;}
 
-function toggleAdicionales(){
-  if(_toggleAdicionalesActivo)return;
-  _toggleAdicionalesActivo=true;
-  setTimeout(function(){_toggleAdicionalesActivo=false;},100);
-  onCallData.hayAdicionales=!onCallData.hayAdicionales;
-  document.getElementById('chk-adicionales').checked=onCallData.hayAdicionales;
-  document.getElementById('oncall-detalle').style.display=onCallData.hayAdicionales?'block':'none';
+function onAdicionalesChange(checked){
+  onCallData.hayAdicionales=checked;
+  document.getElementById('oncall-detalle').style.display=checked?'block':'none';
   autoguardar();
 }
-
-function onCarreton(checked){
-  onCallData.carreton=checked;
-  autoguardar();
-}
-
+function onCarreton(checked){onCallData.carreton=checked;autoguardar();}
 function onOncallItem(tipo,campo,checked){
   var wrap=document.getElementById('wrap-'+tipo);
   wrap.style.display=checked?'flex':'none';
-  if(!checked){
-    onCallData[campo]=0;
-    wrap.querySelector('input').value='';
-  }else{
-    setTimeout(function(){wrap.querySelector('input').focus();},100);
-  }
+  if(!checked){onCallData[campo]=0;wrap.querySelector('input').value='';}
+  else{setTimeout(function(){wrap.querySelector('input').focus();},150);}
   autoguardar();
 }
-
 function setOnCallCantidad(campo,val){onCallData[campo]=val;autoguardar();}
 
 function sincronizarOnCallUI(){
@@ -327,8 +380,7 @@ function sincronizarOnCallUI(){
     var chk=document.getElementById('chk-'+t);
     var wrap=document.getElementById('wrap-'+t);
     var tiene=onCallData[campo]>0;
-    chk.checked=tiene;
-    wrap.style.display=tiene?'flex':'none';
+    chk.checked=tiene;wrap.style.display=tiene?'flex':'none';
     if(tiene)wrap.querySelector('input').value=onCallData[campo];
   });
 }
@@ -379,8 +431,7 @@ function mostrarError(msg){var e=document.getElementById('login-error');e.textCo
 function irAlParte(){
   mostrarScreen('screen-parte');
   var hoy=new Date();
-  fechaInput=hoyInput();
-  fechaGuardar=fechaArgentina(hoy);
+  fechaInput=hoyInput();fechaGuardar=fechaArgentina(hoy);
   onCallData={hayAdicionales:false,carreton:false,hormigonM3:0,geomembranaM2:0,mallaM2:0};
   borradorPendiente=null;
   var inp=document.getElementById('inp-fecha-parte');
@@ -615,13 +666,8 @@ function mostrarConfirmacion(exitoso){
   document.getElementById('confirm-titulo').textContent=exitoso?'Parte registrado':'Parte guardado localmente';
   document.getElementById('confirm-detalle').textContent=fechaGuardar+' — '+yacimientoActual+' — '+supervisorActual.nombre;
   var badge=document.getElementById('confirm-badge');
-  if(exitoso){
-    badge.textContent='✓ Enviado correctamente';
-    badge.className='confirm-estado-badge badge-ok';
-  }else{
-    badge.textContent='⚠ Sin conexión — se enviará cuando vuelva la señal';
-    badge.className='confirm-estado-badge badge-pendiente';
-  }
+  if(exitoso){badge.textContent='✓ Enviado correctamente';badge.className='confirm-estado-badge badge-ok';}
+  else{badge.textContent='⚠ Sin conexión — se enviará cuando vuelva la señal';badge.className='confirm-estado-badge badge-pendiente';}
   var oncallRes='';
   if(onCallData.hayAdicionales){
     var oc=[];
