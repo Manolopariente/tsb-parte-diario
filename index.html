@@ -21,6 +21,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .login-subtitulo{color:rgba(255,255,255,0.55);font-size:11px;margin-top:4px;letter-spacing:1px;}
 .login-card{background:rgba(255,255,255,0.97);border-radius:16px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.45);}
 .login-card-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:20px;text-align:center;letter-spacing:0.5px;}
+.btn-dashboard-acceso{display:block;text-align:center;margin-top:16px;padding:13px;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.35);border-radius:12px;color:white;font-size:13px;font-weight:700;letter-spacing:0.5px;text-decoration:none;cursor:pointer;transition:background .2s;}
+.btn-dashboard-acceso:hover{background:rgba(255,255,255,0.2);}
 .topbar{background:var(--azul);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.25);}
 .topbar img{height:28px;filter:brightness(0) invert(1);}
 .topbar-info{text-align:right;}
@@ -75,24 +77,32 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .tc-fields label{font-size:10px;margin-bottom:4px;}
 .tc-fields input,.tc-fields select{margin-bottom:0;padding:9px 10px;font-size:14px;}
 .tc-resumen{font-size:12px;font-weight:700;color:var(--azul);margin-top:8px;text-align:center;background:white;border-radius:6px;padding:7px;display:none;}
-.oncall-toggle-row{display:flex;align-items:center;gap:10px;padding:14px 16px;background:white;border:1.5px solid var(--borde);border-radius:12px;margin-bottom:8px;cursor:pointer;}
-.oncall-toggle-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;}
-.oncall-toggle-label{font-size:14px;font-weight:700;color:var(--texto);}
-.oncall-detalle{background:white;border:1.5px solid var(--borde);border-radius:12px;padding:14px 16px;margin-bottom:8px;display:none;}
-.oncall-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gris);cursor:pointer;}
-.oncall-row:last-child{border-bottom:none;padding-bottom:0;}
-.oncall-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;pointer-events:none;}
-.oncall-row-label{font-size:14px;font-weight:600;flex:1;}
+/* ONCALL MEJORADO */
+.oncall-header{display:flex;align-items:center;gap:12px;padding:14px 16px;background:white;border:1.5px solid var(--borde);border-radius:12px;margin-bottom:8px;cursor:pointer;user-select:none;}
+.oncall-header:active{opacity:0.85;}
+.oncall-chk-big{width:22px;height:22px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;}
+.oncall-header-label{font-size:14px;font-weight:700;color:var(--texto);flex:1;}
+.oncall-detalle{background:white;border:1.5px solid var(--borde);border-radius:12px;padding:8px 0;margin-bottom:8px;display:none;overflow:hidden;}
+.oncall-item{display:flex;align-items:center;gap:0;padding:12px 16px;border-bottom:1px solid var(--gris);cursor:pointer;user-select:none;transition:background .15s;}
+.oncall-item:last-child{border-bottom:none;}
+.oncall-item:active{background:var(--gris);}
+.oncall-item-chk{width:22px;height:22px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;margin-right:12px;pointer-events:none;}
+.oncall-item-label{font-size:14px;font-weight:600;color:var(--texto);flex:1;}
+.oncall-item-tag{font-size:11px;font-weight:600;color:var(--muted);background:var(--gris);padding:3px 8px;border-radius:20px;margin-right:8px;}
 .oncall-cant{display:none;align-items:center;gap:6px;}
-.oncall-cant input{width:70px;margin:0;padding:8px 10px;font-size:14px;font-weight:700;pointer-events:all;cursor:text;}
+.oncall-cant input{width:75px;margin:0;padding:9px 10px;font-size:15px;font-weight:700;text-align:center;border:1.5px solid var(--borde);border-radius:8px;background:white;}
 .oncall-unit{font-size:12px;font-weight:700;color:var(--muted);}
 .buscador{position:sticky;top:56px;background:var(--gris);padding:10px 16px;z-index:50;}
 .buscador input{margin:0;border-radius:12px;background:white;}
 .equipo-lista-item{background:white;border:1.5px solid var(--borde);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
 .btn-agregar-eq{background:var(--azul);color:white;border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;}
+/* CONFIRMACION MEJORADA */
 .confirm-icon{text-align:center;font-size:72px;margin:24px 0 16px;}
 .confirm-titulo{text-align:center;font-size:24px;font-weight:800;color:var(--azul);margin-bottom:8px;}
-.confirm-sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:24px;}
+.confirm-sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:8px;}
+.confirm-estado-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:0.5px;margin:0 auto 20px;text-align:center;}
+.badge-ok{background:#e8f5e9;color:#2e7d32;}
+.badge-pendiente{background:#fff8e1;color:#f57f17;}
 .confirm-card{background:white;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
 .loading{text-align:center;padding:40px 20px;color:var(--muted);}
 .spinner{width:36px;height:36px;border:3px solid var(--borde);border-top-color:var(--azul);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
@@ -137,6 +147,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
           <button class="btn btn-primary" onclick="hacerLogin()">INGRESAR AL SISTEMA</button>
         </div>
       </div>
+      <a href="dashboard.html" class="btn-dashboard-acceso">📊 Acceso Dashboard Gerencial</a>
     </div>
   </div>
 </div>
@@ -179,40 +190,46 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
       <div id="lista-equipos"></div>
       <div class="divider"></div>
       <div class="seccion-titulo">Servicios adicionales</div>
-      <label class="oncall-toggle-row">
-        <input type="checkbox" id="chk-adicionales" onchange="onAdicionales(this.checked)">
-        <span class="oncall-toggle-label">¿Hubo servicios adicionales hoy?</span>
-      </label>
+
+      <!-- Toggle principal adicionales -->
+      <div class="oncall-header" onclick="toggleAdicionales()">
+        <input type="checkbox" class="oncall-chk-big" id="chk-adicionales" onclick="event.stopPropagation()">
+        <span class="oncall-header-label">¿Hubo servicios adicionales hoy?</span>
+      </div>
+
+      <!-- Lista adicionales -->
       <div id="oncall-detalle" class="oncall-detalle">
-        <div class="oncall-row" onclick="toggleCarreton()">
-          <input type="checkbox" id="chk-carreton">
-          <span class="oncall-row-label">🚚 Camión carretón <span style="font-weight:400;font-size:12px;color:var(--muted);">(tarifa día)</span></span>
+        <div class="oncall-item" onclick="toggleCarreton()">
+          <input type="checkbox" class="oncall-item-chk" id="chk-carreton">
+          <span class="oncall-item-label">🚚 Camión carretón</span>
+          <span class="oncall-item-tag">tarifa día</span>
         </div>
-        <div class="oncall-row" onclick="toggleOncallRow('hormigon',event)">
-          <input type="checkbox" id="chk-hormigon">
-          <span class="oncall-row-label">🪨 Hormigón</span>
+        <div class="oncall-item" onclick="toggleOncallItem('hormigon', event)">
+          <input type="checkbox" class="oncall-item-chk" id="chk-hormigon">
+          <span class="oncall-item-label">🪨 Hormigón</span>
           <div class="oncall-cant" id="wrap-hormigon">
-            <input type="number" min="0" step="0.1" placeholder="0" onclick="event.stopPropagation()" onchange="setOnCallCantidad('hormigonM3',parseFloat(this.value)||0)">
+            <input type="number" min="0" step="0.1" placeholder="0" onclick="event.stopPropagation()" oninput="setOnCallCantidad('hormigonM3', parseFloat(this.value)||0)">
             <span class="oncall-unit">m³</span>
           </div>
         </div>
-        <div class="oncall-row" onclick="toggleOncallRow('geomembrana',event)">
-          <input type="checkbox" id="chk-geomembrana">
-          <span class="oncall-row-label">🟦 Geomembrana</span>
+        <div class="oncall-item" onclick="toggleOncallItem('geomembrana', event)">
+          <input type="checkbox" class="oncall-item-chk" id="chk-geomembrana">
+          <span class="oncall-item-label">🟦 Geomembrana</span>
           <div class="oncall-cant" id="wrap-geomembrana">
-            <input type="number" min="0" step="0.1" placeholder="0" onclick="event.stopPropagation()" onchange="setOnCallCantidad('geomembranaM2',parseFloat(this.value)||0)">
+            <input type="number" min="0" step="0.1" placeholder="0" onclick="event.stopPropagation()" oninput="setOnCallCantidad('geomembranaM2', parseFloat(this.value)||0)">
             <span class="oncall-unit">m²</span>
           </div>
         </div>
-        <div class="oncall-row" onclick="toggleOncallRow('malla',event)">
-          <input type="checkbox" id="chk-malla">
-          <span class="oncall-row-label">🕸️ Malla antiaves</span>
+        <div class="oncall-item" onclick="toggleOncallItem('malla', event)">
+          <input type="checkbox" class="oncall-item-chk" id="chk-malla">
+          <span class="oncall-item-label">🕸️ Malla antiaves</span>
           <div class="oncall-cant" id="wrap-malla">
-            <input type="number" min="0" step="0.1" placeholder="0" onclick="event.stopPropagation()" onchange="setOnCallCantidad('mallaM2',parseFloat(this.value)||0)">
+            <input type="number" min="0" step="0.1" placeholder="0" onclick="event.stopPropagation()" oninput="setOnCallCantidad('mallaM2', parseFloat(this.value)||0)">
             <span class="oncall-unit">m²</span>
           </div>
         </div>
       </div>
+
       <div class="divider"></div>
       <button class="btn btn-outline" onclick="irAgregarEquipo()">+ Agregar equipo</button>
       <button class="btn btn-success" onclick="guardarParte()">✓ CONFIRMAR Y GUARDAR PARTE</button>
@@ -245,10 +262,13 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
     <div class="topbar-title" style="color:white;margin-right:auto;margin-left:16px;">PARTE DIARIO</div>
     <div></div>
   </div>
-  <div class="contenido" style="padding-top:30px;">
-    <div class="confirm-icon">✅</div>
-    <div class="confirm-titulo">Parte registrado</div>
+  <div class="contenido" style="padding-top:30px;text-align:center;">
+    <div class="confirm-icon" id="confirm-icon">✅</div>
+    <div class="confirm-titulo" id="confirm-titulo">Parte registrado</div>
     <div class="confirm-sub" id="confirm-detalle"></div>
+    <div style="text-align:center;margin-bottom:20px;">
+      <span class="confirm-estado-badge" id="confirm-badge"></span>
+    </div>
     <div class="confirm-card" id="confirm-resumen"></div>
     <button class="btn btn-primary" onclick="resetear()">CARGAR OTRO PARTE</button>
   </div>
@@ -272,21 +292,49 @@ function hoyInput(){var h=new Date();return h.getFullYear()+'-'+String(h.getMont
 function inputToArgentina(v){var p=v.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
 function borradorKey(){return 'tsb_draft_'+yacimientoActual+'_'+fechaGuardar;}
 
+// ONCALL
+function toggleAdicionales(){
+  onCallData.hayAdicionales=!onCallData.hayAdicionales;
+  document.getElementById('chk-adicionales').checked=onCallData.hayAdicionales;
+  document.getElementById('oncall-detalle').style.display=onCallData.hayAdicionales?'block':'none';
+  autoguardar();
+}
 function toggleCarreton(){
   onCallData.carreton=!onCallData.carreton;
   document.getElementById('chk-carreton').checked=onCallData.carreton;
   autoguardar();
 }
-
-function toggleOncallRow(tipo,event){
-  var wrap=document.getElementById('wrap-'+tipo);
+function toggleOncallItem(tipo,event){
   var chk=document.getElementById('chk-'+tipo);
+  var wrap=document.getElementById('wrap-'+tipo);
   var mapa={hormigon:'hormigonM3',geomembrana:'geomembranaM2',malla:'mallaM2'};
   var activo=!chk.checked;
   chk.checked=activo;
   wrap.style.display=activo?'flex':'none';
-  if(!activo)onCallData[mapa[tipo]]=0;
+  if(!activo){
+    onCallData[mapa[tipo]]=0;
+    wrap.querySelector('input').value='';
+  }else{
+    setTimeout(function(){wrap.querySelector('input').focus();},100);
+  }
   autoguardar();
+}
+function setOnCallCantidad(campo,val){onCallData[campo]=val;autoguardar();}
+
+function sincronizarOnCallUI(){
+  document.getElementById('chk-adicionales').checked=onCallData.hayAdicionales;
+  document.getElementById('oncall-detalle').style.display=onCallData.hayAdicionales?'block':'none';
+  document.getElementById('chk-carreton').checked=onCallData.carreton;
+  var tipos={hormigon:'hormigonM3',geomembrana:'geomembranaM2',malla:'mallaM2'};
+  Object.keys(tipos).forEach(function(t){
+    var campo=tipos[t];
+    var chk=document.getElementById('chk-'+t);
+    var wrap=document.getElementById('wrap-'+t);
+    var tiene=onCallData[campo]>0;
+    chk.checked=tiene;
+    wrap.style.display=tiene?'flex':'none';
+    if(tiene)wrap.querySelector('input').value=onCallData[campo];
+  });
 }
 
 window.onload=function(){
@@ -405,8 +453,7 @@ function descartarBorrador(){
 
 function cambiarFecha(val){
   fechaInput=val;fechaGuardar=inputToArgentina(val);
-  var hoy=hoyInput();
-  document.getElementById('aviso-retro').style.display=val<hoy?'block':'none';
+  document.getElementById('aviso-retro').style.display=val<hoyInput()?'block':'none';
   var d=new Date(val+'T12:00:00');
   document.getElementById('banner-fecha').innerHTML=fechaBanner(d);
   autoguardar();
@@ -481,31 +528,6 @@ function actualizarResumenTC(idx){
 function setObs(idx,val){equiposDelParte[idx].observaciones=val;autoguardar();}
 function quitarEquipo(idx){equiposDelParte.splice(idx,1);renderizarEquipos();autoguardar();}
 
-function onAdicionales(checked){
-  onCallData.hayAdicionales=checked;
-  document.getElementById('oncall-detalle').style.display=checked?'block':'none';
-  autoguardar();
-}
-function setOnCallCantidad(campo,val){onCallData[campo]=val;autoguardar();}
-
-function sincronizarOnCallUI(){
-  var chk=document.getElementById('chk-adicionales');
-  if(!chk)return;
-  chk.checked=onCallData.hayAdicionales;
-  document.getElementById('oncall-detalle').style.display=onCallData.hayAdicionales?'block':'none';
-  document.getElementById('chk-carreton').checked=onCallData.carreton;
-  var tipos={hormigon:'hormigonM3',geomembrana:'geomembranaM2',malla:'mallaM2'};
-  Object.keys(tipos).forEach(function(t){
-    var campo=tipos[t];
-    var chkT=document.getElementById('chk-'+t);
-    var wrap=document.getElementById('wrap-'+t);
-    var tiene=onCallData[campo]>0;
-    chkT.checked=tiene;
-    wrap.style.display=tiene?'flex':'none';
-    if(tiene)wrap.querySelector('input').value=onCallData[campo];
-  });
-}
-
 function autoguardar(){
   if(!supervisorActual||!yacimientoActual||!fechaGuardar)return;
   var draft={equipos:equiposDelParte,onCall:onCallData,fecha:fechaGuardar,ts:Date.now()};
@@ -570,33 +592,57 @@ function guardarParte(){
     .then(function(data){
       if(data.ok){
         try{localStorage.removeItem(borradorKey());}catch(e){}
-        var op=equiposDelParte.filter(function(e){return e.estado==='Operativo';}).length;
-        var nop=equiposDelParte.length-op;
-        document.getElementById('confirm-detalle').textContent=fechaGuardar+' — '+yacimientoActual+' — '+supervisorActual.nombre;
-        var oncallRes='';
-        if(onCallData.hayAdicionales){
-          var oc=[];
-          if(onCallData.carreton)oc.push('Carretón ✓');
-          if(onCallData.hormigonM3>0)oc.push('Hormigón: '+onCallData.hormigonM3+' m³');
-          if(onCallData.geomembranaM2>0)oc.push('Geomembrana: '+onCallData.geomembranaM2+' m²');
-          if(onCallData.mallaM2>0)oc.push('Malla: '+onCallData.mallaM2+' m²');
-          if(oc.length>0)oncallRes='<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--borde);"><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;margin-bottom:6px;">ADICIONALES</div><div style="font-size:13px;font-weight:600;line-height:1.8;">'+oc.join('<br>')+'</div></div>';
-        }
-        document.getElementById('confirm-resumen').innerHTML=
-          '<div style="display:flex;gap:12px;justify-content:center;padding:8px 0;">'+
-          '<div style="text-align:center;flex:1;"><div style="font-size:40px;font-weight:900;color:var(--verde);">'+op+'</div><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;">OPERATIVOS</div></div>'+
-          '<div style="width:1px;background:var(--borde);"></div>'+
-          '<div style="text-align:center;flex:1;"><div style="font-size:40px;font-weight:900;color:var(--rojo);">'+nop+'</div><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;">FUERA DE SERV.</div></div>'+
-          '<div style="width:1px;background:var(--borde);"></div>'+
-          '<div style="text-align:center;flex:1;"><div style="font-size:40px;font-weight:900;color:var(--azul);">'+equiposDelParte.length+'</div><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;">TOTAL</div></div>'+
-          '</div>'+oncallRes;
-        mostrarScreen('screen-confirmacion');
+        mostrarConfirmacion(true);
       }else{throw new Error('error');}
     })
     .catch(function(){
+      // Si falla la conexión, guardamos como pendiente en localStorage
+      guardarPendiente(payload);
+      mostrarConfirmacion(false);
       btn.textContent='✓ CONFIRMAR Y GUARDAR PARTE';btn.disabled=false;
-      alert('Error al guardar. Verificá tu conexión.');
     });
+}
+
+function guardarPendiente(payload){
+  try{
+    var pendientes=JSON.parse(localStorage.getItem('tsb_pendientes')||'[]');
+    pendientes.push(payload);
+    localStorage.setItem('tsb_pendientes',JSON.stringify(pendientes));
+  }catch(e){}
+}
+
+function mostrarConfirmacion(exitoso){
+  var op=equiposDelParte.filter(function(e){return e.estado==='Operativo';}).length;
+  var nop=equiposDelParte.length-op;
+  document.getElementById('confirm-icon').textContent=exitoso?'✅':'📋';
+  document.getElementById('confirm-titulo').textContent=exitoso?'Parte registrado':'Parte guardado localmente';
+  document.getElementById('confirm-detalle').textContent=fechaGuardar+' — '+yacimientoActual+' — '+supervisorActual.nombre;
+  var badge=document.getElementById('confirm-badge');
+  if(exitoso){
+    badge.textContent='✓ Enviado al servidor correctamente';
+    badge.className='confirm-estado-badge badge-ok';
+  }else{
+    badge.textContent='⚠ Sin conexión — se enviará automáticamente cuando vuelva la señal';
+    badge.className='confirm-estado-badge badge-pendiente';
+  }
+  var oncallRes='';
+  if(onCallData.hayAdicionales){
+    var oc=[];
+    if(onCallData.carreton)oc.push('Carretón ✓');
+    if(onCallData.hormigonM3>0)oc.push('Hormigón: '+onCallData.hormigonM3+' m³');
+    if(onCallData.geomembranaM2>0)oc.push('Geomembrana: '+onCallData.geomembranaM2+' m²');
+    if(onCallData.mallaM2>0)oc.push('Malla: '+onCallData.mallaM2+' m²');
+    if(oc.length>0)oncallRes='<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--borde);"><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;margin-bottom:6px;">ADICIONALES</div><div style="font-size:13px;font-weight:600;line-height:1.8;">'+oc.join('<br>')+'</div></div>';
+  }
+  document.getElementById('confirm-resumen').innerHTML=
+    '<div style="display:flex;gap:12px;justify-content:center;padding:8px 0;">'+
+    '<div style="text-align:center;flex:1;"><div style="font-size:40px;font-weight:900;color:var(--verde);">'+op+'</div><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;">OPERATIVOS</div></div>'+
+    '<div style="width:1px;background:var(--borde);"></div>'+
+    '<div style="text-align:center;flex:1;"><div style="font-size:40px;font-weight:900;color:var(--rojo);">'+nop+'</div><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;">FUERA DE SERV.</div></div>'+
+    '<div style="width:1px;background:var(--borde);"></div>'+
+    '<div style="text-align:center;flex:1;"><div style="font-size:40px;font-weight:900;color:var(--azul);">'+equiposDelParte.length+'</div><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;">TOTAL</div></div>'+
+    '</div>'+oncallRes;
+  mostrarScreen('screen-confirmacion');
 }
 
 function mostrarScreen(id){
