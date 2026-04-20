@@ -11,7 +11,8 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
   --azul:#1e3070;--azul2:#152558;--verde:#8dc63f;--verde2:#6fa832;
-  --rojo:#e53935;--gris:#f0f2f5;--borde:#d1d9e6;--texto:#1a2340;--muted:#6b7a99;
+  --rojo:#e53935;--naranja:#f59e0b;--naranja2:#d97706;
+  --gris:#f0f2f5;--borde:#d1d9e6;--texto:#1a2340;--muted:#6b7a99;
 }
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--gris);color:var(--texto);min-height:100vh;}
 .screen{display:none;}.screen.active{display:block;}
@@ -59,14 +60,24 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .equipo-item{background:white;border:2px solid var(--borde);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,0.06);}
 .equipo-item.operativo{border-color:#c5e89a;background:#f7fbf0;}
 .equipo-item.no-operativo{border-color:#ffbdbd;background:#fff5f5;}
+.equipo-item.sin-chofer{border-color:#fcd34d;background:#fffbeb;}
 .equipo-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
 .equipo-interno{font-size:22px;font-weight:900;color:var(--azul);}
 .equipo-tipo{font-size:12px;color:var(--muted);margin-top:2px;font-weight:500;}
 .equipo-categoria{font-size:11px;color:var(--muted);background:var(--gris);padding:4px 10px;border-radius:20px;font-weight:600;}
+
+/* ── Toggle tres estados ─────────────────────────────────── */
 .toggle-estado{display:flex;border-radius:10px;overflow:hidden;border:1.5px solid var(--borde);margin-bottom:10px;}
-.toggle-btn{flex:1;padding:11px;border:none;font-size:13px;font-weight:700;cursor:pointer;background:white;color:var(--muted);transition:.15s;}
+.toggle-btn{flex:1;padding:10px 4px;border:none;font-size:12px;font-weight:700;cursor:pointer;background:white;color:var(--muted);transition:.15s;line-height:1.2;text-align:center;}
 .toggle-btn.active-op{background:var(--verde);color:white;}
 .toggle-btn.active-nop{background:var(--rojo);color:white;}
+.toggle-btn.active-sc{background:var(--naranja);color:white;}
+/* Botón sin chofer más pequeño */
+.toggle-btn-sc{flex:0.65;font-size:10px;padding:10px 3px;}
+
+/* ── Badge sin chofer ────────────────────────────────────── */
+.sc-badge{background:#fff8e1;border:1.5px solid #fcd34d;border-radius:8px;padding:8px 12px;margin:6px 0 8px;font-size:12px;font-weight:700;color:#92400e;text-align:center;}
+
 .obs-input{width:100%;padding:10px 12px;border:1.5px solid var(--borde);border-radius:8px;font-size:14px;resize:none;font-family:inherit;color:var(--texto);}
 .btn-quitar{background:none;border:none;color:#bbb;font-size:12px;cursor:pointer;margin-top:6px;padding:0;font-weight:500;}
 .tarifa-c-wrap{margin:8px 0;display:none;}
@@ -525,21 +536,17 @@ function renderizarEquipos(){
   lista.innerHTML='';
   equiposDelParte.forEach(function(eq,idx){
     var esOp=eq.estado==='Operativo';
+    var esSC=eq.estado==='Sin chofer';
+    var claseItem=esOp?'operativo':esSC?'sin-chofer':'no-operativo';
     var div=document.createElement('div');
-    div.className='equipo-item '+(esOp?'operativo':'no-operativo');
+    div.className='equipo-item '+claseItem;
     var motivosOpts=MOTIVOS_TC.map(function(m){return '<option value="'+m+'" '+(eq.motivoTarifaC===m?'selected':'')+'>'+m+'</option>';}).join('');
     var hsA=eq.aplicaTarifaC&&eq.horasTarifaC>0?(8-eq.horasTarifaC):8;
     var resumenTC=eq.aplicaTarifaC&&eq.horasTarifaC>0?hsA+' hs Tarifa A  +  '+eq.horasTarifaC+' hs Tarifa C  =  8 hs':'';
-    div.innerHTML=
-      '<div class="equipo-header">'+
-        '<div><div class="equipo-interno">'+eq.interno+'</div><div class="equipo-tipo">'+eq.tipo+'</div></div>'+
-        '<div class="equipo-categoria">'+(eq.categoria?eq.categoria.split('[')[0].trim():'')+'</div>'+
-      '</div>'+
-      '<div class="toggle-estado">'+
-        '<button class="toggle-btn '+(esOp?'active-op':'')+'" onclick="setEstado('+idx+',\'Operativo\')">✓ OPERATIVO</button>'+
-        '<button class="toggle-btn '+(!esOp?'active-nop':'')+'" onclick="setEstado('+idx+',\'No operativo\')">✗ FUERA DE SERVICIO</button>'+
-      '</div>'+
-      '<div class="tarifa-c-wrap" id="tc-wrap-'+idx+'" style="'+(esOp?'display:block':'display:none')+'">'+
+
+    var scBadge=esSC?'<div class="sc-badge">⚠ SIN CHOFER — BAJAS YPF · Tarifa C 8hs automático</div>':'';
+    var tarifaCHtml=esOp?
+      '<div class="tarifa-c-wrap" id="tc-wrap-'+idx+'">'+
         '<div class="tc-check-row">'+
           '<input type="checkbox" id="tc-chk-'+idx+'" '+(eq.aplicaTarifaC?'checked':'')+' onchange="toggleTarifaC('+idx+',this.checked)">'+
           '<label class="tc-check-label" for="tc-chk-'+idx+'">Aplica Tarifa C</label>'+
@@ -551,7 +558,20 @@ function renderizarEquipos(){
           '</div>'+
           '<div class="tc-resumen" id="tc-res-'+idx+'" style="'+(resumenTC?'display:block':'display:none')+'">'+resumenTC+'</div>'+
         '</div>'+
+      '</div>':'';
+
+    div.innerHTML=
+      '<div class="equipo-header">'+
+        '<div><div class="equipo-interno">'+eq.interno+'</div><div class="equipo-tipo">'+eq.tipo+'</div></div>'+
+        '<div class="equipo-categoria">'+(eq.categoria?eq.categoria.split('[')[0].trim():'')+'</div>'+
       '</div>'+
+      '<div class="toggle-estado">'+
+        '<button class="toggle-btn '+(esOp?'active-op':'')+'" onclick="setEstado('+idx+',\'Operativo\')">✓ OPERATIVO</button>'+
+        '<button class="toggle-btn '+(!esOp&&!esSC?'active-nop':'')+'" onclick="setEstado('+idx+',\'No operativo\')">✗ FUERA DE SERV.</button>'+
+        '<button class="toggle-btn toggle-btn-sc '+(esSC?'active-sc':'')+'" onclick="setEstado('+idx+',\'Sin chofer\')">SIN<br>CHOFER</button>'+
+      '</div>'+
+      scBadge+
+      tarifaCHtml+
       '<textarea class="obs-input" rows="2" placeholder="Observaciones del equipo..." onchange="setObs('+idx+',this.value)">'+(eq.observaciones||'')+'</textarea>'+
       '<button class="btn-quitar" onclick="quitarEquipo('+idx+')">✕ Quitar del parte</button>';
     lista.appendChild(div);
@@ -560,7 +580,11 @@ function renderizarEquipos(){
 
 function setEstado(idx,estado){
   equiposDelParte[idx].estado=estado;
-  if(estado==='No operativo'){equiposDelParte[idx].aplicaTarifaC=false;equiposDelParte[idx].horasTarifaC=0;equiposDelParte[idx].motivoTarifaC='';}
+  if(estado==='No operativo'||estado==='Sin chofer'){
+    equiposDelParte[idx].aplicaTarifaC=false;
+    equiposDelParte[idx].horasTarifaC=0;
+    equiposDelParte[idx].motivoTarifaC='';
+  }
   renderizarEquipos();autoguardar();
 }
 function toggleTarifaC(idx,checked){
@@ -629,7 +653,7 @@ function guardarParte(){
   if(equiposDelParte.length===0){alert('No hay equipos en el parte. Agregá al menos uno.');return;}
   for(var i=0;i<equiposDelParte.length;i++){
     var eq=equiposDelParte[i];
-    if(eq.aplicaTarifaC){
+    if(eq.estado==='Operativo'&&eq.aplicaTarifaC){
       if(!eq.horasTarifaC||eq.horasTarifaC<=0){alert('Equipo '+eq.interno+': marcaste Tarifa C pero no ingresaste las horas.');return;}
       if(!eq.motivoTarifaC){alert('Equipo '+eq.interno+': marcaste Tarifa C pero falta el motivo.');return;}
     }
@@ -672,7 +696,8 @@ function guardarPendiente(payload){
 
 function mostrarConfirmacion(exitoso){
   var op=equiposDelParte.filter(function(e){return e.estado==='Operativo';}).length;
-  var nop=equiposDelParte.length-op;
+  var nop=equiposDelParte.filter(function(e){return e.estado==='No operativo';}).length;
+  var sc=equiposDelParte.filter(function(e){return e.estado==='Sin chofer';}).length;
   document.getElementById('confirm-icon').textContent=exitoso?'✅':'📋';
   document.getElementById('confirm-titulo').textContent=exitoso?'Parte registrado':'Parte guardado localmente';
   document.getElementById('confirm-detalle').textContent=fechaGuardar+' — '+yacimientoActual+' — '+supervisorActual.nombre;
@@ -688,14 +713,17 @@ function mostrarConfirmacion(exitoso){
     if(onCallData.mallaM2>0)oc.push('Malla: '+onCallData.mallaM2+' m²');
     if(oc.length>0)oncallRes='<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--borde);"><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;margin-bottom:6px;">ADICIONALES</div><div style="font-size:13px;font-weight:600;line-height:1.8;">'+oc.join('<br>')+'</div></div>';
   }
+  var scResumen=sc>0?'<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--borde);"><div style="font-size:11px;font-weight:700;color:#92400e;letter-spacing:1px;margin-bottom:4px;">SIN CHOFER — BAJAS YPF</div><div style="font-size:13px;font-weight:600;color:#92400e;">'+sc+' equipo'+(sc>1?'s':'')+' en Tarifa C automático</div></div>':'';
   document.getElementById('confirm-resumen').innerHTML=
     '<div style="display:flex;gap:12px;justify-content:center;padding:8px 0;">'+
-    '<div style="text-align:center;flex:1;"><div style="font-size:40px;font-weight:900;color:var(--verde);">'+op+'</div><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;">OPERATIVOS</div></div>'+
+    '<div style="text-align:center;flex:1;"><div style="font-size:36px;font-weight:900;color:var(--verde2);">'+op+'</div><div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;">OPERATIVOS</div></div>'+
     '<div style="width:1px;background:var(--borde);"></div>'+
-    '<div style="text-align:center;flex:1;"><div style="font-size:40px;font-weight:900;color:var(--rojo);">'+nop+'</div><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;">FUERA DE SERV.</div></div>'+
+    '<div style="text-align:center;flex:1;"><div style="font-size:36px;font-weight:900;color:var(--rojo);">'+nop+'</div><div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;">FUERA SERV.</div></div>'+
     '<div style="width:1px;background:var(--borde);"></div>'+
-    '<div style="text-align:center;flex:1;"><div style="font-size:40px;font-weight:900;color:var(--azul);">'+equiposDelParte.length+'</div><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;">TOTAL</div></div>'+
-    '</div>'+oncallRes;
+    '<div style="text-align:center;flex:1;"><div style="font-size:36px;font-weight:900;color:var(--naranja);">'+sc+'</div><div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;">SIN CHOFER</div></div>'+
+    '<div style="width:1px;background:var(--borde);"></div>'+
+    '<div style="text-align:center;flex:1;"><div style="font-size:36px;font-weight:900;color:var(--azul);">'+equiposDelParte.length+'</div><div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;">TOTAL</div></div>'+
+    '</div>'+scResumen+oncallRes;
   mostrarScreen('screen-confirmacion');
 }
 
