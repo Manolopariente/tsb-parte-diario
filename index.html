@@ -780,7 +780,7 @@ function resetear(){
   document.getElementById('inp-pin').value='';
   document.getElementById('inp-password').value='';
   document.getElementById('sel-yacimiento').value='';
-  document.getElementById('sel-supervisor').innerHTML='<option value="">— Seleccioná tu nombre —</option>';
+  var selSup=document.getElementById('sel-supervisor');selSup.innerHTML='<option value="">— Seleccioná tu nombre —</option>';supervisores.forEach(function(s){var opt=document.createElement('option');opt.value=String(s.id);opt.textContent=s.nombre;selSup.appendChild(opt);});
   mostrarScreen('screen-login');
 }
 </script>
