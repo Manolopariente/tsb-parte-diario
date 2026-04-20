@@ -7,7 +7,6 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="theme-color" content="#1e3070">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -72,14 +71,48 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .barra-fill.bajo{background:linear-gradient(90deg,var(--rojo),#c62828);}
 .barra-pct{text-align:center;font-size:12px;font-weight:700;color:var(--muted);margin-top:6px;}
 .seccion-titulo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
-.mapa-card{background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;}
-#mapa{height:300px;width:100%;}
-.mapa-leyenda{display:flex;gap:16px;padding:10px 16px;border-top:1px solid var(--gris);}
-.leyenda-item{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted);}
-.leyenda-dot{width:12px;height:12px;border-radius:50%;}
-.leyenda-dot.verde{background:var(--verde2);}
-.leyenda-dot.rojo{background:var(--rojo);}
-.leyenda-dot.gris{background:#bbb;}
+
+/* ── Eficiencia del día ─────────────────────────────────── */
+.eficiencia-card{background:white;border-radius:14px;padding:18px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;display:flex;align-items:center;gap:20px;}
+.eficiencia-donut{flex-shrink:0;}
+.eficiencia-datos{flex:1;}
+.eficiencia-fecha{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.eficiencia-fila{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--gris);}
+.eficiencia-fila:last-child{border-bottom:none;}
+.eficiencia-fila-label{font-size:12px;font-weight:600;color:var(--muted);}
+.eficiencia-fila-val{font-size:14px;font-weight:900;color:var(--azul);}
+.eficiencia-fila-val.verde{color:var(--verde2);}
+.eficiencia-fila-val.rojo{color:var(--rojo);}
+
+/* ── Tabla seguimiento diario ───────────────────────────── */
+.tabla-card{background:white;border-radius:14px;padding:0;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;overflow:hidden;}
+.tabla-scroll{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead tr{background:var(--azul);color:white;}
+thead th{padding:10px 12px;text-align:left;font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;white-space:nowrap;}
+thead th:last-child{text-align:center;}
+tbody tr{border-bottom:1px solid var(--gris);}
+tbody tr:last-child{border-bottom:none;}
+tbody tr.fila-hoy{background:#f0f4ff;}
+tbody td{padding:9px 12px;color:var(--texto);white-space:nowrap;}
+tbody td:first-child{font-weight:700;}
+td.num{text-align:right;font-weight:700;font-variant-numeric:tabular-nums;}
+td.pct-cell{text-align:center;}
+.pct-pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.pct-pill.bien{background:#e8f5e9;color:#2e7d32;}
+.pct-pill.riesgo{background:#fff8e1;color:#f57f17;}
+.pct-pill.bajo{background:#ffebee;color:var(--rojo);}
+
+/* ── Flota y yacimientos ────────────────────────────────── */
+.flota-card{background:white;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;}
+.flota-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gris);}
+.flota-row:last-child{border-bottom:none;}
+.flota-tipo{font-size:13px;font-weight:600;color:var(--texto);flex:1;}
+.flota-total{font-size:16px;font-weight:900;color:var(--azul);width:28px;text-align:center;}
+.flota-chips{display:flex;gap:6px;}
+.chip{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;}
+.chip-op{background:#e8f5e9;color:#2e7d32;}
+.chip-nop{background:#ffebee;color:var(--rojo);}
 .yac-card{background:white;border-radius:12px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.06);border:2px solid var(--borde);margin-bottom:10px;}
 .yac-card.verde{border-color:#c5e89a;background:#f7fbf0;}
 .yac-card.rojo{border-color:#ffbdbd;background:#fff5f5;}
@@ -101,20 +134,12 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .yac-equipo-chip{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;border:1.5px solid;}
 .yac-equipo-chip.op{background:#f0faf0;color:#2e7d32;border-color:#c5e89a;}
 .yac-equipo-chip.nop{background:#fff0f0;color:var(--rojo);border-color:#ffbdbd;}
-.flota-card{background:white;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;}
-.flota-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gris);}
-.flota-row:last-child{border-bottom:none;}
-.flota-tipo{font-size:13px;font-weight:600;color:var(--texto);flex:1;}
-.flota-total{font-size:16px;font-weight:900;color:var(--azul);width:28px;text-align:center;}
-.flota-chips{display:flex;gap:6px;}
-.chip{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;}
-.chip-op{background:#e8f5e9;color:#2e7d32;}
-.chip-nop{background:#ffebee;color:var(--rojo);}
 .caido-item{background:white;border-radius:12px;padding:14px;margin-bottom:8px;box-shadow:0 2px 6px rgba(0,0,0,0.06);border-left:4px solid var(--rojo);}
 .caido-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
 .caido-interno{font-size:18px;font-weight:900;color:var(--azul);}
 .caido-dias{background:#ffebee;color:var(--rojo);font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;}
 .caido-tipo{font-size:12px;color:var(--muted);margin-bottom:4px;}
+.caido-yac{font-size:11px;color:var(--muted);margin-bottom:4px;}
 .caido-obs{font-size:13px;color:var(--texto);}
 .loading{text-align:center;padding:40px 20px;color:var(--muted);}
 .spinner{width:36px;height:36px;border:3px solid var(--borde);border-top-color:var(--azul);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
@@ -189,77 +214,59 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
     <div id="dash-loading" class="loading"><div class="spinner"></div>Cargando datos...</div>
     <div id="dash-contenido" style="display:none;">
       <div class="actualizacion" id="txt-actualizacion">Actualizado: —<button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button></div>
+
+      <!-- KPIs flota -->
       <div class="kpi-grid" id="kpi-grid"></div>
+
+      <!-- Acumulado mensual -->
+      <div class="seccion-titulo">Acumulado período — Contrato 4900100500</div>
       <div class="objetivo-card" id="objetivo-card"></div>
-      <div class="seccion-titulo">Distribución de flota — Vaca Muerta</div>
-      <div class="mapa-card">
-        <div id="mapa"></div>
-        <div class="mapa-leyenda">
-          <div class="leyenda-item"><div class="leyenda-dot verde"></div>Operativo</div>
-          <div class="leyenda-item"><div class="leyenda-dot rojo"></div>Fuera de servicio</div>
-          <div class="leyenda-item"><div class="leyenda-dot gris"></div>Sin parte</div>
+
+      <!-- Eficiencia del día -->
+      <div class="seccion-titulo">Eficiencia del último parte cargado</div>
+      <div id="eficiencia-card"></div>
+
+      <!-- Seguimiento diario -->
+      <div class="seccion-titulo">Seguimiento diario del período</div>
+      <div class="tabla-card">
+        <div class="tabla-scroll">
+          <table id="tabla-seguimiento">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th style="text-align:right">Resultado</th>
+                <th style="text-align:right">Objetivo</th>
+                <th>% Efic.</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-seguimiento"></tbody>
+          </table>
         </div>
       </div>
+
+      <!-- Composición de flota -->
       <div class="seccion-titulo">Composición de flota en campo</div>
       <div class="flota-card" id="flota-card"></div>
+
+      <!-- Estado por yacimiento -->
       <div class="seccion-titulo">Estado por yacimiento</div>
       <div id="yac-lista"></div>
+
+      <!-- Equipos caídos -->
       <div class="seccion-titulo" id="titulo-caidos">Equipos fuera de servicio</div>
       <div id="lista-caidos"></div>
     </div>
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 var API="https://script.google.com/macros/s/AKfycbyq5XbVf5nSf4p3XOm0aSaJc27XfRIxmdWus3Rd_POT-GBoqeEBVdjd2kSB8GWYFi8v/exec";
-var usuarios=[],usuarioActual=null,mapaObj=null,marcadores=[];
+var usuarios=[],usuarioActual=null;
 
-var YACIMIENTOS=[
-  {nombre:'Señal Picada',     lat:-37.6759,lng:-68.1397},
-  {nombre:'BDT - NAR',        lat:-37.3687,lng:-69.0378},
-  {nombre:'Puesto Hernandez', lat:-37.2863,lng:-69.0678},
-  {nombre:'Lomita',           lat:-37.3326,lng:-69.2146},
-  {nombre:'Obras',            lat:-37.2983,lng:-69.0611}
-];
-
-function iconoMapa(color){
-  var c=color==='verde'?'#6fa832':color==='rojo'?'#e53935':'#999999';
-  var svg='<svg xmlns="http://www.w3.org/2000/svg" width="28" height="38" viewBox="0 0 28 38">'+
-    '<path d="M14 0C6.27 0 0 6.27 0 14c0 9.19 12.25 22.75 14 22.75S28 23.19 28 14C28 6.27 21.73 0 14 0z" fill="'+c+'"/>'+
-    '<circle cx="14" cy="14" r="6" fill="white"/>'+
-  '</svg>';
-  return L.divIcon({html:svg,iconSize:[28,38],iconAnchor:[14,38],popupAnchor:[0,-38],className:''});
-}
-
-function iniciarMapa(){
-  if(mapaObj)return;
-  mapaObj=L.map('mapa',{zoomControl:true,scrollWheelZoom:false}).setView([-37.45,-68.9],9);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    attribution:'© OpenStreetMap',maxZoom:18
-  }).addTo(mapaObj);
-}
-
-function actualizarMapa(estadoFlota){
-  if(!mapaObj)return;
-  marcadores.forEach(function(m){mapaObj.removeLayer(m);});
-  marcadores=[];
-  YACIMIENTOS.forEach(function(yac){
-    var info=estadoFlota[yac.nombre];
-    var color='gris';
-    var popupTxt='<b>'+yac.nombre+'</b><br>Sin partes cargados';
-    if(info){
-      color=info.caidos===0?'verde':'rojo';
-      popupTxt='<b>'+yac.nombre+'</b><br>'+
-        '🟢 Operativos: '+info.operativos+'<br>'+
-        '🔴 Caídos: '+info.caidos+'<br>'+
-        (info.supervisor?'👤 '+info.supervisor+'<br>':'')+
-        '<small>Parte: '+info.fecha+'</small>';
-    }
-    var m=L.marker([yac.lat,yac.lng],{icon:iconoMapa(color)}).addTo(mapaObj).bindPopup(popupTxt);
-    marcadores.push(m);
-  });
-  mapaObj.invalidateSize();
+function fmtPeso(n){
+  if(n>=1000000000)return'$'+(n/1000000000).toFixed(2).replace('.',',')+'B';
+  if(n>=1000000)return'$'+(n/1000000).toFixed(1).replace('.',',')+'M';
+  return'$'+Math.round(n).toLocaleString('es-AR');
 }
 
 function limpiarTipo(tipo){
@@ -267,10 +274,19 @@ function limpiarTipo(tipo){
   return tipo.replace(/^TARIFA [AC] /i,'').replace(/\[.*\]/,'').trim();
 }
 
-function fmtPeso(n){
-  if(n>=1000000000)return'$'+(n/1000000000).toFixed(2).replace('.',',')+'B';
-  if(n>=1000000)return'$'+(n/1000000).toFixed(1).replace('.',',')+'M';
-  return'$'+Math.round(n).toLocaleString('es-AR');
+function donutSVG(pct){
+  var color = pct>=90?'#6fa832':pct>=70?'#f59e0b':'#e53935';
+  var r=40, cx=50, cy=50;
+  var circ=2*Math.PI*r;
+  var fill=circ*(pct/100);
+  return '<svg width="100" height="100" viewBox="0 0 100 100">'+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#f0f2f5" stroke-width="12"/>'+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="12"'+
+      ' stroke-dasharray="'+fill+' '+circ+'"'+
+      ' stroke-linecap="round"'+
+      ' transform="rotate(-90 '+cx+' '+cy+')"/>'+
+    '<text x="'+cx+'" y="'+(cy+5)+'" text-anchor="middle" font-size="18" font-weight="900" fill="'+color+'" font-family="sans-serif">'+pct+'%</text>'+
+  '</svg>';
 }
 
 window.onload=function(){
@@ -338,7 +354,6 @@ function cargarDashboard(){
       renderDashboard(d);
       document.getElementById('dash-loading').style.display='none';
       document.getElementById('dash-contenido').style.display='block';
-      setTimeout(function(){iniciarMapa();actualizarMapa(d.estadoFlota);},400);
     })
     .catch(function(){
       document.getElementById('dash-loading').innerHTML='<div class="error-msg">Error al cargar datos. <button class="btn-refresh" onclick="cargarDashboard()">Reintentar</button></div>';
@@ -348,6 +363,7 @@ function cargarDashboard(){
 function renderDashboard(d){
   document.getElementById('txt-actualizacion').innerHTML='Actualizado: '+d.fechaActualizacion+'<button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button>';
 
+  // ── KPIs flota ─────────────────────────────────────────────────────────────
   var totalOp=0,totalNop=0;
   Object.values(d.estadoFlota).forEach(function(yac){totalOp+=yac.operativos;totalNop+=yac.caidos;});
   var total=totalOp+totalNop;
@@ -358,7 +374,8 @@ function renderDashboard(d){
     '<div class="kpi-card kpi-azul"><div class="kpi-label">Total flota</div><div class="kpi-val">'+total+'</div><div class="kpi-sub">equipos en campo</div></div>'+
     '<div class="kpi-card '+(pctOp>=80?'kpi-verde':pctOp>=60?'kpi-azul':'kpi-rojo')+'"><div class="kpi-label">Operatividad</div><div class="kpi-val">'+pctOp+'%</div><div class="kpi-sub">del total</div></div>';
 
-  var pctReal=Math.round(d.acumulado/d.objetivo*100);
+  // ── Acumulado mensual ──────────────────────────────────────────────────────
+  var pctReal=d.objetivo>0?Math.round(d.acumulado/d.objetivo*100):0;
   var pct=Math.min(pctReal,100);
   var estadoBadge=pctReal>=90?'badge-bien':pctReal>=70?'badge-riesgo':'badge-bajo';
   var estadoTxt=pctReal>=90?'En objetivo':pctReal>=70?'En riesgo':'Por debajo';
@@ -373,8 +390,55 @@ function renderDashboard(d){
       '<div class="objetivo-monto-item"><div class="objetivo-monto-label">Objetivo</div><div class="objetivo-monto-val">'+fmtPeso(d.objetivo)+'</div></div>'+
     '</div>'+
     '<div class="barra-wrap"><div class="barra-fill '+barraClass+'" style="width:'+pct+'%"></div></div>'+
-    '<div class="barra-pct">'+pctReal+'% del objetivo</div>';
+    '<div class="barra-pct">'+pctReal+'% del objetivo mensual</div>';
 
+  // ── Eficiencia del día ─────────────────────────────────────────────────────
+  var efDiv=document.getElementById('eficiencia-card');
+  if(d.eficienciaHoy){
+    var eh=d.eficienciaHoy;
+    var colorVal=eh.pct>=90?'verde':eh.pct<70?'rojo':'';
+    efDiv.innerHTML=
+      '<div class="eficiencia-card">'+
+        '<div class="eficiencia-donut">'+donutSVG(eh.pct)+'</div>'+
+        '<div class="eficiencia-datos">'+
+          '<div class="eficiencia-fecha">Parte del '+eh.fecha+'</div>'+
+          '<div class="eficiencia-fila">'+
+            '<span class="eficiencia-fila-label">Resultado</span>'+
+            '<span class="eficiencia-fila-val verde">'+fmtPeso(eh.resultado)+'</span>'+
+          '</div>'+
+          '<div class="eficiencia-fila">'+
+            '<span class="eficiencia-fila-label">Objetivo</span>'+
+            '<span class="eficiencia-fila-val">'+fmtPeso(eh.objetivo)+'</span>'+
+          '</div>'+
+          '<div class="eficiencia-fila">'+
+            '<span class="eficiencia-fila-label">Diferencia</span>'+
+            '<span class="eficiencia-fila-val '+colorVal+'">'+fmtPeso(eh.resultado-eh.objetivo)+'</span>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+  }else{
+    efDiv.innerHTML='<div style="background:white;border-radius:14px;padding:16px;text-align:center;color:var(--muted);font-size:13px;margin-bottom:14px;">Sin datos del período actual</div>';
+  }
+
+  // ── Tabla seguimiento diario ───────────────────────────────────────────────
+  var tbody=document.getElementById('tbody-seguimiento');
+  if(d.seguimientoDiario&&d.seguimientoDiario.length>0){
+    var ultimaFecha=d.seguimientoDiario[d.seguimientoDiario.length-1].fecha;
+    tbody.innerHTML=d.seguimientoDiario.map(function(fila){
+      var pillClass=fila.pct>=90?'bien':fila.pct>=70?'riesgo':'bajo';
+      var esHoy=fila.fecha===ultimaFecha?'fila-hoy':'';
+      return '<tr class="'+esHoy+'">'+
+        '<td>'+fila.fecha+(esHoy?' ★':'')+'</td>'+
+        '<td class="num">'+fmtPeso(fila.resultado)+'</td>'+
+        '<td class="num">'+fmtPeso(fila.objetivo)+'</td>'+
+        '<td class="pct-cell"><span class="pct-pill '+pillClass+'">'+fila.pct+'%</span></td>'+
+      '</tr>';
+    }).join('');
+  }else{
+    tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted);">Sin datos en el período</td></tr>';
+  }
+
+  // ── Composición de flota ───────────────────────────────────────────────────
   var flotaHtml='';
   if(d.flotaPorTipo&&d.flotaPorTipo.length>0){
     d.flotaPorTipo.forEach(function(f){
@@ -393,6 +457,7 @@ function renderDashboard(d){
   }
   document.getElementById('flota-card').innerHTML=flotaHtml;
 
+  // ── Estado por yacimiento ──────────────────────────────────────────────────
   var YACS=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez'];
   var yacHtml='';
   YACS.forEach(function(nombre){
@@ -443,17 +508,23 @@ function renderDashboard(d){
   });
   document.getElementById('yac-lista').innerHTML=yacHtml;
 
+  // ── Equipos caídos — TODOS ─────────────────────────────────────────────────
   var titulo=document.getElementById('titulo-caidos');
   var lista=document.getElementById('lista-caidos');
   if(!d.equiposCaidos||d.equiposCaidos.length===0){
     titulo.style.display='none';
     lista.innerHTML='<div style="background:white;border-radius:12px;padding:16px;text-align:center;color:var(--verde2);font-weight:700;font-size:14px;margin-bottom:14px;">✓ Sin equipos fuera de servicio</div>';
   }else{
+    titulo.textContent='Equipos fuera de servicio ('+d.equiposCaidos.length+')';
     titulo.style.display='block';
     lista.innerHTML=d.equiposCaidos.map(function(eq){
       return '<div class="caido-item">'+
-        '<div class="caido-header"><div class="caido-interno">'+eq.interno+'</div><span class="caido-dias">'+eq.diasCaido+(eq.diasCaido===1?' día':' días')+'</span></div>'+
+        '<div class="caido-header">'+
+          '<div class="caido-interno">'+eq.interno+'</div>'+
+          '<span class="caido-dias">'+eq.diasCaido+(eq.diasCaido===1?' día':' días')+'</span>'+
+        '</div>'+
         '<div class="caido-tipo">'+limpiarTipo(eq.tipo)+'</div>'+
+        '<div class="caido-yac">📍 '+eq.yac+'</div>'+
         (eq.obs?'<div class="caido-obs">'+eq.obs+'</div>':'')+
       '</div>';
     }).join('');
