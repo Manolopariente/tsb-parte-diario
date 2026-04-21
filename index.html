@@ -373,6 +373,17 @@ var onCallData={hayAdicionales:false,carreton:false,hormigonM3:0,geomembranaM2:0
 var borradorPendiente=null;
 var MOTIVOS_TC=['Viento','Lluvia','Corte de ruta','Asamblea','VTV','Control médico','Renovación de licencia','Otro'];
 
+// ── Fetch con timeout ────────────────────────────────────────────────────────
+function fetchConTimeout(url, opciones, msTimeout) {
+  msTimeout = msTimeout || 25000;
+  return Promise.race([
+    fetch(url, opciones),
+    new Promise(function(_, reject) {
+      setTimeout(function() { reject(new Error('timeout')); }, msTimeout);
+    })
+  ]);
+}
+
 function fechaArgentina(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();}
 function fechaBanner(d){
   var dias=['DOMINGO','LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO'];
@@ -432,9 +443,8 @@ function sincronizarOnCallUI(){
   });
 }
 
-// ── Carga rápida: una sola llamada al API ────────────────────────────────────
 window.onload=function(){
-  fetch(API+'?action=getLoginData')
+  fetchConTimeout(API+'?action=getLoginData', {}, 20000)
     .then(function(r){return r.json();})
     .then(function(data){
       supervisores=data.supervisores;
@@ -470,11 +480,8 @@ function hacerLogin(){
   if(String(sup.password)!==String(pass)){mostrarError('Contraseña incorrecta');return;}
   supervisorActual=sup;
   yacimientoActual=yac;
-  if(sup.debeCambiar){
-    mostrarScreen('screen-cambio-sup');
-  }else{
-    irAlParte();
-  }
+  if(sup.debeCambiar){mostrarScreen('screen-cambio-sup');}
+  else{irAlParte();}
 }
 function mostrarError(msg){var e=document.getElementById('login-error');e.textContent=msg;e.style.display='block';}
 
@@ -485,13 +492,11 @@ function cambiarPasswordSup(){
   errEl.style.display='none';
   if(nueva.length<4){errEl.textContent='Mínimo 4 caracteres';errEl.style.display='block';return;}
   if(nueva!==confirma){errEl.textContent='Las contraseñas no coinciden';errEl.style.display='block';return;}
-  fetch(API+'?action=cambiarPasswordSupervisor',{method:'POST',body:JSON.stringify({id:supervisorActual.id,nuevaPassword:nueva})})
+  fetchConTimeout(API+'?action=cambiarPasswordSupervisor',{method:'POST',body:JSON.stringify({id:supervisorActual.id,nuevaPassword:nueva})},20000)
     .then(function(r){return r.json();})
     .then(function(data){
-      if(data.ok){
-        supervisorActual.password=nueva;supervisorActual.debeCambiar=false;
-        irAlParte();
-      }else{errEl.textContent='Error al guardar';errEl.style.display='block';}
+      if(data.ok){supervisorActual.password=nueva;supervisorActual.debeCambiar=false;irAlParte();}
+      else{errEl.textContent='Error al guardar';errEl.style.display='block';}
     })
     .catch(function(){errEl.textContent='Error de conexión';errEl.style.display='block';});
 }
@@ -515,7 +520,7 @@ function irAlParte(){
   document.getElementById('banner-fecha').innerHTML=fechaBanner(hoy);
   document.getElementById('parte-loading').style.display='block';
   document.getElementById('parte-contenido').style.display='none';
-  fetch(API+'?action=getUltimoParte&yacimiento='+encodeURIComponent(yacimientoActual))
+  fetchConTimeout(API+'?action=getUltimoParte&yacimiento='+encodeURIComponent(yacimientoActual),{},20000)
     .then(function(r){return r.json();})
     .then(function(u){
       var draft=null;
@@ -711,7 +716,7 @@ function guardarParte(){
     }),
     onCall:onCallData
   };
-  fetch(API+'?action=guardarParteCompleto',{method:'POST',body:JSON.stringify(payload)})
+  fetchConTimeout(API+'?action=guardarParteCompleto',{method:'POST',body:JSON.stringify(payload)},30000)
     .then(function(r){return r.json();})
     .then(function(data){
       if(data.ok){
@@ -722,7 +727,8 @@ function guardarParte(){
     .catch(function(){
       guardarPendiente(payload);
       mostrarConfirmacion(false);
-      btn.textContent='✓ CONFIRMAR Y GUARDAR PARTE';btn.disabled=false;
+      btn.textContent='✓ CONFIRMAR Y GUARDAR PARTE';
+      btn.disabled=false;
     });
 }
 
@@ -780,7 +786,13 @@ function resetear(){
   document.getElementById('inp-pin').value='';
   document.getElementById('inp-password').value='';
   document.getElementById('sel-yacimiento').value='';
-  var selSup=document.getElementById('sel-supervisor');selSup.innerHTML='<option value="">— Seleccioná tu nombre —</option>';supervisores.forEach(function(s){var opt=document.createElement('option');opt.value=String(s.id);opt.textContent=s.nombre;selSup.appendChild(opt);});
+  var selSup=document.getElementById('sel-supervisor');
+  selSup.innerHTML='<option value="">— Seleccioná tu nombre —</option>';
+  supervisores.forEach(function(s){
+    var opt=document.createElement('option');
+    opt.value=String(s.id);opt.textContent=s.nombre;
+    selSup.appendChild(opt);
+  });
   mostrarScreen('screen-login');
 }
 </script>
