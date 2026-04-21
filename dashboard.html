@@ -24,7 +24,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .login-titulo{color:white;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;opacity:0.9;margin-top:12px;}
 .login-subtitulo{color:rgba(255,255,255,0.55);font-size:11px;margin-top:4px;letter-spacing:1px;}
 .login-card{background:rgba(255,255,255,0.97);border-radius:16px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.45);}
-.login-card-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:20px;text-align:center;}
+.login-card-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:4px;text-align:center;}
+.login-card-hint{font-size:12px;color:var(--muted);text-align:center;margin-bottom:20px;}
 .error-msg{background:#ffebee;color:var(--rojo);padding:12px 16px;border-radius:10px;font-size:14px;margin-bottom:12px;text-align:center;font-weight:500;}
 .form-label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.8px;}
 select,input{width:100%;padding:13px 16px;border:1.5px solid var(--borde);border-radius:10px;font-size:15px;color:var(--texto);background:white;margin-bottom:14px;appearance:none;-webkit-appearance:none;}
@@ -43,6 +44,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .topbar-title{color:white;font-size:13px;font-weight:700;letter-spacing:1px;}
 .topbar-sub{color:rgba(255,255,255,0.7);font-size:11px;margin-top:1px;}
 .btn-salir{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;}
+.btn-compartir{background:rgba(141,198,63,0.25);border:1px solid rgba(141,198,63,0.5);color:white;padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;margin-right:8px;}
 .dash{padding:16px;max-width:600px;margin:auto;}
 .actualizacion{text-align:right;font-size:11px;color:var(--muted);margin-bottom:12px;}
 .btn-refresh{background:var(--azul);color:white;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;margin-left:8px;}
@@ -68,7 +70,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .objetivo-monto-val{font-size:18px;font-weight:900;color:var(--azul);}
 .objetivo-monto-val.acum{color:var(--verde2);}
 .barra-wrap{background:var(--gris);border-radius:20px;height:14px;overflow:hidden;}
-.barra-fill{height:100%;border-radius:20px;transition:width .6s ease;background:linear-gradient(90deg,var(--verde),var(--verde2));}
+.barra-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--verde),var(--verde2));width:0%;transition:width 1.2s ease;}
 .barra-fill.riesgo{background:linear-gradient(90deg,#f59e0b,#d97706);}
 .barra-fill.bajo{background:linear-gradient(90deg,var(--rojo),#c62828);}
 .barra-pct{text-align:center;font-size:12px;font-weight:700;color:var(--muted);margin-top:6px;}
@@ -113,6 +115,8 @@ td.pct-cell{text-align:center;}
 .yac-card.verde{border-color:#c5e89a;background:#f7fbf0;}
 .yac-card.rojo{border-color:#ffbdbd;background:#fff5f5;}
 .yac-card.naranja{border-color:#fcd34d;background:#fffbeb;}
+.yac-card.pendiente{border-color:#e53935;background:#ffebee;}
+.alerta-pendiente{background:#e53935;color:white;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
 .yac-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
 .yac-header-izq{display:flex;align-items:center;gap:8px;}
 .yac-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
@@ -142,7 +146,7 @@ td.pct-cell{text-align:center;}
 .sc-dias{background:#fff8e1;color:#92400e;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;}
 .caido-tipo{font-size:12px;color:var(--muted);margin-bottom:4px;}
 .caido-yac{font-size:11px;color:var(--muted);margin-bottom:4px;}
-.caido-obs{font-size:13px;color:var(--texto);}
+.caido-obs{font-size:13px;color:var(--texto);background:#fff5f5;border-radius:6px;padding:6px 10px;margin-top:4px;}
 .loading{text-align:center;padding:40px 20px;color:var(--muted);}
 .spinner{width:36px;height:36px;border:3px solid var(--borde);border-top-color:var(--azul);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -162,6 +166,7 @@ td.pct-cell{text-align:center;}
       </div>
       <div class="login-card">
         <div class="login-card-title">Acceso Gerencial</div>
+        <div class="login-card-hint">Contraseña por defecto: <strong>123456</strong></div>
         <div id="login-loading" class="loading" style="padding:20px 0;">
           <div class="spinner"></div>Cargando...
         </div>
@@ -210,9 +215,12 @@ td.pct-cell{text-align:center;}
       <div class="topbar-title">DASHBOARD</div>
       <div class="topbar-sub" id="topbar-usuario"></div>
     </div>
-    <button class="btn-salir" onclick="salir()">Salir</button>
+    <div style="display:flex;align-items:center;">
+      <button class="btn-compartir" onclick="compartirWhatsApp()">📤 Compartir</button>
+      <button class="btn-salir" onclick="salir()">Salir</button>
+    </div>
   </div>
-  <div class="dash">
+  <div class="dash" id="dash-contenido-wrap">
     <div id="dash-loading" class="loading"><div class="spinner"></div>Cargando datos...</div>
     <div id="dash-contenido" style="display:none;">
       <div class="actualizacion" id="txt-actualizacion">Actualizado: —<button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button></div>
@@ -224,15 +232,13 @@ td.pct-cell{text-align:center;}
       <div class="seccion-titulo">Seguimiento diario del período</div>
       <div class="tabla-card">
         <div class="tabla-scroll">
-          <table id="tabla-seguimiento">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th style="text-align:right">Resultado</th>
-                <th style="text-align:right">Objetivo</th>
-                <th>% Efic.</th>
-              </tr>
-            </thead>
+          <table>
+            <thead><tr>
+              <th>Fecha</th>
+              <th style="text-align:right">Resultado</th>
+              <th style="text-align:right">Objetivo</th>
+              <th>% Efic.</th>
+            </tr></thead>
             <tbody id="tbody-seguimiento"></tbody>
           </table>
         </div>
@@ -241,17 +247,25 @@ td.pct-cell{text-align:center;}
       <div class="flota-card" id="flota-card"></div>
       <div class="seccion-titulo">Estado por yacimiento</div>
       <div id="yac-lista"></div>
+      <div class="seccion-titulo" id="titulo-caidos" style="display:none;">Equipos fuera de servicio</div>
+      <div id="lista-caidos"></div>
       <div class="seccion-titulo" id="titulo-sc" style="display:none;">Equipos sin chofer — Bajas YPF</div>
       <div id="lista-sc"></div>
-      <div class="seccion-titulo" id="titulo-caidos">Equipos fuera de servicio</div>
-      <div id="lista-caidos"></div>
     </div>
   </div>
 </div>
 
 <script>
 var API="https://script.google.com/macros/s/AKfycbxUqQerIBYj76ohuo1mJtFQzcoufeM7VUxdSxxJATSk8gYghPAqP7iJZDbKUrvRiUWw/exec";
-var usuarios=[],usuarioActual=null;
+var usuarios=[],usuarioActual=null,dashData=null;
+
+function fetchConTimeout(url,opciones,ms){
+  ms=ms||25000;
+  return Promise.race([
+    fetch(url,opciones),
+    new Promise(function(_,reject){setTimeout(function(){reject(new Error('timeout'));},ms);})
+  ]);
+}
 
 function fmtPeso(n){
   if(n>=1000000000)return'$'+(n/1000000000).toFixed(2).replace('.',',')+'B';
@@ -274,8 +288,17 @@ function donutSVG(pct){
   '</svg>';
 }
 
+function diasDesdeHoy(fechaStr){
+  if(!fechaStr)return 999;
+  var p=fechaStr.split('/');
+  if(p.length!==3)return 999;
+  var d=new Date(Number(p[2]),Number(p[1])-1,Number(p[0]));
+  var hoy=new Date();hoy.setHours(0,0,0,0);
+  return Math.round((hoy-d)/(1000*60*60*24));
+}
+
 window.onload=function(){
-  fetch(API+'?action=getDashboardUsers')
+  fetchConTimeout(API+'?action=getDashboardUsers',{},20000)
     .then(function(r){return r.json();})
     .then(function(data){
       usuarios=data;
@@ -316,7 +339,7 @@ function cambiarPassword(){
   errEl.style.display='none';
   if(nueva.length<6){errEl.textContent='Mínimo 6 caracteres';errEl.style.display='block';return;}
   if(nueva!==confirma){errEl.textContent='Las contraseñas no coinciden';errEl.style.display='block';return;}
-  fetch(API+'?action=cambiarPasswordDashboard',{method:'POST',body:JSON.stringify({id:usuarioActual.id,nuevaPassword:nueva})})
+  fetchConTimeout(API+'?action=cambiarPasswordDashboard',{method:'POST',body:JSON.stringify({id:usuarioActual.id,nuevaPassword:nueva})},20000)
     .then(function(r){return r.json();})
     .then(function(data){
       if(data.ok){
@@ -332,23 +355,29 @@ function cambiarPassword(){
 function cargarDashboard(){
   document.getElementById('dash-loading').style.display='block';
   document.getElementById('dash-contenido').style.display='none';
-  fetch(API+'?action=getDashboardData')
+  fetchConTimeout(API+'?action=getDashboardData',{},30000)
     .then(function(r){return r.json();})
     .then(function(d){
       if(!d.ok)throw new Error('error');
+      dashData=d;
       renderDashboard(d);
       document.getElementById('dash-loading').style.display='none';
       document.getElementById('dash-contenido').style.display='block';
+      // Animar barra después de mostrar
+      setTimeout(function(){
+        var barra=document.getElementById('barra-fill-principal');
+        if(barra)barra.style.width=barra.dataset.pct+'%';
+      },300);
     })
     .catch(function(){
-      document.getElementById('dash-loading').innerHTML='<div class="error-msg">Error al cargar datos. <button class="btn-refresh" onclick="cargarDashboard()">Reintentar</button></div>';
+      document.getElementById('dash-loading').innerHTML='<div style="background:#ffebee;color:#e53935;padding:12px 16px;border-radius:10px;font-size:14px;text-align:center;font-weight:500;">Error al cargar datos. <button class="btn-refresh" onclick="cargarDashboard()">Reintentar</button></div>';
     });
 }
 
 function renderDashboard(d){
   document.getElementById('txt-actualizacion').innerHTML='Actualizado: '+d.fechaActualizacion+'<button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button>';
 
-  // ── KPIs — ahora con 4 valores: op / sin chofer / caídos / operatividad ──
+  // ── KPIs — operatividad = (op + sc) / total ──────────────────────────────
   var totalOp=0,totalNop=0,totalSC=0;
   Object.values(d.estadoFlota).forEach(function(yac){
     totalOp+=yac.operativos;
@@ -356,14 +385,14 @@ function renderDashboard(d){
     totalSC+=(yac.sinChofer||0);
   });
   var total=totalOp+totalNop+totalSC;
-  var pctOp=total>0?Math.round(totalOp/total*100):0;
+  var pctOp=total>0?Math.round((totalOp+totalSC)/total*100):0;
   document.getElementById('kpi-grid').innerHTML=
     '<div class="kpi-card kpi-verde"><div class="kpi-label">Operativos</div><div class="kpi-val">'+totalOp+'</div><div class="kpi-sub">equipos en campo</div></div>'+
     '<div class="kpi-card kpi-rojo"><div class="kpi-label">Fuera de servicio</div><div class="kpi-val">'+totalNop+'</div><div class="kpi-sub">equipos caídos</div></div>'+
     '<div class="kpi-card kpi-naranja"><div class="kpi-label">Sin chofer</div><div class="kpi-val">'+totalSC+'</div><div class="kpi-sub">bajas YPF</div></div>'+
-    '<div class="kpi-card '+(pctOp>=80?'kpi-verde':pctOp>=60?'kpi-azul':'kpi-rojo')+'"><div class="kpi-label">Operatividad</div><div class="kpi-val">'+pctOp+'%</div><div class="kpi-sub">del total</div></div>';
+    '<div class="kpi-card '+(pctOp>=80?'kpi-verde':pctOp>=60?'kpi-azul':'kpi-rojo')+'"><div class="kpi-label">Operatividad</div><div class="kpi-val">'+pctOp+'%</div><div class="kpi-sub">(op+s/c) vs rotos</div></div>';
 
-  // ── Acumulado mensual ──────────────────────────────────────────────────────
+  // ── Acumulado mensual con barra animada ───────────────────────────────────
   var pctReal=d.objetivo>0?Math.round(d.acumulado/d.objetivo*100):0;
   var pct=Math.min(pctReal,100);
   var estadoBadge=pctReal>=90?'badge-bien':pctReal>=70?'badge-riesgo':'badge-bajo';
@@ -378,13 +407,14 @@ function renderDashboard(d){
       '<div class="objetivo-monto-item"><div class="objetivo-monto-label">Acumulado</div><div class="objetivo-monto-val acum">'+fmtPeso(d.acumulado)+'</div></div>'+
       '<div class="objetivo-monto-item"><div class="objetivo-monto-label">Objetivo</div><div class="objetivo-monto-val">'+fmtPeso(d.objetivo)+'</div></div>'+
     '</div>'+
-    '<div class="barra-wrap"><div class="barra-fill '+barraClass+'" style="width:'+pct+'%"></div></div>'+
+    '<div class="barra-wrap"><div class="barra-fill '+barraClass+'" id="barra-fill-principal" data-pct="'+pct+'" style="width:0%"></div></div>'+
     '<div class="barra-pct">'+pctReal+'% del objetivo mensual</div>';
 
   // ── Eficiencia del día ─────────────────────────────────────────────────────
   var efDiv=document.getElementById('eficiencia-card');
   if(d.eficienciaHoy){
     var eh=d.eficienciaHoy;
+    var perdida=eh.objetivo-eh.resultado;
     var colorVal=eh.pct>=90?'verde':eh.pct<70?'rojo':'';
     efDiv.innerHTML=
       '<div class="eficiencia-card">'+
@@ -393,7 +423,7 @@ function renderDashboard(d){
           '<div class="eficiencia-fecha">Parte del '+eh.fecha+'</div>'+
           '<div class="eficiencia-fila"><span class="eficiencia-fila-label">Resultado</span><span class="eficiencia-fila-val verde">'+fmtPeso(eh.resultado)+'</span></div>'+
           '<div class="eficiencia-fila"><span class="eficiencia-fila-label">Objetivo</span><span class="eficiencia-fila-val">'+fmtPeso(eh.objetivo)+'</span></div>'+
-          '<div class="eficiencia-fila"><span class="eficiencia-fila-label">Diferencia</span><span class="eficiencia-fila-val '+colorVal+'">'+fmtPeso(eh.resultado-eh.objetivo)+'</span></div>'+
+          '<div class="eficiencia-fila"><span class="eficiencia-fila-label">Pérdida día</span><span class="eficiencia-fila-val rojo">'+fmtPeso(perdida)+'</span></div>'+
         '</div>'+
       '</div>';
   }else{
@@ -445,14 +475,20 @@ function renderDashboard(d){
     var info=d.estadoFlota[nombre];
     if(info){
       var sc=info.sinChofer||0;
-      var clase=info.caidos===0&&sc===0?'verde':info.caidos>0?'rojo':sc>0?'naranja':'';
-      var dotClass=info.caidos===0&&sc===0?'dot-verde':info.caidos>0?'dot-rojo':sc>0?'dot-naranja':'dot-gris';
+      var diasAtraso=diasDesdeHoy(info.fecha);
+      var estaPendiente=diasAtraso>=2; // ayer o antes = pendiente
+      var clase=estaPendiente?'pendiente':info.caidos===0&&sc===0?'verde':info.caidos>0?'rojo':sc>0?'naranja':'';
+      var dotClass=estaPendiente?'dot-rojo':info.caidos===0&&sc===0?'dot-verde':info.caidos>0?'dot-rojo':sc>0?'dot-naranja':'dot-gris';
+
+      var alertaPendiente=estaPendiente?
+        '<div class="alerta-pendiente">⚠ PARTE PENDIENTE — Último: '+info.fecha+' · Supervisor: '+(info.supervisor||'—')+'</div>':'';
+
       var tiposMap={};
       if(info.equipos){
         info.equipos.forEach(function(eq){
           var tipo=limpiarTipo(eq.tipo);
           if(!tiposMap[tipo])tiposMap[tipo]={op:0,nop:0,sc:0};
-          var en=String(eq.estadoN||eq.estado).toLowerCase();
+          var en=String(eq.estadoN||eq.estado||'').toLowerCase();
           if(en==='operativo')tiposMap[tipo].op++;
           else if(en==='sin chofer')tiposMap[tipo].sc++;
           else tiposMap[tipo].nop++;
@@ -467,6 +503,7 @@ function renderDashboard(d){
       });
       yacHtml+=
         '<div class="yac-card '+clase+'">'+
+          alertaPendiente+
           '<div class="yac-header">'+
             '<div class="yac-header-izq"><div class="yac-dot '+dotClass+'"></div><div class="yac-nombre">'+nombre+'</div></div>'+
             '<div class="yac-totales">'+
@@ -482,12 +519,37 @@ function renderDashboard(d){
           '<div class="yac-flota">'+chipsHtml+'</div>'+
         '</div>';
     }else{
-      yacHtml+='<div class="yac-card"><div class="yac-header"><div class="yac-header-izq"><div class="yac-dot dot-gris"></div><div class="yac-nombre">'+nombre+'</div></div></div><div style="font-size:12px;color:var(--muted);margin-top:4px;">Sin partes cargados</div></div>';
+      yacHtml+=
+        '<div class="yac-card pendiente">'+
+          '<div class="alerta-pendiente">⚠ SIN PARTES CARGADOS</div>'+
+          '<div class="yac-header">'+
+            '<div class="yac-header-izq"><div class="yac-dot dot-rojo"></div><div class="yac-nombre">'+nombre+'</div></div>'+
+          '</div>'+
+        '</div>';
     }
   });
   document.getElementById('yac-lista').innerHTML=yacHtml;
 
-  // ── Sin chofer — sección separada ─────────────────────────────────────────
+  // ── Equipos caídos — primero ───────────────────────────────────────────────
+  var tituloCaidos=document.getElementById('titulo-caidos');
+  var listaCaidos=document.getElementById('lista-caidos');
+  if(!d.equiposCaidos||d.equiposCaidos.length===0){
+    tituloCaidos.style.display='none';
+    listaCaidos.innerHTML='<div style="background:white;border-radius:12px;padding:16px;text-align:center;color:var(--verde2);font-weight:700;font-size:14px;margin-bottom:8px;">✓ Sin equipos fuera de servicio</div>';
+  }else{
+    tituloCaidos.textContent='Equipos fuera de servicio ('+d.equiposCaidos.length+')';
+    tituloCaidos.style.display='block';
+    listaCaidos.innerHTML=d.equiposCaidos.map(function(eq){
+      return '<div class="caido-item">'+
+        '<div class="caido-header"><div class="caido-interno">'+eq.interno+'</div><span class="caido-dias">'+eq.diasCaido+(eq.diasCaido===1?' día':' días')+'</span></div>'+
+        '<div class="caido-tipo">'+limpiarTipo(eq.tipo)+'</div>'+
+        '<div class="caido-yac">📍 '+eq.yac+'</div>'+
+        (eq.obs?'<div class="caido-obs">📋 '+eq.obs+'</div>':'')+
+      '</div>';
+    }).join('');
+  }
+
+  // ── Sin chofer — después ───────────────────────────────────────────────────
   var tituloSC=document.getElementById('titulo-sc');
   var listaSC=document.getElementById('lista-sc');
   if(d.equiposSinChofer&&d.equiposSinChofer.length>0){
@@ -495,38 +557,95 @@ function renderDashboard(d){
     tituloSC.style.display='block';
     listaSC.innerHTML=d.equiposSinChofer.map(function(eq){
       return '<div class="sc-item">'+
-        '<div class="caido-header">'+
-          '<div class="caido-interno">'+eq.interno+'</div>'+
-          '<span class="sc-dias">'+eq.diasSinChofer+(eq.diasSinChofer===1?' día':' días')+'</span>'+
-        '</div>'+
+        '<div class="caido-header"><div class="caido-interno">'+eq.interno+'</div><span class="sc-dias">'+eq.diasSinChofer+(eq.diasSinChofer===1?' día':' días')+'</span></div>'+
         '<div class="caido-tipo">'+limpiarTipo(eq.tipo)+'</div>'+
         '<div class="caido-yac">📍 '+eq.yac+'</div>'+
-        (eq.obs?'<div class="caido-obs">'+eq.obs+'</div>':'')+
+        (eq.obs?'<div class="caido-obs">📋 '+eq.obs+'</div>':'')+
       '</div>';
     }).join('');
   }else{
     tituloSC.style.display='none';
     listaSC.innerHTML='';
   }
+}
 
-  // ── Equipos caídos ────────────────────────────────────────────────────────
-  var titulo=document.getElementById('titulo-caidos');
-  var lista=document.getElementById('lista-caidos');
-  if(!d.equiposCaidos||d.equiposCaidos.length===0){
-    titulo.style.display='none';
-    lista.innerHTML='<div style="background:white;border-radius:12px;padding:16px;text-align:center;color:var(--verde2);font-weight:700;font-size:14px;margin-bottom:14px;">✓ Sin equipos fuera de servicio</div>';
-  }else{
-    titulo.textContent='Equipos fuera de servicio ('+d.equiposCaidos.length+')';
-    titulo.style.display='block';
-    lista.innerHTML=d.equiposCaidos.map(function(eq){
-      return '<div class="caido-item">'+
-        '<div class="caido-header"><div class="caido-interno">'+eq.interno+'</div><span class="caido-dias">'+eq.diasCaido+(eq.diasCaido===1?' día':' días')+'</span></div>'+
-        '<div class="caido-tipo">'+limpiarTipo(eq.tipo)+'</div>'+
-        '<div class="caido-yac">📍 '+eq.yac+'</div>'+
-        (eq.obs?'<div class="caido-obs">'+eq.obs+'</div>':'')+
-      '</div>';
-    }).join('');
+// ── Compartir por WhatsApp ─────────────────────────────────────────────────
+function compartirWhatsApp(){
+  if(!dashData){alert('Esperá que carguen los datos.');return;}
+  var d=dashData;
+  var totalOp=0,totalNop=0,totalSC=0;
+  Object.values(d.estadoFlota).forEach(function(yac){
+    totalOp+=yac.operativos;totalNop+=yac.caidos;totalSC+=(yac.sinChofer||0);
+  });
+  var total=totalOp+totalNop+totalSC;
+  var pctOp=total>0?Math.round((totalOp+totalSC)/total*100):0;
+  var pctAcum=d.objetivo>0?Math.round(d.acumulado/d.objetivo*100):0;
+
+  var lineas=[];
+  lineas.push('🏗 *TSB — Dashboard Operativo*');
+  lineas.push('📅 '+d.fechaActualizacion);
+  lineas.push('');
+  lineas.push('*FLOTA*');
+  lineas.push('✅ Operativos: '+totalOp);
+  lineas.push('🔴 Fuera de servicio: '+totalNop);
+  lineas.push('🟡 Sin chofer: '+totalSC);
+  lineas.push('📊 Operatividad: '+pctOp+'%');
+  lineas.push('');
+  lineas.push('*ACUMULADO PERÍODO*');
+  lineas.push('💰 Acumulado: '+fmtPeso(d.acumulado));
+  lineas.push('🎯 Objetivo: '+fmtPeso(d.objetivo));
+  lineas.push('📈 Alcance: '+pctAcum+'%  ('+d.periodoDesde+' → '+d.periodoHasta+')');
+
+  if(d.eficienciaHoy){
+    var eh=d.eficienciaHoy;
+    lineas.push('');
+    lineas.push('*EFICIENCIA HOY ('+eh.fecha+')*');
+    lineas.push('✅ Resultado: '+fmtPeso(eh.resultado));
+    lineas.push('🎯 Objetivo: '+fmtPeso(eh.objetivo));
+    lineas.push('📉 Pérdida: '+fmtPeso(eh.objetivo-eh.resultado));
+    lineas.push('📊 Eficiencia: '+eh.pct+'%');
   }
+
+  var YACS=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez'];
+  lineas.push('');
+  lineas.push('*ESTADO POR YACIMIENTO*');
+  YACS.forEach(function(nombre){
+    var info=d.estadoFlota[nombre];
+    if(info){
+      var diasAtraso=diasDesdeHoy(info.fecha);
+      var sc=info.sinChofer||0;
+      var icono=diasAtraso>=2?'⚠':info.caidos===0&&sc===0?'🟢':'🔴';
+      var detalle=info.operativos+' op';
+      if(info.caidos>0)detalle+=', '+info.caidos+' caído'+(info.caidos>1?'s':'');
+      if(sc>0)detalle+=', '+sc+' s/c';
+      if(diasAtraso>=2)detalle+=' — ⚠ PARTE PENDIENTE';
+      lineas.push(icono+' *'+nombre+'*: '+detalle);
+    }else{
+      lineas.push('⚠ *'+nombre+'*: Sin partes');
+    }
+  });
+
+  if(d.equiposCaidos&&d.equiposCaidos.length>0){
+    lineas.push('');
+    lineas.push('*FUERA DE SERVICIO*');
+    d.equiposCaidos.forEach(function(eq){
+      var txt='🔴 '+eq.interno+' ('+limpiarTipo(eq.tipo)+') — '+eq.diasCaido+(eq.diasCaido===1?' día':' días')+' — '+eq.yac;
+      if(eq.obs)txt+=' — '+eq.obs;
+      lineas.push(txt);
+    });
+  }
+
+  if(d.equiposSinChofer&&d.equiposSinChofer.length>0){
+    lineas.push('');
+    lineas.push('*SIN CHOFER — BAJAS YPF*');
+    d.equiposSinChofer.forEach(function(eq){
+      lineas.push('🟡 '+eq.interno+' ('+limpiarTipo(eq.tipo)+') — '+eq.diasSinChofer+(eq.diasSinChofer===1?' día':' días')+' — '+eq.yac);
+    });
+  }
+
+  var texto=lineas.join('\n');
+  var url='https://wa.me/?text='+encodeURIComponent(texto);
+  window.open(url,'_blank');
 }
 
 function mostrarScreen(id){
@@ -535,14 +654,13 @@ function mostrarScreen(id){
   window.scrollTo(0,0);
 }
 function salir(){
-  usuarioActual=null;
+  usuarioActual=null;dashData=null;
   document.getElementById('inp-password').value='';
   document.getElementById('sel-usuario').value='';
   document.getElementById('login-error').style.display='none';
   mostrarScreen('screen-login');
 }
 </script>
-
 <script>
 if('serviceWorker' in navigator){
   window.addEventListener('load',function(){

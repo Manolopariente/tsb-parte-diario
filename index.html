@@ -24,7 +24,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .login-titulo{color:white;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;opacity:0.9;margin-top:12px;}
 .login-subtitulo{color:rgba(255,255,255,0.55);font-size:11px;margin-top:4px;letter-spacing:1px;}
 .login-card{background:rgba(255,255,255,0.97);border-radius:16px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.45);}
-.login-card-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:20px;text-align:center;}
+.login-card-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:4px;text-align:center;}
+.login-card-hint{font-size:12px;color:var(--muted);text-align:center;margin-bottom:20px;}
 .btn-dashboard-acceso{display:block;text-align:center;margin-top:16px;padding:13px;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.35);border-radius:12px;color:white;font-size:13px;font-weight:700;text-decoration:none;}
 .topbar{background:var(--azul);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.25);}
 .topbar img{height:28px;filter:brightness(0) invert(1);}
@@ -52,7 +53,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.8px;}
 select,input{width:100%;padding:13px 16px;border:1.5px solid var(--borde);border-radius:10px;font-size:15px;color:var(--texto);background:white;margin-bottom:14px;appearance:none;-webkit-appearance:none;transition:border-color .2s;}
 select:focus,input:focus{outline:none;border-color:var(--azul);}
-.pin-input{text-align:center;font-size:28px;font-weight:700;letter-spacing:10px;color:var(--azul);}
 .btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:0.5px;transition:opacity .2s;}
 .btn:active{opacity:0.85;}
 .btn-primary{background:linear-gradient(135deg,var(--azul),var(--azul2));color:white;box-shadow:0 4px 12px rgba(30,48,112,0.3);}
@@ -137,6 +137,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
       </div>
       <div class="login-card">
         <div class="login-card-title">Ingreso de Supervisores</div>
+        <div class="login-card-hint">Contraseña por defecto: <strong>1234</strong></div>
         <div id="login-loading" class="loading" style="padding:20px 0;">
           <div class="spinner"></div>Cargando sistema...
         </div>
@@ -153,8 +154,6 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
           </select>
           <label>Supervisor</label>
           <select id="sel-supervisor"><option value="">— Seleccioná tu nombre —</option></select>
-          <label>PIN de acceso</label>
-          <input type="password" inputmode="numeric" maxlength="6" id="inp-pin" class="pin-input" placeholder="••••">
           <label>Contraseña</label>
           <input type="password" id="inp-password" placeholder="Contraseña">
           <button class="btn btn-primary" onclick="hacerLogin()">INGRESAR AL SISTEMA</button>
@@ -348,9 +347,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 <div id="screen-confirmacion" class="screen">
   <div class="topbar">
     <img src="logo.png" alt="TSB">
-    <div class="topbar-info">
-      <div class="topbar-title">PARTE DIARIO</div>
-    </div>
+    <div class="topbar-info"><div class="topbar-title">PARTE DIARIO</div></div>
     <button class="btn-volver" onclick="resetear()">← Inicio</button>
   </div>
   <div class="contenido" style="padding-top:30px;text-align:center;">
@@ -373,14 +370,11 @@ var onCallData={hayAdicionales:false,carreton:false,hormigonM3:0,geomembranaM2:0
 var borradorPendiente=null;
 var MOTIVOS_TC=['Viento','Lluvia','Corte de ruta','Asamblea','VTV','Control médico','Renovación de licencia','Otro'];
 
-// ── Fetch con timeout ────────────────────────────────────────────────────────
-function fetchConTimeout(url, opciones, msTimeout) {
-  msTimeout = msTimeout || 25000;
+function fetchConTimeout(url,opciones,ms){
+  ms=ms||25000;
   return Promise.race([
-    fetch(url, opciones),
-    new Promise(function(_, reject) {
-      setTimeout(function() { reject(new Error('timeout')); }, msTimeout);
-    })
+    fetch(url,opciones),
+    new Promise(function(_,reject){setTimeout(function(){reject(new Error('timeout'));},ms);})
   ]);
 }
 
@@ -393,7 +387,7 @@ function fechaBanner(d){
 function hoyInput(){var h=new Date();return h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'-'+String(h.getDate()).padStart(2,'0');}
 function inputToArgentina(v){var p=v.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
 function borradorKey(){return 'tsb_draft_'+yacimientoActual+'_'+fechaGuardar;}
-function setCchk(id,val){var el=document.getElementById(id);if(!el)return;if(val){el.classList.add('on');}else{el.classList.remove('on');}}
+function setCchk(id,val){var el=document.getElementById(id);if(!el)return;if(val)el.classList.add('on');else el.classList.remove('on');}
 
 function toggleAdicionales(){
   onCallData.hayAdicionales=!onCallData.hayAdicionales;
@@ -444,7 +438,7 @@ function sincronizarOnCallUI(){
 }
 
 window.onload=function(){
-  fetchConTimeout(API+'?action=getLoginData', {}, 20000)
+  fetchConTimeout(API+'?action=getLoginData',{},20000)
     .then(function(r){return r.json();})
     .then(function(data){
       supervisores=data.supervisores;
@@ -468,15 +462,12 @@ function hacerLogin(){
   document.getElementById('login-error').style.display='none';
   var yac=document.getElementById('sel-yacimiento').value;
   var supId=document.getElementById('sel-supervisor').value;
-  var pin=document.getElementById('inp-pin').value.trim();
   var pass=document.getElementById('inp-password').value.trim();
   if(!yac){mostrarError('Seleccioná un yacimiento');return;}
   if(!supId){mostrarError('Seleccioná tu nombre');return;}
-  if(!pin){mostrarError('Ingresá tu PIN');return;}
   if(!pass){mostrarError('Ingresá tu contraseña');return;}
   var sup=supervisores.find(function(s){return String(s.id)===supId;});
   if(!sup){mostrarError('Supervisor no encontrado');return;}
-  if(String(sup.pin)!==String(pin)){mostrarError('PIN incorrecto');return;}
   if(String(sup.password)!==String(pass)){mostrarError('Contraseña incorrecta');return;}
   supervisorActual=sup;
   yacimientoActual=yac;
@@ -567,13 +558,11 @@ function retomar(){
   document.getElementById('titulo-equipos').textContent='Retomando borrador guardado';
   renderizarEquipos();sincronizarOnCallUI();
 }
-
 function descartarBorrador(){
   try{localStorage.removeItem(borradorKey());}catch(e){}
   borradorPendiente=null;
   document.getElementById('borrador-banner').style.display='none';
 }
-
 function cambiarFecha(val){
   fechaInput=val;fechaGuardar=inputToArgentina(val);
   document.getElementById('aviso-retro').style.display=val<hoyInput()?'block':'none';
@@ -783,7 +772,6 @@ function resetear(){
   supervisorActual=null;yacimientoActual='';equiposDelParte=[];
   onCallData={hayAdicionales:false,carreton:false,hormigonM3:0,geomembranaM2:0,mallaM2:0};
   fechaGuardar='';fechaInput='';borradorPendiente=null;
-  document.getElementById('inp-pin').value='';
   document.getElementById('inp-password').value='';
   document.getElementById('sel-yacimiento').value='';
   var selSup=document.getElementById('sel-supervisor');
@@ -796,7 +784,6 @@ function resetear(){
   mostrarScreen('screen-login');
 }
 </script>
-
 <script>
 if('serviceWorker' in navigator){
   window.addEventListener('load',function(){
