@@ -571,7 +571,10 @@ function renderDashboard(d){
         '<div class="caido-header"><div class="caido-interno">'+eq.interno+'</div><span class="caido-dias">'+eq.diasCaido+(eq.diasCaido===1?' día':' días')+'</span></div>'+
         '<div class="caido-tipo">'+limpiarTipo(eq.tipo)+'</div>'+
         '<div class="caido-yac">📍 '+eq.yac+'</div>'+
-        (eq.costoPausa>0?'<div style="font-size:12px;font-weight:700;color:var(--rojo);margin-top:4px;">💸 Costo parada: '+fmtPeso(eq.costoPausa)+'</div>':'')+
+        (eq.costoPausa>0?'<div style="display:flex;gap:10px;margin-top:6px;flex-wrap:wrap;">'+
+          '<div style="background:#fff5f5;border:1px solid #ffbdbd;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--rojo);">💸 Día: '+fmtPeso(Math.round(eq.costoPausa/Math.max(eq.diasCaido,1)))+'</div>'+
+          '<div style="background:#ffebee;border:1px solid #ffbdbd;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--rojo);">📉 Acumulado: '+fmtPeso(eq.costoPausa)+'</div>'+
+        '</div>':'')+
         (eq.obs?'<div class="caido-obs">📋 '+eq.obs+'</div>':'')+
       '</div>';
     }).join('');
