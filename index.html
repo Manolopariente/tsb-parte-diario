@@ -494,6 +494,8 @@ function cambiarPasswordSup(){
 
 function irAlParte(){
   mostrarScreen('screen-parte');
+  var btn=document.querySelector('#screen-parte .btn-success');
+  if(btn){btn.textContent='✓ CONFIRMAR Y GUARDAR PARTE';btn.disabled=false;}
   var hoy=new Date();
   fechaInput=hoyInput();fechaGuardar=fechaArgentina(hoy);
   onCallData={hayAdicionales:false,carreton:false,hormigonM3:0,geomembranaM2:0,mallaM2:0};
@@ -610,7 +612,7 @@ function renderizarEquipos(){
         '<button class="toggle-btn toggle-btn-sc '+(esSC?'active-sc':'')+'" onclick="setEstado('+idx+',\'Sin chofer\')">SIN<br>CHOFER</button>'+
       '</div>'+
       scBadge+tarifaCHtml+
-      '<textarea class="obs-input" rows="2" placeholder="Observaciones del equipo..." onchange="setObs('+idx+',this.value)">'+(eq.observaciones||'')+'</textarea>'+
+      '<textarea class="obs-input" rows="2" id="obs-'+idx+'" placeholder="'+(claseItem==='no-operativo'?'⚠ OBLIGATORIO: Describí la falla del equipo...':'Observaciones del equipo...')+'" style="'+(claseItem==='no-operativo'?'border-color:#e53935;':'')+'" onchange="setObs('+idx+',this.value)">'+(eq.observaciones||'')+'</textarea>'+
       '<button class="btn-quitar" onclick="quitarEquipo('+idx+')">✕ Quitar del parte</button>';
     lista.appendChild(div);
   });
@@ -687,6 +689,7 @@ function guardarParte(){
   if(equiposDelParte.length===0){alert('No hay equipos en el parte. Agregá al menos uno.');return;}
   for(var i=0;i<equiposDelParte.length;i++){
     var eq=equiposDelParte[i];
+    if(eq.estado==='No operativo'&&(!eq.observaciones||eq.observaciones.trim()==='')){ alert('Equipo '+eq.interno+': describí la falla antes de guardar.');return;}
     if(eq.estado==='Operativo'&&eq.aplicaTarifaC){
       if(!eq.horasTarifaC||eq.horasTarifaC<=0){alert('Equipo '+eq.interno+': marcaste Tarifa C pero no ingresaste las horas.');return;}
       if(!eq.motivoTarifaC){alert('Equipo '+eq.interno+': marcaste Tarifa C pero falta el motivo.');return;}

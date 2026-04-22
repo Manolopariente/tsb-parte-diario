@@ -435,7 +435,7 @@ function renderDashboard(d){
       '</div>'+
       '<div class="objetivo-monto-item">'+
         '<div class="objetivo-monto-label">Proyección al 20</div>'+
-        '<div class="objetivo-monto-val proyect">'+fmtPeso(d.objetivoProyectado)+'</div>'+
+        '<div class="objetivo-monto-val proyect">'+pctProy+'%</div>'+
       '</div>'+
       '<div class="objetivo-monto-item">'+
         '<div class="objetivo-monto-label">Objetivo TSB</div>'+
@@ -521,7 +521,7 @@ function renderDashboard(d){
     if(info){
       var sc=info.sinChofer||0;
       var diasAtraso=diasDesdeHoy(info.fecha);
-      var estaPendiente=diasAtraso>=2;
+      var estaPendiente=diasAtraso>=1;
       var clase=estaPendiente?'pendiente':info.caidos===0&&sc===0?'verde':info.caidos>0?'rojo':sc>0?'naranja':'';
       var dotClass=estaPendiente?'dot-rojo':info.caidos===0&&sc===0?'dot-verde':info.caidos>0?'dot-rojo':sc>0?'dot-naranja':'dot-gris';
       var alertaPendiente=estaPendiente?
@@ -584,6 +584,7 @@ function renderDashboard(d){
         '<div class="caido-header"><div class="caido-interno">'+eq.interno+'</div><span class="caido-dias">'+eq.diasCaido+(eq.diasCaido===1?' día':' días')+'</span></div>'+
         '<div class="caido-tipo">'+limpiarTipo(eq.tipo)+'</div>'+
         '<div class="caido-yac">📍 '+eq.yac+'</div>'+
+        (eq.costoPausa>0?'<div style="font-size:12px;font-weight:700;color:var(--rojo);margin-top:4px;">💸 Costo parada: '+fmtPeso(eq.costoPausa)+'</div>':'')+
         (eq.obs?'<div class="caido-obs">📋 '+eq.obs+'</div>':'')+
       '</div>';
     }).join('');
