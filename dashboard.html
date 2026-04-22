@@ -381,15 +381,12 @@ function cargarDashboard(){
 }
 
 function animarBarras(d){
-  var maximo = Math.max(d.acumulado, d.objetivoProyectado, d.objetivo) * 1.05;
-  var pctReal   = Math.min(d.acumulado / maximo * 100, 100);
-  var pctProyect= Math.min(d.objetivoProyectado / maximo * 100, 100);
-  var pctObj    = Math.min(d.objetivo / maximo * 100, 100);
+  var maximo = Math.max(d.acumulado, d.objetivo) * 1.05;
+  var pctReal  = Math.min(d.acumulado / maximo * 100, 100);
+  var pctObj   = Math.min(d.objetivo  / maximo * 100, 100);
   var barraReal = document.getElementById('barra-real-anim');
-  var barraProy = document.getElementById('barra-proy-anim');
   var lineaObj  = document.getElementById('linea-contractual');
   if(barraReal) barraReal.style.width = pctReal+'%';
-  if(barraProy){ barraProy.style.width = (pctProyect-pctReal)+'%'; barraProy.style.left = pctReal+'%'; }
   if(lineaObj)  lineaObj.style.left   = pctObj+'%';
 }
 
@@ -414,10 +411,7 @@ function renderDashboard(d){
       '<div class="kpi-sub">(op + s/c) vs rotos</div></div>';
 
   // ── Objetivo — badge basado en proyección vs objetivo ─────────────────────
-  var pctProy = d.objetivo>0 ? Math.round(d.objetivoProyectado/d.objetivo*100) : 0;
   var pctAcum = d.objetivo>0 ? Math.round(d.acumulado/d.objetivo*100) : 0;
-  var estadoBadge = pctProy>=95?'badge-bien':pctProy>=80?'badge-riesgo':'badge-bajo';
-  var estadoTxt   = pctProy>=95?'Proyección: en objetivo':pctProy>=80?'Proyección: en riesgo':'Proyección: ajustada';
   var barraClass  = pctAcum>=95?'bien':pctAcum>=70?'riesgo':'bajo';
 
   document.getElementById('objetivo-card').innerHTML=
@@ -426,7 +420,6 @@ function renderDashboard(d){
         '<div class="objetivo-titulo">Acumulado y proyección</div>'+
         '<div class="objetivo-periodo">'+d.periodoDesde+' → '+d.periodoHasta+' · '+d.diasRestantes+' días restantes</div>'+
       '</div>'+
-      '<span class="objetivo-badge '+estadoBadge+'">'+estadoTxt+'</span>'+
     '</div>'+
     '<div class="objetivo-montos" style="grid-template-columns:1fr 1fr;">'+
       '<div class="objetivo-monto-item">'+
@@ -441,13 +434,11 @@ function renderDashboard(d){
     '<div class="barra-doble-wrap">'+
       '<div class="barra-fondo">'+
         '<div class="barra-real '+barraClass+'" id="barra-real-anim" style="width:0%"></div>'+
-        '<div class="barra-proyeccion" id="barra-proy-anim" style="width:0%;left:0%"></div>'+
         '<div class="barra-contractual" id="linea-contractual" style="left:0%"></div>'+
       '</div>'+
     '</div>'+
     '<div class="barra-leyenda">'+
       '<div class="barra-leyenda-item"><div class="leyenda-dot" style="background:var(--verde2)"></div>Acumulado '+pctAcum+'%</div>'+
-      '<div class="barra-leyenda-item"><div class="leyenda-dot" style="background:#bbb"></div>Proyección '+pctProy+'%</div>'+
       '<div class="barra-leyenda-item"><div class="leyenda-line"></div>Objetivo TSB</div>'+
     '</div>'+
     '<div class="objetivo-dias">Objetivo diario: '+fmtPeso(d.objetivoDiarioHoy)+' · Standby: '+fmtPeso(d.standbyDia)+'/día</div>';

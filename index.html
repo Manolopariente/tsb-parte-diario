@@ -527,7 +527,14 @@ function irAlParte(){
         equiposDelParte=cargarDesdeUltimoParte(u);
       }else if(u&&u.length>0){
         equiposDelParte=cargarDesdeUltimoParte(u);
-        document.getElementById('titulo-equipos').textContent='Confirmá o modificá el estado de hoy';
+        // Verificar si el último parte es de hoy — puede ser una corrección
+        var hoyStr=fechaGuardar;
+        var ultimaFechaStr=u[0]?u[0].fecha:'';
+        if(ultimaFechaStr===hoyStr){
+          document.getElementById('titulo-equipos').textContent='⚠ Ya existe un parte de hoy — podés corregirlo';
+        }else{
+          document.getElementById('titulo-equipos').textContent='Confirmá o modificá el estado de hoy';
+        }
       }else{
         equiposDelParte=[];
         document.getElementById('titulo-equipos').textContent='Sin parte anterior — agregá los equipos';
