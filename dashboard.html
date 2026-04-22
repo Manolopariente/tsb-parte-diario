@@ -268,8 +268,6 @@ function fetchConTimeout(url,opciones,ms){
 }
 
 function fmtPeso(n){
-  if(n>=1000000000)return'$'+(n/1000000000).toFixed(2).replace('.',',')+'B';
-  if(n>=1000000)return'$'+(n/1000000).toFixed(1).replace('.',',')+'M';
   return'$'+Math.round(n).toLocaleString('es-AR');
 }
 function limpiarTipo(tipo){
