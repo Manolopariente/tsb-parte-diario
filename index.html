@@ -769,6 +769,8 @@ function mostrarScreen(id){
 }
 function salir(){if(confirm('¿Salir de la sesión?')){resetear();}}
 function resetear(){
+  var btn=document.querySelector('#screen-parte .btn-success');
+  if(btn){btn.textContent='✓ CONFIRMAR Y GUARDAR PARTE';btn.disabled=false;}
   supervisorActual=null;yacimientoActual='';equiposDelParte=[];
   onCallData={hayAdicionales:false,carreton:false,hormigonM3:0,geomembranaM2:0,mallaM2:0};
   fechaGuardar='';fechaInput='';borradorPendiente=null;
