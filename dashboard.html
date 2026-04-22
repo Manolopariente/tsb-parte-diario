@@ -364,7 +364,7 @@ function cambiarPassword(){
 function cargarDashboard(){
   document.getElementById('dash-loading').style.display='block';
   document.getElementById('dash-contenido').style.display='none';
-  fetchConTimeout(API+'?action=getDashboardData',{},30000)
+  fetchConTimeout(API+'?action=getDashboardData&t='+Date.now(),{},30000)
     .then(function(r){return r.json();})
     .then(function(d){
       if(!d.ok)throw new Error('error');
@@ -428,14 +428,10 @@ function renderDashboard(d){
       '</div>'+
       '<span class="objetivo-badge '+estadoBadge+'">'+estadoTxt+'</span>'+
     '</div>'+
-    '<div class="objetivo-montos">'+
+    '<div class="objetivo-montos" style="grid-template-columns:1fr 1fr;">'+
       '<div class="objetivo-monto-item">'+
         '<div class="objetivo-monto-label">Acumulado real</div>'+
         '<div class="objetivo-monto-val acum">'+fmtPeso(d.acumulado)+'</div>'+
-      '</div>'+
-      '<div class="objetivo-monto-item">'+
-        '<div class="objetivo-monto-label">Proyección al 20</div>'+
-        '<div class="objetivo-monto-val proyect">'+pctProy+'%</div>'+
       '</div>'+
       '<div class="objetivo-monto-item">'+
         '<div class="objetivo-monto-label">Objetivo TSB</div>'+
