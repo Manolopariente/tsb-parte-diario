@@ -364,7 +364,7 @@ function cambiarPassword(){
 function cargarDashboard(){
   document.getElementById('dash-loading').style.display='block';
   document.getElementById('dash-contenido').style.display='none';
-  fetchConTimeout(API+'?action=getDashboardData&t='+Date.now(),{},30000)
+  fetchConTimeout(API+'?action=getDashboardData&t='+Date.now(),{method:'POST',body:'{}'},30000)
     .then(function(r){return r.json();})
     .then(function(d){
       if(!d.ok)throw new Error('error');
