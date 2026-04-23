@@ -462,7 +462,7 @@ window.onload=function(){
         var selActuar=document.getElementById('sel-actuar-como');
         if(sup&&sup.rol==='ADMIN'){
           selActuar.innerHTML='<option value="">— Seleccioná el supervisor —</option>';
-          supervisores.filter(function(s){return s.rol!=='ADMIN';}).forEach(function(s){
+          supervisores.forEach(function(s){
             var opt=document.createElement('option');
             opt.value=String(s.id);opt.textContent=s.nombre;
             selActuar.appendChild(opt);
