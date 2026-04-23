@@ -44,7 +44,10 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .topbar-title{color:white;font-size:13px;font-weight:700;letter-spacing:1px;}
 .topbar-sub{color:rgba(255,255,255,0.7);font-size:11px;margin-top:1px;}
 .btn-salir{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;}
-.btn-compartir{background:rgba(141,198,63,0.25);border:1px solid rgba(141,198,63,0.5);color:white;padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;margin-right:8px;}
+.btn-wa{width:36px;height:36px;border-radius:50%;background:#25d366;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-right:10px;transition:transform .15s;}
+.btn-wa:hover{transform:scale(1.1);}
+.btn-wa:active{transform:scale(0.93);}
+.btn-wa svg{width:18px;height:18px;}
 .dash{padding:16px;max-width:600px;margin:auto;}
 .actualizacion{text-align:right;font-size:11px;color:var(--muted);margin-bottom:12px;}
 .btn-refresh{background:var(--azul);color:white;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;margin-left:8px;}
@@ -61,10 +64,6 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .objetivo-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
 .objetivo-titulo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
 .objetivo-periodo{font-size:10px;color:var(--muted);margin-top:2px;}
-.objetivo-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;}
-.badge-bien{background:#e8f5e9;color:#2e7d32;}
-.badge-riesgo{background:#fff8e1;color:#f57f17;}
-.badge-bajo{background:#ffebee;color:var(--rojo);}
 .objetivo-montos{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
 .objetivo-monto-item{text-align:center;background:var(--gris);border-radius:10px;padding:10px 6px;}
 .objetivo-monto-label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;}
@@ -226,7 +225,9 @@ td.pct-cell{text-align:center;}
       <div class="topbar-sub" id="topbar-usuario"></div>
     </div>
     <div style="display:flex;align-items:center;">
-      <button class="btn-compartir" onclick="compartirWhatsApp()">📤 Compartir</button>
+      <button class="btn-wa" onclick="compartirWhatsApp()" title="Compartir por WhatsApp">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      </button>
       <button class="btn-salir" onclick="salir()">Salir</button>
     </div>
   </div>
@@ -265,6 +266,7 @@ td.pct-cell{text-align:center;}
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 var API="https://script.google.com/macros/s/AKfycbxUqQerIBYj76ohuo1mJtFQzcoufeM7VUxdSxxJATSk8gYghPAqP7iJZDbKUrvRiUWw/exec";
 var usuarios=[],usuarioActual=null,dashData=null;
@@ -277,9 +279,13 @@ function fetchConTimeout(url,opciones,ms){
   ]);
 }
 
-// Formato con puntos de miles, sin decimales
 function fmtPeso(n){
   return '$'+Math.round(n).toLocaleString('es-AR');
+}
+function fmtB(n){
+  if(n>=1000000000)return '$'+(n/1000000000).toFixed(2)+'B';
+  if(n>=1000000)return '$'+(n/1000000).toFixed(0)+'M';
+  return fmtPeso(n);
 }
 
 function limpiarTipo(tipo){
@@ -381,13 +387,153 @@ function cargarDashboard(){
 }
 
 function animarBarras(d){
-  var maximo = Math.max(d.acumulado, d.objetivo) * 1.05;
-  var pctReal  = Math.min(d.acumulado / maximo * 100, 100);
-  var pctObj   = Math.min(d.objetivo  / maximo * 100, 100);
-  var barraReal = document.getElementById('barra-real-anim');
-  var lineaObj  = document.getElementById('linea-contractual');
-  if(barraReal) barraReal.style.width = pctReal+'%';
-  if(lineaObj)  lineaObj.style.left   = pctObj+'%';
+  var maximo=Math.max(d.acumulado,d.objetivo)*1.05;
+  var pctReal=Math.min(d.acumulado/maximo*100,100);
+  var pctObj=Math.min(d.objetivo/maximo*100,100);
+  var barraReal=document.getElementById('barra-real-anim');
+  var lineaObj=document.getElementById('linea-contractual');
+  if(barraReal)barraReal.style.width=pctReal+'%';
+  if(lineaObj)lineaObj.style.left=pctObj+'%';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// COMPARTIR POR WHATSAPP — genera card ejecutivo oscuro, captura imagen
+// ─────────────────────────────────────────────────────────────────────────────
+function compartirWhatsApp(){
+  if(!dashData){alert('Esperá que carguen los datos.');return;}
+  var d=dashData;
+
+  // Calcular totales
+  var totalOp=0,totalNop=0,totalSC=0;
+  Object.values(d.estadoFlota).forEach(function(yac){
+    totalOp+=yac.operativos;totalNop+=yac.caidos;totalSC+=(yac.sinChofer||0);
+  });
+  var total=totalOp+totalNop+totalSC;
+  var pctOp=total>0?Math.round((totalOp+totalSC)/total*100):0;
+  var pctAcum=d.objetivo>0?Math.round(d.acumulado/d.objetivo*100):0;
+  var uptimeColor=pctOp>=90?'#4ade80':pctOp>=70?'#fbbf24':'#f87171';
+  var billingColor=pctAcum>=90?'#4ade80':pctAcum>=70?'#fbbf24':'#f87171';
+
+  // Filas de yacimientos
+  var YACS=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez'];
+  var yacsHtml='';
+  YACS.forEach(function(nombre){
+    var info=d.estadoFlota[nombre];
+    var sc=info?info.sinChofer||0:0;
+    var atraso=info?diasDesdeHoy(info.fecha):999;
+    var dot=!info||atraso>=1?'#ef4444':info.caidos===0&&sc===0?'#22c55e':info.caidos>0?'#ef4444':'#f59e0b';
+    var detalle=info?(info.operativos+' op'+(info.caidos>0?' · '+info.caidos+' caído'+(info.caidos>1?'s':''):'')+
+      (sc>0?' · '+sc+' s/c':'')+(atraso>=1?' ⚠ PENDIENTE':'')):'Sin partes';
+    yacsHtml+='<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">'+
+      '<div style="width:8px;height:8px;border-radius:50%;background:'+dot+';flex-shrink:0;"></div>'+
+      '<span style="font-size:11px;color:#94a3b8;flex:1;">'+nombre+'</span>'+
+      '<span style="font-size:11px;color:#e8eaf0;font-weight:600;">'+detalle+'</span>'+
+    '</div>';
+  });
+
+  // Filas equipos caídos
+  var caidosHtml='';
+  if(d.equiposCaidos&&d.equiposCaidos.length>0){
+    d.equiposCaidos.forEach(function(eq){
+      caidosHtml+='<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);">'+
+        '<div style="width:8px;height:8px;border-radius:50%;background:#ef4444;flex-shrink:0;"></div>'+
+        '<span style="font-size:11px;color:#94a3b8;flex:1;">'+eq.interno+' · '+limpiarTipo(eq.tipo)+'</span>'+
+        '<span style="font-size:11px;color:#f87171;font-weight:700;">'+eq.diasCaido+(eq.diasCaido===1?' día':' días')+'</span>'+
+        (eq.costoPausa>0?'<span style="font-size:10px;color:#f87171;margin-left:4px;">'+fmtB(eq.costoPausa)+'</span>':'')+
+      '</div>';
+    });
+  }else{
+    caidosHtml='<div style="font-size:11px;color:#4ade80;padding:6px 0;">✓ Sin equipos fuera de servicio</div>';
+  }
+
+  // Card ejecutivo oscuro
+  var card=document.createElement('div');
+  card.style.cssText='position:fixed;left:-9999px;top:0;width:420px;background:#0a0f1e;font-family:-apple-system,BlinkMacSystemFont,sans-serif;border-radius:16px;overflow:hidden;';
+  card.innerHTML=
+    // Header
+    '<div style="background:#0d1530;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center;">'+
+      '<div>'+
+        '<div style="font-size:13px;font-weight:700;color:#e8eaf0;letter-spacing:0.3px;">CONTRATO 4900100500 — YPF RDLS</div>'+
+        '<div style="font-size:10px;color:#4a6fa5;margin-top:2px;">Movimiento de Suelos · Neuquén</div>'+
+      '</div>'+
+      '<div style="text-align:right;">'+
+        '<div style="font-size:10px;color:#4a6fa5;">'+d.fechaActualizacion+'</div>'+
+        '<div style="font-size:10px;color:#60a5fa;margin-top:2px;font-weight:500;">'+d.periodoDesde+' → '+d.periodoHasta+'</div>'+
+      '</div>'+
+    '</div>'+
+    // KPIs
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;border-bottom:1px solid rgba(255,255,255,0.06);">'+
+      '<div style="padding:14px 12px;border-right:1px solid rgba(255,255,255,0.06);">'+
+        '<div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Uptime</div>'+
+        '<div style="font-size:22px;font-weight:900;color:'+uptimeColor+';">'+pctOp+'%</div>'+
+        '<div style="font-size:10px;color:#4a6fa5;margin-top:2px;">'+totalOp+' op / '+total+' tot</div>'+
+      '</div>'+
+      '<div style="padding:14px 12px;border-right:1px solid rgba(255,255,255,0.06);">'+
+        '<div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Facturado</div>'+
+        '<div style="font-size:22px;font-weight:900;color:'+billingColor+';">'+pctAcum+'%</div>'+
+        '<div style="font-size:10px;color:#4a6fa5;margin-top:2px;">'+fmtB(d.acumulado)+'</div>'+
+      '</div>'+
+      '<div style="padding:14px 12px;border-right:1px solid rgba(255,255,255,0.06);">'+
+        '<div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Objetivo</div>'+
+        '<div style="font-size:22px;font-weight:900;color:#60a5fa;">'+fmtB(d.objetivo)+'</div>'+
+        '<div style="font-size:10px;color:#4a6fa5;margin-top:2px;">'+d.diasRestantes+' días rest.</div>'+
+      '</div>'+
+      '<div style="padding:14px 12px;">'+
+        '<div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Caídos</div>'+
+        '<div style="font-size:22px;font-weight:900;color:'+(totalNop>0?'#f87171':'#4ade80')+';">'+totalNop+'</div>'+
+        '<div style="font-size:10px;color:#4a6fa5;margin-top:2px;">equipos</div>'+
+      '</div>'+
+    '</div>'+
+    // Barra facturación
+    '<div style="padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);">'+
+      '<div style="display:flex;justify-content:space-between;font-size:10px;color:#4a6fa5;margin-bottom:5px;">'+
+        '<span>Avance del período</span><span style="color:'+billingColor+';font-weight:600;">'+pctAcum+'% del objetivo</span>'+
+      '</div>'+
+      '<div style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;">'+
+        '<div style="height:100%;width:'+Math.min(pctAcum,100)+'%;background:'+(pctAcum>=90?'#22c55e':pctAcum>=70?'#f59e0b':'#ef4444')+';border-radius:4px;"></div>'+
+      '</div>'+
+    '</div>'+
+    // Yacimientos
+    '<div style="padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);">'+
+      '<div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Estado por yacimiento</div>'+
+      yacsHtml+
+    '</div>'+
+    // Equipos caídos
+    '<div style="padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);">'+
+      '<div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Equipos fuera de servicio</div>'+
+      caidosHtml+
+    '</div>'+
+    // Footer
+    '<div style="padding:10px 20px;display:flex;justify-content:space-between;align-items:center;">'+
+      '<div style="font-size:9px;color:#2d4a7a;">TSB · Uso interno · Contrato RDLS</div>'+
+      '<div style="font-size:9px;color:#2d4a7a;">Resp: M. Pariente</div>'+
+    '</div>';
+
+  document.body.appendChild(card);
+
+  html2canvas(card,{
+    backgroundColor:'#0a0f1e',
+    scale:2,
+    useCORS:true,
+    logging:false
+  }).then(function(canvas){
+    document.body.removeChild(card);
+    canvas.toBlob(function(blob){
+      var file=new File([blob],'TSB_RDLS_'+new Date().toLocaleDateString('es-AR').replace(/\//g,'-')+'.png',{type:'image/png'});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){
+        navigator.share({
+          files:[file],
+          title:'TSB — Contrato RDLS',
+          text:'Dashboard operativo YPF RDLS · '+d.fechaActualizacion
+        });
+      }else{
+        var a=document.createElement('a');
+        a.href=URL.createObjectURL(blob);
+        a.download=file.name;
+        a.click();
+      }
+    },'image/png');
+  });
 }
 
 function renderDashboard(d){
@@ -395,7 +541,6 @@ function renderDashboard(d){
     'Actualizado: '+d.fechaActualizacion+
     '<button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button>';
 
-  // ── KPIs ──────────────────────────────────────────────────────────────────
   var totalOp=0,totalNop=0,totalSC=0;
   Object.values(d.estadoFlota).forEach(function(yac){
     totalOp+=yac.operativos;totalNop+=yac.caidos;totalSC+=(yac.sinChofer||0);
@@ -410,9 +555,8 @@ function renderDashboard(d){
       '<div class="kpi-label">Operatividad</div><div class="kpi-val">'+pctOp+'%</div>'+
       '<div class="kpi-sub">(op + s/c) vs rotos</div></div>';
 
-  // ── Objetivo — badge basado en proyección vs objetivo ─────────────────────
-  var pctAcum = d.objetivo>0 ? Math.round(d.acumulado/d.objetivo*100) : 0;
-  var barraClass  = pctAcum>=95?'bien':pctAcum>=70?'riesgo':'bajo';
+  var pctAcum=d.objetivo>0?Math.round(d.acumulado/d.objetivo*100):0;
+  var barraClass=pctAcum>=95?'bien':pctAcum>=70?'riesgo':'bajo';
 
   document.getElementById('objetivo-card').innerHTML=
     '<div class="objetivo-header">'+
@@ -443,7 +587,6 @@ function renderDashboard(d){
     '</div>'+
     '<div class="objetivo-dias">Objetivo diario: '+fmtPeso(d.objetivoDiarioHoy)+' · Standby: '+fmtPeso(d.standbyDia)+'/día</div>';
 
-  // ── Eficiencia del día ─────────────────────────────────────────────────────
   var efDiv=document.getElementById('eficiencia-card');
   if(d.eficienciaHoy){
     var eh=d.eficienciaHoy;
@@ -462,7 +605,6 @@ function renderDashboard(d){
     efDiv.innerHTML='<div style="background:white;border-radius:14px;padding:16px;text-align:center;color:var(--muted);font-size:13px;margin-bottom:14px;">Sin datos del período actual</div>';
   }
 
-  // ── Tabla seguimiento diario ───────────────────────────────────────────────
   var tbody=document.getElementById('tbody-seguimiento');
   if(d.seguimientoDiario&&d.seguimientoDiario.length>0){
     var ultimaFecha=d.seguimientoDiario[d.seguimientoDiario.length-1].fecha;
@@ -480,7 +622,6 @@ function renderDashboard(d){
     tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted);">Sin datos en el período</td></tr>';
   }
 
-  // ── Composición de flota ───────────────────────────────────────────────────
   var flotaHtml='';
   if(d.flotaPorTipo&&d.flotaPorTipo.length>0){
     d.flotaPorTipo.forEach(function(f){
@@ -500,7 +641,6 @@ function renderDashboard(d){
   }
   document.getElementById('flota-card').innerHTML=flotaHtml;
 
-  // ── Estado por yacimiento ──────────────────────────────────────────────────
   var YACS=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez'];
   var yacHtml='';
   YACS.forEach(function(nombre){
@@ -556,7 +696,6 @@ function renderDashboard(d){
   });
   document.getElementById('yac-lista').innerHTML=yacHtml;
 
-  // ── Equipos caídos ────────────────────────────────────────────────────────
   var tituloCaidos=document.getElementById('titulo-caidos');
   var listaCaidos=document.getElementById('lista-caidos');
   if(!d.equiposCaidos||d.equiposCaidos.length===0){
@@ -579,7 +718,6 @@ function renderDashboard(d){
     }).join('');
   }
 
-  // ── Sin chofer ────────────────────────────────────────────────────────────
   var tituloSC=document.getElementById('titulo-sc');
   var listaSC=document.getElementById('lista-sc');
   if(d.equiposSinChofer&&d.equiposSinChofer.length>0){
@@ -597,83 +735,6 @@ function renderDashboard(d){
     tituloSC.style.display='none';
     listaSC.innerHTML='';
   }
-}
-
-function compartirWhatsApp(){
-  if(!dashData){alert('Esperá que carguen los datos.');return;}
-  var d=dashData;
-  var totalOp=0,totalNop=0,totalSC=0;
-  Object.values(d.estadoFlota).forEach(function(yac){
-    totalOp+=yac.operativos;totalNop+=yac.caidos;totalSC+=(yac.sinChofer||0);
-  });
-  var total=totalOp+totalNop+totalSC;
-  var pctOp=total>0?Math.round((totalOp+totalSC)/total*100):0;
-  var pctProy=d.objetivo>0?Math.round(d.objetivoProyectado/d.objetivo*100):0;
-
-  var lineas=[];
-  lineas.push('🏗 *TSB — Dashboard Operativo*');
-  lineas.push('📅 '+d.fechaActualizacion);
-  lineas.push('');
-  lineas.push('*FLOTA*');
-  lineas.push('✅ Operativos: '+totalOp);
-  lineas.push('🔴 Fuera de servicio: '+totalNop);
-  lineas.push('🟡 Sin chofer: '+totalSC);
-  lineas.push('📊 Operatividad: '+pctOp+'%');
-  lineas.push('');
-  lineas.push('*ACUMULADO Y PROYECCIÓN*');
-  lineas.push('💰 Acumulado real: '+fmtPeso(d.acumulado));
-  lineas.push('📈 Proyección al 20: '+fmtPeso(d.objetivoProyectado)+' ('+pctProy+'% del obj.)');
-  lineas.push('🎯 Objetivo TSB: '+fmtPeso(d.objetivo));
-  lineas.push('📆 '+d.periodoDesde+' → '+d.periodoHasta+' · '+d.diasRestantes+' días restantes');
-
-  if(d.eficienciaHoy){
-    var eh=d.eficienciaHoy;
-    lineas.push('');
-    lineas.push('*EFICIENCIA HOY ('+eh.fecha+')*');
-    lineas.push('✅ Resultado: '+fmtPeso(eh.resultado));
-    lineas.push('🎯 Objetivo día: '+fmtPeso(eh.objetivo));
-    lineas.push('📉 Pérdida: '+fmtPeso(eh.objetivo-eh.resultado));
-    lineas.push('📊 Eficiencia: '+eh.pct+'%');
-  }
-
-  var YACS=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez'];
-  lineas.push('');
-  lineas.push('*ESTADO POR YACIMIENTO*');
-  YACS.forEach(function(nombre){
-    var info=d.estadoFlota[nombre];
-    if(info){
-      var diasAtraso=diasDesdeHoy(info.fecha);
-      var sc=info.sinChofer||0;
-      var icono=diasAtraso>=2?'⚠':info.caidos===0&&sc===0?'🟢':'🔴';
-      var detalle=info.operativos+' op';
-      if(info.caidos>0)detalle+=', '+info.caidos+' caído'+(info.caidos>1?'s':'');
-      if(sc>0)detalle+=', '+sc+' s/c';
-      if(diasAtraso>=2)detalle+=' ⚠ PENDIENTE';
-      lineas.push(icono+' *'+nombre+'*: '+detalle);
-    }else{
-      lineas.push('⚠ *'+nombre+'*: Sin partes');
-    }
-  });
-
-  if(d.equiposCaidos&&d.equiposCaidos.length>0){
-    lineas.push('');
-    lineas.push('*FUERA DE SERVICIO*');
-    d.equiposCaidos.forEach(function(eq){
-      var txt='🔴 '+eq.interno+' ('+limpiarTipo(eq.tipo)+') — '+eq.diasCaido+(eq.diasCaido===1?' día':' días')+' — '+eq.yac;
-      if(eq.obs)txt+=' — '+eq.obs;
-      lineas.push(txt);
-    });
-  }
-
-  if(d.equiposSinChofer&&d.equiposSinChofer.length>0){
-    lineas.push('');
-    lineas.push('*SIN CHOFER — BAJAS YPF*');
-    d.equiposSinChofer.forEach(function(eq){
-      lineas.push('🟡 '+eq.interno+' ('+limpiarTipo(eq.tipo)+') — '+eq.diasSinChofer+(eq.diasSinChofer===1?' día':' días')+' — '+eq.yac);
-    });
-  }
-
-  window.open('https://wa.me/?text='+encodeURIComponent(lineas.join('\n')),'_blank');
 }
 
 function mostrarScreen(id){
