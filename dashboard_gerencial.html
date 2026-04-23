@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSB — Dashboard Gerencial</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#1e3070">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --azul:#1e3070;--azul2:#152558;--verde:#8dc63f;--verde2:#6fa832;
+  --rojo:#e53935;--naranja:#f59e0b;--naranja2:#d97706;
+  --gris:#f0f2f5;--borde:#d1d9e6;--texto:#1a2340;--muted:#6b7a99;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--gris);color:var(--texto);min-height:100vh;}
+.screen{display:none;}.screen.active{display:block;}
+.login-bg{min-height:100vh;background:url('TOPA1.jpeg') center center/cover no-repeat;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;}
+.login-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(10,20,60,0.82) 0%,rgba(10,20,60,0.93) 100%);}
+.login-box{position:relative;z-index:2;width:100%;max-width:400px;}
+.login-logo-wrap{text-align:center;margin-bottom:24px;}
+.login-logo-wrap img{height:64px;filter:brightness(0) invert(1);}
+.login-titulo{color:white;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;opacity:0.9;margin-top:12px;}
+.login-subtitulo{color:rgba(255,255,255,0.55);font-size:11px;margin-top:4px;letter-spacing:1px;}
+.login-card{background:rgba(255,255,255,0.97);border-radius:16px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.45);}
+.login-card-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:4px;text-align:center;}
+.login-card-hint{font-size:12px;color:var(--muted);text-align:center;margin-bottom:20px;}
+.error-msg{background:#ffebee;color:var(--rojo);padding:12px 16px;border-radius:10px;font-size:14px;margin-bottom:12px;text-align:center;font-weight:500;}
+.form-label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.8px;}
+select,input{width:100%;padding:13px 16px;border:1.5px solid var(--borde);border-radius:10px;font-size:15px;color:var(--texto);background:white;margin-bottom:14px;appearance:none;-webkit-appearance:none;}
+select:focus,input:focus{outline:none;border-color:var(--azul);}
+.btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;}
+.btn:active{opacity:0.85;}
+.btn-primary{background:linear-gradient(135deg,var(--azul),var(--azul2));color:white;box-shadow:0 4px 12px rgba(30,48,112,0.3);}
+.btn-success{background:linear-gradient(135deg,var(--verde),var(--verde2));color:white;box-shadow:0 4px 12px rgba(141,198,63,0.3);}
+.back-link{display:block;text-align:center;margin-top:16px;color:rgba(255,255,255,0.7);font-size:13px;text-decoration:none;}
+.cambio-card{background:rgba(255,255,255,0.97);border-radius:16px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.45);}
+.cambio-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:8px;text-align:center;}
+.cambio-sub{font-size:13px;color:var(--muted);margin-bottom:20px;text-align:center;}
+.topbar{background:var(--azul);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,0.25);}
+.topbar img{height:28px;filter:brightness(0) invert(1);}
+.topbar-info{text-align:right;}
+.topbar-title{color:white;font-size:13px;font-weight:700;letter-spacing:1px;}
+.topbar-sub{color:rgba(255,255,255,0.7);font-size:11px;margin-top:1px;}
+.btn-salir{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;}
+.share-icons{display:flex;align-items:center;gap:8px;margin-right:8px;}
+.share-ico{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;transition:transform .15s,opacity .15s;flex-shrink:0;}
+.share-ico:hover{transform:scale(1.12);}
+.share-ico:active{transform:scale(0.93);opacity:.8;}
+.share-ico.wa{background:#25d366;}
+.share-ico.mail{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.35);}
+.share-ico svg{width:17px;height:17px;}
+.dash{padding:16px;max-width:600px;margin:auto;}
+.actualizacion{text-align:right;font-size:11px;color:var(--muted);margin-bottom:12px;}
+.btn-refresh{background:var(--azul);color:white;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;margin-left:8px;}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.kpi-card{background:white;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);}
+.kpi-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.kpi-val{font-size:32px;font-weight:900;line-height:1;}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+.kpi-verde .kpi-val{color:var(--verde2);}
+.kpi-rojo .kpi-val{color:var(--rojo);}
+.kpi-azul .kpi-val{color:var(--azul);}
+.kpi-naranja .kpi-val{color:var(--naranja2);}
+.objetivo-card{background:white;border-radius:14px;padding:18px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;}
+.objetivo-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.objetivo-titulo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.objetivo-periodo{font-size:10px;color:var(--muted);margin-top:2px;}
+.objetivo-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;}
+.badge-bien{background:#e8f5e9;color:#2e7d32;}
+.badge-riesgo{background:#fff8e1;color:#f57f17;}
+.badge-bajo{background:#ffebee;color:var(--rojo);}
+.objetivo-montos{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+.objetivo-monto-item{text-align:center;background:var(--gris);border-radius:10px;padding:10px 6px;}
+.objetivo-monto-label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;}
+.objetivo-monto-val{font-size:13px;font-weight:900;color:var(--azul);line-height:1.2;}
+.objetivo-monto-val.acum{color:var(--verde2);}
+.objetivo-monto-val.proyect{color:var(--naranja2);}
+.barra-doble-wrap{position:relative;margin-bottom:6px;}
+.barra-fondo{background:var(--gris);border-radius:20px;height:14px;overflow:hidden;position:relative;}
+.barra-real{height:100%;border-radius:20px 0 0 20px;transition:width 1.2s ease;position:absolute;left:0;top:0;}
+.barra-real.bien{background:linear-gradient(90deg,var(--verde),var(--verde2));}
+.barra-real.riesgo{background:linear-gradient(90deg,#f59e0b,#d97706);}
+.barra-real.bajo{background:linear-gradient(90deg,var(--rojo),#c62828);}
+.barra-proyeccion{height:100%;position:absolute;top:0;transition:all 1.2s ease;background:rgba(180,180,180,0.35);}
+.barra-contractual{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--azul);border-radius:2px;z-index:2;}
+.barra-leyenda{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;}
+.barra-leyenda-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);font-weight:600;}
+.leyenda-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.leyenda-line{width:10px;height:2px;background:var(--azul);flex-shrink:0;}
+.objetivo-dias{text-align:center;font-size:11px;color:var(--muted);margin-top:4px;}
+.seccion-titulo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.eficiencia-card{background:white;border-radius:14px;padding:18px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;display:flex;align-items:center;gap:20px;}
+.eficiencia-donut{flex-shrink:0;}
+.eficiencia-datos{flex:1;}
+.eficiencia-fecha{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.eficiencia-fila{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--gris);}
+.eficiencia-fila:last-child{border-bottom:none;}
+.eficiencia-fila-label{font-size:12px;font-weight:600;color:var(--muted);}
+.eficiencia-fila-val{font-size:13px;font-weight:900;color:var(--azul);}
+.eficiencia-fila-val.verde{color:var(--verde2);}
+.eficiencia-fila-val.rojo{color:var(--rojo);}
+.tabla-card{background:white;border-radius:14px;padding:0;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;overflow:hidden;}
+.tabla-scroll{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead tr{background:var(--azul);color:white;}
+thead th{padding:10px 12px;text-align:left;font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--gris);}
+tbody tr:last-child{border-bottom:none;}
+tbody tr.fila-hoy{background:#f0f4ff;}
+tbody td{padding:9px 12px;color:var(--texto);white-space:nowrap;}
+tbody td:first-child{font-weight:700;}
+td.num{text-align:right;font-weight:700;font-variant-numeric:tabular-nums;}
+td.pct-cell{text-align:center;}
+.pct-pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.pct-pill.bien{background:#e8f5e9;color:#2e7d32;}
+.pct-pill.riesgo{background:#fff8e1;color:#f57f17;}
+.pct-pill.bajo{background:#ffebee;color:var(--rojo);}
+.flota-card{background:white;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;}
+.flota-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gris);}
+.flota-row:last-child{border-bottom:none;}
+.flota-tipo{font-size:13px;font-weight:600;color:var(--texto);flex:1;}
+.flota-total{font-size:16px;font-weight:900;color:var(--azul);width:28px;text-align:center;}
+.flota-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;}
+.chip-op{background:#e8f5e9;color:#2e7d32;}
+.chip-nop{background:#ffebee;color:var(--rojo);}
+.chip-sc{background:#fff8e1;color:#92400e;}
+.yac-card{background:white;border-radius:12px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.06);border:2px solid var(--borde);margin-bottom:10px;}
+.yac-card.verde{border-color:#c5e89a;background:#f7fbf0;}
+.yac-card.rojo{border-color:#ffbdbd;background:#fff5f5;}
+.yac-card.naranja{border-color:#fcd34d;background:#fffbeb;}
+.yac-card.pendiente{border-color:#e53935;background:#ffebee;}
+.alerta-pendiente{background:#e53935;color:white;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.yac-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.yac-header-izq{display:flex;align-items:center;gap:8px;}
+.yac-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.dot-verde{background:var(--verde2);}
+.dot-rojo{background:var(--rojo);}
+.dot-naranja{background:var(--naranja);}
+.dot-gris{background:#bbb;}
+.yac-nombre{font-size:14px;font-weight:700;color:var(--texto);}
+.yac-totales{display:flex;gap:6px;flex-wrap:wrap;}
+.yac-tot{font-size:12px;font-weight:700;padding:3px 8px;border-radius:20px;}
+.yac-tot.op{background:#e8f5e9;color:#2e7d32;}
+.yac-tot.nop{background:#ffebee;color:var(--rojo);}
+.yac-tot.sc{background:#fff8e1;color:#92400e;}
+.yac-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.yac-supervisor{font-size:11px;color:var(--muted);font-weight:600;}
+.yac-fecha{font-size:11px;color:var(--muted);}
+.yac-flota{display:flex;flex-wrap:wrap;gap:6px;}
+.yac-equipo-chip{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;border:1.5px solid;}
+.yac-equipo-chip.op{background:#f0faf0;color:#2e7d32;border-color:#c5e89a;}
+.yac-equipo-chip.nop{background:#fff0f0;color:var(--rojo);border-color:#ffbdbd;}
+.yac-equipo-chip.sc{background:#fffbeb;color:#92400e;border-color:#fcd34d;}
+.caido-item{background:white;border-radius:12px;padding:14px;margin-bottom:8px;box-shadow:0 2px 6px rgba(0,0,0,0.06);border-left:4px solid var(--rojo);}
+.sc-item{background:white;border-radius:12px;padding:14px;margin-bottom:8px;box-shadow:0 2px 6px rgba(0,0,0,0.06);border-left:4px solid var(--naranja);}
+.caido-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.caido-interno{font-size:18px;font-weight:900;color:var(--azul);}
+.caido-dias{background:#ffebee;color:var(--rojo);font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.sc-dias{background:#fff8e1;color:#92400e;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.caido-tipo{font-size:12px;color:var(--muted);margin-bottom:4px;}
+.caido-yac{font-size:11px;color:var(--muted);margin-bottom:4px;}
+.caido-obs{font-size:13px;color:var(--texto);background:#fff5f5;border-radius:6px;padding:6px 10px;margin-top:4px;}
+.loading{text-align:center;padding:40px 20px;color:var(--muted);}
+.spinner{width:36px;height:36px;border:3px solid var(--borde);border-top-color:var(--azul);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="screen-login" class="screen active">
+  <div class="login-bg">
+    <div class="login-overlay"></div>
+    <div class="login-box">
+      <div class="login-logo-wrap">
+        <img src="logo.png" alt="TSB">
+        <div class="login-titulo">Dashboard Gerencial</div>
+        <div class="login-subtitulo">Contrato 4900100500 — YPF</div>
+      </div>
+      <div class="login-card">
+        <div class="login-card-title">Acceso Gerencial</div>
+        <div class="login-card-hint">Contraseña por defecto: <strong>123456</strong></div>
+        <div id="login-loading" class="loading" style="padding:20px 0;">
+          <div class="spinner"></div>Cargando...
+        </div>
+        <div id="login-form" style="display:none;">
+          <div id="login-error" class="error-msg" style="display:none;"></div>
+          <span class="form-label">Usuario</span>
+          <select id="sel-usuario"><option value="">— Seleccioná tu nombre —</option></select>
+          <span class="form-label">Contraseña</span>
+          <input type="password" id="inp-password" placeholder="Contraseña" onkeydown="if(event.key==='Enter')hacerLogin()">
+          <button class="btn btn-primary" onclick="hacerLogin()">INGRESAR</button>
+        </div>
+      </div>
+      <a href="index.html" class="back-link">← Volver al ingreso de supervisores</a>
+    </div>
+  </div>
+</div>
+
+<!-- CAMBIO DE CONTRASEÑA -->
+<div id="screen-cambio" class="screen">
+  <div class="login-bg">
+    <div class="login-overlay"></div>
+    <div class="login-box">
+      <div class="login-logo-wrap">
+        <img src="logo.png" alt="TSB">
+        <div class="login-titulo">Seguridad</div>
+      </div>
+      <div class="cambio-card">
+        <div class="cambio-title">Cambiá tu contraseña</div>
+        <div class="cambio-sub">Es tu primer ingreso. Por seguridad establecé una contraseña nueva.</div>
+        <div id="cambio-error" class="error-msg" style="display:none;"></div>
+        <span class="form-label">Nueva contraseña</span>
+        <input type="password" id="inp-nueva" placeholder="Mínimo 6 caracteres">
+        <span class="form-label">Confirmá la contraseña</span>
+        <input type="password" id="inp-confirma" placeholder="Repetí la contraseña">
+        <button class="btn btn-success" onclick="cambiarPassword()">GUARDAR Y CONTINUAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="screen-dash" class="screen">
+  <div class="topbar">
+    <img src="logo.png" alt="TSB">
+    <div class="topbar-info">
+      <div class="topbar-title">DASHBOARD</div>
+      <div class="topbar-sub" id="topbar-usuario"></div>
+    </div>
+    <div style="display:flex;align-items:center;">
+      <div class="share-icons">
+        <button class="share-ico wa" onclick="compartirImagen('wa')" title="Enviar por WhatsApp">
+          <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </button>
+        <button class="share-ico mail" onclick="compartirImagen('mail')" title="Enviar por correo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+        </button>
+      </div>
+      <button class="btn-salir" onclick="salir()">Salir</button>
+    </div>
+  </div>
+  <div class="dash" id="dash-captura">
+    <div id="dash-loading" class="loading"><div class="spinner"></div>Cargando datos...</div>
+    <div id="dash-contenido" style="display:none;">
+      <div class="actualizacion" id="txt-actualizacion">Actualizado: —<button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button></div>
+      <div class="kpi-grid" id="kpi-grid"></div>
+      <div class="seccion-titulo">Acumulado período — Contrato 4900100500</div>
+      <div class="objetivo-card" id="objetivo-card"></div>
+      <div class="seccion-titulo">Eficiencia del último parte cargado</div>
+      <div id="eficiencia-card"></div>
+      <div class="seccion-titulo">Seguimiento diario del período</div>
+      <div class="tabla-card">
+        <div class="tabla-scroll">
+          <table>
+            <thead><tr>
+              <th>Fecha</th>
+              <th style="text-align:right">Resultado</th>
+              <th style="text-align:right">Objetivo</th>
+              <th>% Efic.</th>
+            </tr></thead>
+            <tbody id="tbody-seguimiento"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="seccion-titulo">Composición de flota en campo</div>
+      <div class="flota-card" id="flota-card"></div>
+      <div class="seccion-titulo">Estado por yacimiento</div>
+      <div id="yac-lista"></div>
+      <div class="seccion-titulo" id="titulo-caidos" style="display:none;">Equipos fuera de servicio</div>
+      <div id="lista-caidos"></div>
+      <div class="seccion-titulo" id="titulo-sc" style="display:none;">Equipos sin chofer — Bajas YPF</div>
+      <div id="lista-sc"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+var API="https://script.google.com/macros/s/AKfycbxUqQerIBYj76ohuo1mJtFQzcoufeM7VUxdSxxJATSk8gYghPAqP7iJZDbKUrvRiUWw/exec";
+var usuarios=[],usuarioActual=null,dashData=null;
+
+function fetchConTimeout(url,opciones,ms){
+  ms=ms||25000;
+  return Promise.race([
+    fetch(url,opciones),
+    new Promise(function(_,reject){setTimeout(function(){reject(new Error('timeout'));},ms);})
+  ]);
+}
+
+function fmtPeso(n){
+  return '$'+Math.round(n).toLocaleString('es-AR');
+}
+
+function limpiarTipo(tipo){
+  if(!tipo)return'Sin tipo';
+  return tipo.replace(/^TARIFA [AC] /i,'').replace(/\[.*\]/,'').trim();
+}
+function donutSVG(pct){
+  var color=pct>=90?'#6fa832':pct>=70?'#f59e0b':'#e53935';
+  var r=40,cx=50,cy=50,circ=2*Math.PI*r,fill=circ*(pct/100);
+  return '<svg width="100" height="100" viewBox="0 0 100 100">'+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#f0f2f5" stroke-width="12"/>'+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="12"'+
+      ' stroke-dasharray="'+fill+' '+circ+'" stroke-linecap="round"'+
+      ' transform="rotate(-90 '+cx+' '+cy+')"/>'+
+    '<text x="'+cx+'" y="'+(cy+5)+'" text-anchor="middle" font-size="18" font-weight="900" fill="'+color+'" font-family="sans-serif">'+pct+'%</text>'+
+  '</svg>';
+}
+function diasDesdeHoy(fechaStr){
+  if(!fechaStr)return 999;
+  var p=fechaStr.split('/');
+  if(p.length!==3)return 999;
+  var d=new Date(Number(p[2]),Number(p[1])-1,Number(p[0]));
+  var hoy=new Date();hoy.setHours(0,0,0,0);
+  return Math.round((hoy-d)/(1000*60*60*24));
+}
+
+window.onload=function(){
+  fetchConTimeout(API+'?action=getDashboardUsers',{},20000)
+    .then(function(r){return r.json();})
+    .then(function(data){
+      usuarios=data;
+      var sel=document.getElementById('sel-usuario');
+      sel.innerHTML='<option value="">— Seleccioná tu nombre —</option>';
+      usuarios.forEach(function(u){
+        var opt=document.createElement('option');
+        opt.value=String(u.id);opt.textContent=u.nombre;
+        sel.appendChild(opt);
+      });
+      document.getElementById('login-loading').style.display='none';
+      document.getElementById('login-form').style.display='block';
+    })
+    .catch(function(){
+      document.getElementById('login-loading').innerHTML='<div class="error-msg">Error al cargar. Verificá tu conexión.</div>';
+    });
+};
+
+function hacerLogin(){
+  var userId=document.getElementById('sel-usuario').value;
+  var pass=document.getElementById('inp-password').value.trim();
+  var errEl=document.getElementById('login-error');
+  errEl.style.display='none';
+  if(!userId){errEl.textContent='Seleccioná tu nombre';errEl.style.display='block';return;}
+  if(!pass){errEl.textContent='Ingresá tu contraseña';errEl.style.display='block';return;}
+  var user=usuarios.find(function(u){return String(u.id)===userId;});
+  if(!user){errEl.textContent='Usuario no encontrado';errEl.style.display='block';return;}
+  if(String(user.password)!==String(pass)){errEl.textContent='Contraseña incorrecta';errEl.style.display='block';return;}
+  usuarioActual=user;
+  if(user.debeCambiar){mostrarScreen('screen-cambio');}
+  else{mostrarScreen('screen-dash');document.getElementById('topbar-usuario').textContent=user.nombre;cargarDashboard();}
+}
+
+function cambiarPassword(){
+  var nueva=document.getElementById('inp-nueva').value.trim();
+  var confirma=document.getElementById('inp-confirma').value.trim();
+  var errEl=document.getElementById('cambio-error');
+  errEl.style.display='none';
+  if(nueva.length<6){errEl.textContent='Mínimo 6 caracteres';errEl.style.display='block';return;}
+  if(nueva!==confirma){errEl.textContent='Las contraseñas no coinciden';errEl.style.display='block';return;}
+  fetchConTimeout(API+'?action=cambiarPasswordDashboard',{method:'POST',body:JSON.stringify({id:usuarioActual.id,nuevaPassword:nueva})},20000)
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data.ok){
+        usuarioActual.password=nueva;usuarioActual.debeCambiar=false;
+        mostrarScreen('screen-dash');
+        document.getElementById('topbar-usuario').textContent=usuarioActual.nombre;
+        cargarDashboard();
+      }else{errEl.textContent='Error al guardar';errEl.style.display='block';}
+    })
+    .catch(function(){errEl.textContent='Error de conexión';errEl.style.display='block';});
+}
+
+function cargarDashboard(){
+  document.getElementById('dash-loading').style.display='block';
+  document.getElementById('dash-contenido').style.display='none';
+  fetchConTimeout(API+'?action=getDashboardData&t='+Date.now(),{cache:'no-store'},30000)
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d.ok)throw new Error('error');
+      dashData=d;
+      renderDashboard(d);
+      document.getElementById('dash-loading').style.display='none';
+      document.getElementById('dash-contenido').style.display='block';
+      setTimeout(function(){ animarBarras(d); },400);
+    })
+    .catch(function(){
+      document.getElementById('dash-loading').innerHTML=
+        '<div class="error-msg">Error al cargar datos. <button class="btn-refresh" onclick="cargarDashboard()">Reintentar</button></div>';
+    });
+}
+
+function animarBarras(d){
+  var maximo=Math.max(d.acumulado,d.objetivo)*1.05;
+  var pctReal=Math.min(d.acumulado/maximo*100,100);
+  var pctObj=Math.min(d.objetivo/maximo*100,100);
+  var barraReal=document.getElementById('barra-real-anim');
+  var lineaObj=document.getElementById('linea-contractual');
+  if(barraReal)barraReal.style.width=pctReal+'%';
+  if(lineaObj)lineaObj.style.left=pctObj+'%';
+}
+
+// ── COMPARTIR POR IMAGEN ──────────────────────────────────────────────────────
+function compartirImagen(destino){
+  if(!dashData){alert('Esperá que carguen los datos.');return;}
+  var fecha=new Date().toLocaleDateString('es-AR').replace(/\//g,'-');
+  var nombre='TSB_RDLS_'+fecha+'.png';
+  html2canvas(document.getElementById('dash-captura'),{
+    backgroundColor:'#f0f2f5',
+    scale:2,
+    useCORS:true,
+    logging:false,
+    ignoreElements:function(el){
+      return el.classList&&(el.classList.contains('btn-refresh')||el.classList.contains('actualizacion'));
+    }
+  }).then(function(canvas){
+    canvas.toBlob(function(blob){
+      var file=new File([blob],nombre,{type:'image/png'});
+      if(destino==='wa'){
+        if(navigator.canShare&&navigator.canShare({files:[file]})){
+          navigator.share({files:[file],title:'TSB — Dashboard RDLS',text:'Estado del contrato YPF RDLS · '+new Date().toLocaleDateString('es-AR')});
+        }else{
+          var a=document.createElement('a');
+          a.href=URL.createObjectURL(blob);
+          a.download=nombre;
+          a.click();
+        }
+      }else{
+        var a=document.createElement('a');
+        a.href=URL.createObjectURL(blob);
+        a.download=nombre;
+        a.click();
+        setTimeout(function(){
+          window.location.href='mailto:?subject=Dashboard RDLS — TSB '+new Date().toLocaleDateString('es-AR')+'&body=Adjunto imagen del dashboard operativo del contrato 4900100500 YPF RDLS.';
+        },800);
+      }
+    },'image/png');
+  });
+}
+
+function renderDashboard(d){
+  document.getElementById('txt-actualizacion').innerHTML=
+    'Actualizado: '+d.fechaActualizacion+
+    '<button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button>';
+
+  var totalOp=0,totalNop=0,totalSC=0;
+  Object.values(d.estadoFlota).forEach(function(yac){
+    totalOp+=yac.operativos;totalNop+=yac.caidos;totalSC+=(yac.sinChofer||0);
+  });
+  var total=totalOp+totalNop+totalSC;
+  var pctOp=total>0?Math.round((totalOp+totalSC)/total*100):0;
+  document.getElementById('kpi-grid').innerHTML=
+    '<div class="kpi-card kpi-verde"><div class="kpi-label">Operativos</div><div class="kpi-val">'+totalOp+'</div><div class="kpi-sub">equipos en campo</div></div>'+
+    '<div class="kpi-card kpi-rojo"><div class="kpi-label">Fuera de servicio</div><div class="kpi-val">'+totalNop+'</div><div class="kpi-sub">equipos caídos</div></div>'+
+    '<div class="kpi-card kpi-naranja"><div class="kpi-label">Sin chofer</div><div class="kpi-val">'+totalSC+'</div><div class="kpi-sub">bajas YPF</div></div>'+
+    '<div class="kpi-card '+(pctOp>=80?'kpi-verde':pctOp>=60?'kpi-azul':'kpi-rojo')+'">'+
+      '<div class="kpi-label">Operatividad</div><div class="kpi-val">'+pctOp+'%</div>'+
+      '<div class="kpi-sub">(op + s/c) vs rotos</div></div>';
+
+  var pctAcum=d.objetivo>0?Math.round(d.acumulado/d.objetivo*100):0;
+  var barraClass=pctAcum>=95?'bien':pctAcum>=70?'riesgo':'bajo';
+
+  document.getElementById('objetivo-card').innerHTML=
+    '<div class="objetivo-header">'+
+      '<div>'+
+        '<div class="objetivo-titulo">Acumulado y proyección</div>'+
+        '<div class="objetivo-periodo">'+d.periodoDesde+' → '+d.periodoHasta+' · '+d.diasRestantes+' días restantes</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="objetivo-montos" style="grid-template-columns:1fr 1fr;">'+
+      '<div class="objetivo-monto-item">'+
+        '<div class="objetivo-monto-label">Acumulado real</div>'+
+        '<div class="objetivo-monto-val acum">'+fmtPeso(d.acumulado)+'</div>'+
+      '</div>'+
+      '<div class="objetivo-monto-item">'+
+        '<div class="objetivo-monto-label">Objetivo TSB</div>'+
+        '<div class="objetivo-monto-val">'+fmtPeso(d.objetivo)+'</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="barra-doble-wrap">'+
+      '<div class="barra-fondo">'+
+        '<div class="barra-real '+barraClass+'" id="barra-real-anim" style="width:0%"></div>'+
+        '<div class="barra-contractual" id="linea-contractual" style="left:0%"></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="barra-leyenda">'+
+      '<div class="barra-leyenda-item"><div class="leyenda-dot" style="background:var(--verde2)"></div>Acumulado '+pctAcum+'%</div>'+
+      '<div class="barra-leyenda-item"><div class="leyenda-line"></div>Objetivo TSB</div>'+
+    '</div>'+
+    '<div class="objetivo-dias">Objetivo diario: '+fmtPeso(d.objetivoDiarioHoy)+' · Standby: '+fmtPeso(d.standbyDia)+'/día</div>';
+
+  var efDiv=document.getElementById('eficiencia-card');
+  if(d.eficienciaHoy){
+    var eh=d.eficienciaHoy;
+    var perdida=eh.objetivo-eh.resultado;
+    efDiv.innerHTML=
+      '<div class="eficiencia-card">'+
+        '<div class="eficiencia-donut">'+donutSVG(eh.pct)+'</div>'+
+        '<div class="eficiencia-datos">'+
+          '<div class="eficiencia-fecha">Parte del '+eh.fecha+'</div>'+
+          '<div class="eficiencia-fila"><span class="eficiencia-fila-label">Resultado</span><span class="eficiencia-fila-val verde">'+fmtPeso(eh.resultado)+'</span></div>'+
+          '<div class="eficiencia-fila"><span class="eficiencia-fila-label">Objetivo día</span><span class="eficiencia-fila-val">'+fmtPeso(eh.objetivo)+'</span></div>'+
+          '<div class="eficiencia-fila"><span class="eficiencia-fila-label">Pérdida día</span><span class="eficiencia-fila-val rojo">'+fmtPeso(perdida)+'</span></div>'+
+        '</div>'+
+      '</div>';
+  }else{
+    efDiv.innerHTML='<div style="background:white;border-radius:14px;padding:16px;text-align:center;color:var(--muted);font-size:13px;margin-bottom:14px;">Sin datos del período actual</div>';
+  }
+
+  var tbody=document.getElementById('tbody-seguimiento');
+  if(d.seguimientoDiario&&d.seguimientoDiario.length>0){
+    var ultimaFecha=d.seguimientoDiario[d.seguimientoDiario.length-1].fecha;
+    tbody.innerHTML=d.seguimientoDiario.map(function(fila){
+      var pillClass=fila.pct>=90?'bien':fila.pct>=70?'riesgo':'bajo';
+      var esHoy=fila.fecha===ultimaFecha?'fila-hoy':'';
+      return '<tr class="'+esHoy+'">'+
+        '<td>'+fila.fecha+(esHoy?' ★':'')+'</td>'+
+        '<td class="num">'+fmtPeso(fila.resultado)+'</td>'+
+        '<td class="num">'+fmtPeso(fila.objetivo)+'</td>'+
+        '<td class="pct-cell"><span class="pct-pill '+pillClass+'">'+fila.pct+'%</span></td>'+
+      '</tr>';
+    }).join('');
+  }else{
+    tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted);">Sin datos en el período</td></tr>';
+  }
+
+  var flotaHtml='';
+  if(d.flotaPorTipo&&d.flotaPorTipo.length>0){
+    d.flotaPorTipo.forEach(function(f){
+      flotaHtml+=
+        '<div class="flota-row">'+
+          '<span class="flota-tipo">'+f.tipo+'</span>'+
+          '<span class="flota-total">'+f.total+'</span>'+
+          '<div class="flota-chips">'+
+            '<span class="chip chip-op">'+f.op+' op</span>'+
+            (f.sc>0?'<span class="chip chip-sc">'+f.sc+' s/c</span>':'')+
+            (f.nop>0?'<span class="chip chip-nop">'+f.nop+' caído'+(f.nop>1?'s':'')+'</span>':'')+
+          '</div>'+
+        '</div>';
+    });
+  }else{
+    flotaHtml='<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px 0;">Sin datos</div>';
+  }
+  document.getElementById('flota-card').innerHTML=flotaHtml;
+
+  var YACS=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez'];
+  var yacHtml='';
+  YACS.forEach(function(nombre){
+    var info=d.estadoFlota[nombre];
+    if(info){
+      var sc=info.sinChofer||0;
+      var diasAtraso=diasDesdeHoy(info.fecha);
+      var estaPendiente=diasAtraso>=1;
+      var clase=estaPendiente?'pendiente':info.caidos===0&&sc===0?'verde':info.caidos>0?'rojo':sc>0?'naranja':'';
+      var dotClass=estaPendiente?'dot-rojo':info.caidos===0&&sc===0?'dot-verde':info.caidos>0?'dot-rojo':sc>0?'dot-naranja':'dot-gris';
+      var alertaPendiente=estaPendiente?
+        '<div class="alerta-pendiente">⚠ PARTE PENDIENTE — Último: '+info.fecha+' · Supervisor: '+(info.supervisor||'—')+'</div>':'';
+      var tiposMap={};
+      if(info.equipos){
+        info.equipos.forEach(function(eq){
+          var tipo=limpiarTipo(eq.tipo);
+          if(!tipo)return;
+          var en=String(eq.estadoN||eq.estado||'').toLowerCase();
+          var estadoKey=en==='operativo'?'op':en==='sin chofer'?'sc':'nop';
+          var clave=tipo+'|'+estadoKey;
+          if(!tiposMap[clave])tiposMap[clave]={tipo:tipo,estadoKey:estadoKey,count:0};
+          tiposMap[clave].count++;
+        });
+      }
+      var chipsHtml='';
+      Object.keys(tiposMap).sort().forEach(function(clave){
+        var t=tiposMap[clave];
+        chipsHtml+='<span class="yac-equipo-chip '+t.estadoKey+'">'+t.count+' '+t.tipo+'</span>';
+      });
+      yacHtml+=
+        '<div class="yac-card '+clase+'">'+alertaPendiente+
+          '<div class="yac-header">'+
+            '<div class="yac-header-izq"><div class="yac-dot '+dotClass+'"></div><div class="yac-nombre">'+nombre+'</div></div>'+
+            '<div class="yac-totales">'+
+              '<span class="yac-tot op">'+info.operativos+' op</span>'+
+              (sc>0?'<span class="yac-tot sc">'+sc+' s/c</span>':'')+
+              (info.caidos>0?'<span class="yac-tot nop">'+info.caidos+' caído'+(info.caidos>1?'s':'')+'</span>':'')+
+            '</div>'+
+          '</div>'+
+          '<div class="yac-meta">'+
+            '<span class="yac-supervisor">👤 '+(info.supervisor||'—')+'</span>'+
+            '<span class="yac-fecha">'+info.fecha+'</span>'+
+          '</div>'+
+          '<div class="yac-flota">'+chipsHtml+'</div>'+
+        '</div>';
+    }else{
+      yacHtml+=
+        '<div class="yac-card pendiente">'+
+          '<div class="alerta-pendiente">⚠ SIN PARTES CARGADOS</div>'+
+          '<div class="yac-header"><div class="yac-header-izq"><div class="yac-dot dot-rojo"></div><div class="yac-nombre">'+nombre+'</div></div></div>'+
+        '</div>';
+    }
+  });
+  document.getElementById('yac-lista').innerHTML=yacHtml;
+
+  var tituloCaidos=document.getElementById('titulo-caidos');
+  var listaCaidos=document.getElementById('lista-caidos');
+  if(!d.equiposCaidos||d.equiposCaidos.length===0){
+    tituloCaidos.style.display='none';
+    listaCaidos.innerHTML='<div style="background:white;border-radius:12px;padding:16px;text-align:center;color:var(--verde2);font-weight:700;font-size:14px;margin-bottom:8px;">✓ Sin equipos fuera de servicio</div>';
+  }else{
+    tituloCaidos.textContent='Equipos fuera de servicio ('+d.equiposCaidos.length+')';
+    tituloCaidos.style.display='block';
+    listaCaidos.innerHTML=d.equiposCaidos.map(function(eq){
+      return '<div class="caido-item">'+
+        '<div class="caido-header"><div class="caido-interno">'+eq.interno+'</div><span class="caido-dias">'+eq.diasCaido+(eq.diasCaido===1?' día':' días')+'</span></div>'+
+        '<div class="caido-tipo">'+limpiarTipo(eq.tipo)+'</div>'+
+        '<div class="caido-yac">📍 '+eq.yac+'</div>'+
+        (eq.costoPausa>0?'<div style="display:flex;gap:10px;margin-top:6px;flex-wrap:wrap;">'+
+          '<div style="background:#fff5f5;border:1px solid #ffbdbd;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--rojo);">💸 Día: '+fmtPeso(Math.round(eq.costoPausa/Math.max(eq.diasCaido,1)))+'</div>'+
+          '<div style="background:#ffebee;border:1px solid #ffbdbd;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--rojo);">📉 Acumulado: '+fmtPeso(eq.costoPausa)+'</div>'+
+        '</div>':'')+
+        (eq.obs?'<div class="caido-obs">📋 '+eq.obs+'</div>':'')+
+      '</div>';
+    }).join('');
+  }
+
+  var tituloSC=document.getElementById('titulo-sc');
+  var listaSC=document.getElementById('lista-sc');
+  if(d.equiposSinChofer&&d.equiposSinChofer.length>0){
+    tituloSC.textContent='Equipos sin chofer — Bajas YPF ('+d.equiposSinChofer.length+')';
+    tituloSC.style.display='block';
+    listaSC.innerHTML=d.equiposSinChofer.map(function(eq){
+      return '<div class="sc-item">'+
+        '<div class="caido-header"><div class="caido-interno">'+eq.interno+'</div><span class="sc-dias">'+eq.diasSinChofer+(eq.diasSinChofer===1?' día':' días')+'</span></div>'+
+        '<div class="caido-tipo">'+limpiarTipo(eq.tipo)+'</div>'+
+        '<div class="caido-yac">📍 '+eq.yac+'</div>'+
+        (eq.obs?'<div class="caido-obs">📋 '+eq.obs+'</div>':'')+
+      '</div>';
+    }).join('');
+  }else{
+    tituloSC.style.display='none';
+    listaSC.innerHTML='';
+  }
+}
+
+function mostrarScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function salir(){
+  usuarioActual=null;dashData=null;
+  document.getElementById('inp-password').value='';
+  document.getElementById('sel-usuario').value='';
+  document.getElementById('login-error').style.display='none';
+  mostrarScreen('screen-login');
+}
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('/tsb-parte-diario/sw.js');
+  });
+}
+</script>
+</body>
+</html>
