@@ -595,7 +595,7 @@ function renderizarEquipos(){
     var resumenTC=eq.aplicaTarifaC&&eq.horasTarifaC>0?hsA+' hs Tarifa A  +  '+eq.horasTarifaC+' hs Tarifa C  =  8 hs':'';
     var scBadge=esSC?'<div class="sc-badge">⚠ SIN CHOFER — BAJAS YPF · Tarifa C 8hs automático</div>':'';
     var tarifaCHtml=esOp?
-      '<div class="tarifa-c-wrap" id="tc-wrap-'+idx+'">'+
+      '<div class="tarifa-c-wrap" id="tc-wrap-'+idx+'" style="display:block">'+
         '<div class="tc-check-row">'+
           '<input type="checkbox" id="tc-chk-'+idx+'" '+(eq.aplicaTarifaC?'checked':'')+' onchange="toggleTarifaC('+idx+',this.checked)">'+
           '<label class="tc-check-label" for="tc-chk-'+idx+'">Aplica Tarifa C</label>'+
