@@ -156,6 +156,10 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
           <select id="sel-supervisor"><option value="">— Seleccioná tu nombre —</option></select>
           <label>Contraseña</label>
           <input type="password" id="inp-password" placeholder="Contraseña">
+          <div id="wrap-actuar-como" style="display:none;">
+            <label>Cargar parte como supervisor</label>
+            <select id="sel-actuar-como"><option value="">— Seleccioná el supervisor —</option></select>
+          </div>
           <button class="btn btn-primary" onclick="hacerLogin()">INGRESAR AL SISTEMA</button>
         </div>
       </div>
@@ -450,6 +454,24 @@ window.onload=function(){
         opt.value=String(s.id);opt.textContent=s.nombre;
         sel.appendChild(opt);
       });
+      // Detectar cuando se selecciona un ADMIN para mostrar el selector
+      sel.addEventListener('change', function(){
+        var supId=this.value;
+        var sup=supervisores.find(function(s){return String(s.id)===supId;});
+        var wrapActuar=document.getElementById('wrap-actuar-como');
+        var selActuar=document.getElementById('sel-actuar-como');
+        if(sup&&sup.rol==='ADMIN'){
+          selActuar.innerHTML='<option value="">— Seleccioná el supervisor —</option>';
+          supervisores.filter(function(s){return s.rol!=='ADMIN';}).forEach(function(s){
+            var opt=document.createElement('option');
+            opt.value=String(s.id);opt.textContent=s.nombre;
+            selActuar.appendChild(opt);
+          });
+          wrapActuar.style.display='block';
+        }else{
+          wrapActuar.style.display='none';
+        }
+      });
       document.getElementById('login-loading').style.display='none';
       document.getElementById('login-form').style.display='block';
     })
@@ -470,6 +492,13 @@ function hacerLogin(){
   if(!sup){mostrarError('Supervisor no encontrado');return;}
   if(String(sup.password)!==String(pass)){mostrarError('Contraseña incorrecta');return;}
   supervisorActual=sup;
+  // Si es ADMIN, usar el supervisor seleccionado para cargar el parte
+  if(sup.rol==='ADMIN'){
+    var actuarComoId=document.getElementById('sel-actuar-como').value;
+    if(!actuarComoId){mostrarError('Seleccioná el supervisor como el que vas a cargar');return;}
+    var supActuar=supervisores.find(function(s){return String(s.id)===actuarComoId;});
+    if(supActuar){supervisorActual=supActuar;}
+  }
   yacimientoActual=yac;
   if(sup.debeCambiar){mostrarScreen('screen-cambio-sup');}
   else{irAlParte();}
@@ -786,6 +815,8 @@ function resetear(){
   fechaGuardar='';fechaInput='';borradorPendiente=null;
   document.getElementById('inp-password').value='';
   document.getElementById('sel-yacimiento').value='';
+  document.getElementById('wrap-actuar-como').style.display='none';
+  document.getElementById('sel-actuar-como').innerHTML='<option value="">— Seleccioná el supervisor —</option>';
   var selSup=document.getElementById('sel-supervisor');
   selSup.innerHTML='<option value="">— Seleccioná tu nombre —</option>';
   supervisores.forEach(function(s){
