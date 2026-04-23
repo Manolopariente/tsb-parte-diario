@@ -517,19 +517,18 @@ function renderDashboard(d){
       if(info.equipos){
         info.equipos.forEach(function(eq){
           var tipo=limpiarTipo(eq.tipo);
-          if(!tiposMap[tipo])tiposMap[tipo]={op:0,nop:0,sc:0};
+          if(!tipo)return;
           var en=String(eq.estadoN||eq.estado||'').toLowerCase();
-          if(en==='operativo')tiposMap[tipo].op++;
-          else if(en==='sin chofer')tiposMap[tipo].sc++;
-          else tiposMap[tipo].nop++;
+          var estadoKey=en==='operativo'?'op':en==='sin chofer'?'sc':'nop';
+          var clave=tipo+'|'+estadoKey;
+          if(!tiposMap[clave])tiposMap[clave]={tipo:tipo,estadoKey:estadoKey,count:0};
+          tiposMap[clave].count++;
         });
       }
       var chipsHtml='';
-      Object.keys(tiposMap).forEach(function(tipo){
-        var t=tiposMap[tipo];
-        var total=t.op+t.nop+t.sc;
-        var chipClass=t.nop>0?'nop':t.sc>0?'sc':'op';
-        chipsHtml+='<span class="yac-equipo-chip '+chipClass+'">'+total+' '+tipo+'</span>';
+      Object.keys(tiposMap).sort().forEach(function(clave){
+        var t=tiposMap[clave];
+        chipsHtml+='<span class="yac-equipo-chip '+t.estadoKey+'">'+t.count+' '+t.tipo+'</span>';
       });
       yacHtml+=
         '<div class="yac-card '+clase+'">'+alertaPendiente+
