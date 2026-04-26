@@ -78,7 +78,8 @@ input:focus{outline:none;border-color:var(--azul);}
     </div>
     <button class="btn-reload" onclick="cargarEquipos()">↻</button>
     <button class="btn-reload" onclick="compartirFlota()" style="background:rgba(141,198,63,0.25);border-color:rgba(141,198,63,0.5);">📤</button>
-    <a href="index.html" class="btn-volver">← Volver</a>
+    <button class="btn-reload" id="btn-guardar-top" onclick="guardarCambios()" style="background:rgba(255,255,255,0.25);">✓</button>
+    <a href="index.html" class="btn-volver">←</a>
   </div>
   <div class="contenido">
     <div id="gestion-loading" class="loading"><div class="spinner"></div>Cargando equipos...</div>
@@ -207,9 +208,11 @@ function marcarCambio(fila, nuevoYac, sel){
 function guardarCambios(){
   var filas = Object.keys(cambiosPendientes);
   if(filas.length === 0){ alert('No hay cambios para guardar.'); return; }
-  var btn = document.querySelector('button[onclick="guardarCambios()"]');
-  btn.textContent = 'Guardando...'; btn.disabled = true;
-  var promesas = filas.map(function(fila){
+  var btnTop = document.getElementById('btn-guardar-top');
+  var btnBot = document.querySelector('button[onclick="guardarCambios()"][style*="margin-top"]');
+  if(btnTop){ btnTop.textContent='...'; btnTop.disabled=true; }
+  if(btnBot){ btnBot.textContent='Guardando...'; btnBot.disabled=true; }
+  var promesas = Object.keys(cambiosPendientes).map(function(fila){
     return fetchConTimeout(API+'?action=actualizarEquipo',{method:'POST',body:JSON.stringify({fila:Number(fila),yacimiento:cambiosPendientes[fila]})},15000)
       .then(function(r){return r.json();});
   });
@@ -217,12 +220,16 @@ function guardarCambios(){
     .then(function(){
       cambiosPendientes = {};
       document.querySelectorAll('.gestion-sel').forEach(function(s){ s.style.borderColor=''; });
-      btn.textContent = '✓ Cambios guardados';
-      btn.style.background = '#6fa832';
-      setTimeout(function(){ btn.textContent='✓ Guardar cambios'; btn.style.background='#1e3070'; btn.disabled=false; }, 2000);
+      if(btnTop){ btnTop.textContent='✓'; btnTop.style.background='rgba(141,198,63,0.4)'; btnTop.disabled=false; }
+      if(btnBot){ btnBot.textContent='✓ Cambios guardados'; btnBot.style.background='#6fa832'; btnBot.disabled=false; }
+      setTimeout(function(){
+        if(btnTop){ btnTop.style.background='rgba(255,255,255,0.25)'; }
+        if(btnBot){ btnBot.textContent='✓ Guardar cambios'; btnBot.style.background='#1e3070'; }
+      }, 2000);
     })
     .catch(function(){
-      btn.textContent = '✓ Guardar cambios'; btn.disabled = false;
+      if(btnTop){ btnTop.textContent='✓'; btnTop.disabled=false; }
+      if(btnBot){ btnBot.textContent='✓ Guardar cambios'; btnBot.disabled=false; }
       alert('Error al guardar. Verificá la conexión.');
     });
 }
