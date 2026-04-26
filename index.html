@@ -328,12 +328,6 @@ function fetchConTimeout(url,opciones,ms){
     new Promise(function(_,reject){setTimeout(function(){reject(new Error('timeout'));},ms);})
   ]);
 }
-  ms=ms||25000;
-  return Promise.race([
-    fetch(url,opciones),
-    new Promise(function(_,reject){setTimeout(function(){reject(new Error('timeout'));},ms);})
-  ]);
-}
 
 function fechaArgentina(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();}
 function fechaBanner(d){
