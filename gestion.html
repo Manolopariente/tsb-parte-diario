@@ -78,12 +78,10 @@ input:focus{outline:none;border-color:var(--azul);}
       <div class="topbar-sub">Mover y activar equipos</div>
     </div>
     <button class="btn-reload" onclick="cargarEquipos()">↻ Actualizar</button>
+    <button class="btn-reload" onclick="compartirFlota()" style="background:rgba(141,198,63,0.25);border-color:rgba(141,198,63,0.5);">📤 Compartir</button>
     <a href="index.html" class="btn-volver">← Volver</a>
   </div>
   <div class="contenido">
-    <div class="info-box">
-      💡 Cambiá el yacimiento de un equipo con el selector. Usá ON/OFF para activar o desactivar. Los cambios se guardan al instante en el Sheets.
-    </div>
     <div id="gestion-loading" class="loading"><div class="spinner"></div>Cargando equipos...</div>
     <div id="gestion-contenido"></div>
   </div>
@@ -127,6 +125,7 @@ function cargarEquipos(){
   fetchConTimeout(API+'?action=getEquiposAdmin',{},20000)
     .then(function(r){return r.json();})
     .then(function(equipos){
+      equiposCargados = equipos;
       renderGestion(equipos);
       document.getElementById('gestion-loading').style.display='none';
     })
@@ -160,48 +159,73 @@ function renderGestion(equipos){
           '<div class="gestion-equipo-row">'+
             '<div class="gestion-interno">'+eq.interno+'</div>'+
             '<div class="gestion-tipo">'+eq.tipo.replace(/^TARIFA [AC] /i,'').replace(/\[.*\]/,'').trim()+'</div>'+
-            '<select class="gestion-sel" onchange="moverEquipo('+eq.fila+',this.value,this)">'+optsYac+'</select>'+
-            '<button class="gestion-toggle '+(eq.activo?'on':'off')+'" onclick="toggleActivo('+eq.fila+','+eq.activo+',this)">'+
-              (eq.activo?'ON':'OFF')+
-            '</button>'+
+            '<select class="gestion-sel" onchange="marcarCambio('+eq.fila+',this.value,this)">'+optsYac+'</select>'+
           '</div>';
       });
     }
     html+='</div>';
   });
+  html+='<button onclick="guardarCambios()" style="width:100%;padding:14px;background:#1e3070;color:white;border:none;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;margin-top:16px;">✓ Guardar cambios</button>';
   document.getElementById('gestion-contenido').innerHTML=html;
 }
 
-function moverEquipo(fila,nuevoYac,sel){
-  var yacVal=nuevoYac==='Sin asignar'?'':nuevoYac;
-  var colorOrig=sel.style.borderColor;
-  sel.style.borderColor='#f59e0b';
-  fetchConTimeout(API+'?action=actualizarEquipo',{method:'POST',body:JSON.stringify({fila:fila,yacimiento:yacVal})},15000)
-    .then(function(r){return r.json();})
-    .then(function(d){
-      sel.style.borderColor=d.ok?'#6fa832':'#e53935';
-      setTimeout(function(){sel.style.borderColor=colorOrig;},1500);
-    })
-    .catch(function(){
-      sel.style.borderColor='#e53935';
-      alert('Error al guardar. Verificá la conexión.');
+var cambiosPendientes = {};
+var equiposCargados = [];
+
+function compartirFlota(){
+  if(equiposCargados.length === 0){ alert('Cargá los equipos primero.'); return; }
+  var YACS = ['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez'];
+  var hoy = new Date();
+  var fecha = String(hoy.getDate()).padStart(2,'0')+'/'+String(hoy.getMonth()+1).padStart(2,'0')+'/'+hoy.getFullYear();
+  var lineas = [];
+  lineas.push('🏗 *TSB — Flota en campo*');
+  lineas.push('📅 '+fecha);
+  var totalEquipos = 0;
+  YACS.forEach(function(yac){
+    var equipos = equiposCargados.filter(function(eq){
+      return (eq.yacimiento||'Sin asignar') === yac && eq.activo;
     });
+    if(equipos.length === 0) return;
+    lineas.push('');
+    lineas.push('*'+yac.toUpperCase()+'*');
+    equipos.forEach(function(eq){
+      var tipo = eq.tipo.replace(/^TARIFA [AC] /i,'').replace(/\[.*\]/,'').trim();
+      lineas.push('• '+eq.interno+' — '+tipo);
+      totalEquipos++;
+    });
+  });
+  lineas.push('');
+  lineas.push('_Total: '+totalEquipos+' equipos en campo_');
+  window.open('https://wa.me/?text='+encodeURIComponent(lineas.join('\n')),'_blank');
 }
 
-function toggleActivo(fila,actual,btn){
-  var nuevoActivo=!actual;
-  btn.style.opacity='0.5';
-  fetchConTimeout(API+'?action=actualizarEquipo',{method:'POST',body:JSON.stringify({fila:fila,activo:nuevoActivo})},15000)
-    .then(function(r){return r.json();})
-    .then(function(d){
-      btn.style.opacity='1';
-      if(d.ok){
-        btn.textContent=nuevoActivo?'ON':'OFF';
-        btn.className='gestion-toggle '+(nuevoActivo?'on':'off');
-        btn.setAttribute('onclick','toggleActivo('+fila+','+nuevoActivo+',this)');
-      }
+function marcarCambio(fila, nuevoYac, sel){
+  var yacVal = nuevoYac === 'Sin asignar' ? '' : nuevoYac;
+  cambiosPendientes[fila] = yacVal;
+  sel.style.borderColor = '#f59e0b';
+}
+
+function guardarCambios(){
+  var filas = Object.keys(cambiosPendientes);
+  if(filas.length === 0){ alert('No hay cambios para guardar.'); return; }
+  var btn = document.querySelector('button[onclick="guardarCambios()"]');
+  btn.textContent = 'Guardando...'; btn.disabled = true;
+  var promesas = filas.map(function(fila){
+    return fetchConTimeout(API+'?action=actualizarEquipo',{method:'POST',body:JSON.stringify({fila:Number(fila),yacimiento:cambiosPendientes[fila]})},15000)
+      .then(function(r){return r.json();});
+  });
+  Promise.all(promesas)
+    .then(function(){
+      cambiosPendientes = {};
+      document.querySelectorAll('.gestion-sel').forEach(function(s){ s.style.borderColor=''; });
+      btn.textContent = '✓ Cambios guardados';
+      btn.style.background = '#6fa832';
+      setTimeout(function(){ btn.textContent='✓ Guardar cambios'; btn.style.background='#1e3070'; btn.disabled=false; }, 2000);
     })
-    .catch(function(){btn.style.opacity='1';alert('Error al guardar.');});
+    .catch(function(){
+      btn.textContent = '✓ Guardar cambios'; btn.disabled = false;
+      alert('Error al guardar. Verificá la conexión.');
+    });
 }
 </script>
 </body>
