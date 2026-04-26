@@ -474,10 +474,12 @@ var YACS_LISTA=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez',
 function abrirGestion(){
   var pass=prompt('Contraseña ADMIN:');
   if(!pass)return;
+  // Buscar admin en supervisores ya cargados, o pedir igual si no cargaron aún
   var admin=supervisores.find(function(s){return s.rol==='ADMIN'&&String(s.password)===String(pass);});
-  if(!admin){alert('Contraseña incorrecta');return;}
+  if(supervisores.length>0&&!admin){alert('Contraseña incorrecta');return;}
   mostrarScreen('screen-gestion');
   document.getElementById('gestion-loading').style.display='block';
+  document.getElementById('gestion-loading').innerHTML='<div class="spinner"></div>Cargando equipos...';
   document.getElementById('gestion-contenido').style.display='none';
   fetchConTimeout(API+'?action=getEquiposAdmin',{},20000)
     .then(function(r){return r.json();})
@@ -487,7 +489,7 @@ function abrirGestion(){
       document.getElementById('gestion-contenido').style.display='block';
     })
     .catch(function(){
-      document.getElementById('gestion-loading').innerHTML='<div class="error-msg">Error al cargar. Reintentar.</div>';
+      document.getElementById('gestion-loading').innerHTML='<div class="error-msg">Error al cargar. Volvé e intentá de nuevo.</div>';
     });
 }
 
