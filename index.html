@@ -9,11 +9,7 @@
 <meta name="theme-color" content="#1e3070">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-:root{
-  --azul:#1e3070;--azul2:#152558;--verde:#8dc63f;--verde2:#6fa832;
-  --rojo:#e53935;--naranja:#f59e0b;--naranja2:#d97706;
-  --gris:#f0f2f5;--borde:#d1d9e6;--texto:#1a2340;--muted:#6b7a99;
-}
+:root{--azul:#1e3070;--azul2:#152558;--verde:#8dc63f;--verde2:#6fa832;--rojo:#e53935;--naranja:#f59e0b;--naranja2:#d97706;--gris:#f0f2f5;--borde:#d1d9e6;--texto:#1a2340;--muted:#6b7a99;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--gris);color:var(--texto);min-height:100vh;}
 .screen{display:none;}.screen.active{display:block;}
 .login-bg{min-height:100vh;background:url('TOPA1.jpeg') center center/cover no-repeat;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;}
@@ -79,7 +75,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .sc-badge{background:#fff8e1;border:1.5px solid #fcd34d;border-radius:8px;padding:8px 12px;margin:6px 0 8px;font-size:12px;font-weight:700;color:#92400e;text-align:center;}
 .obs-input{width:100%;padding:10px 12px;border:1.5px solid var(--borde);border-radius:8px;font-size:14px;resize:none;font-family:inherit;color:var(--texto);}
 .btn-quitar{background:none;border:none;color:#bbb;font-size:12px;cursor:pointer;margin-top:6px;padding:0;font-weight:500;}
-.tarifa-c-wrap{margin:8px 0;display:none;}
+.tarifa-c-wrap{margin:8px 0;}
 .tc-check-row{display:flex;align-items:center;gap:8px;}
 .tc-check-row input[type=checkbox]{width:17px;height:17px;accent-color:var(--azul);cursor:pointer;flex-shrink:0;}
 .tc-check-label{font-size:13px;font-weight:700;color:var(--azul);text-transform:uppercase;letter-spacing:0.5px;cursor:pointer;}
@@ -89,15 +85,6 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .tc-fields label{font-size:10px;margin-bottom:4px;}
 .tc-fields input,.tc-fields select{margin-bottom:0;padding:9px 10px;font-size:14px;}
 .tc-resumen{font-size:12px;font-weight:700;color:var(--azul);margin-top:8px;text-align:center;background:white;border-radius:6px;padding:7px;display:none;}
-.gestion-equipo-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gris);}
-.gestion-equipo-row:last-child{border-bottom:none;}
-.gestion-interno{font-size:16px;font-weight:900;color:var(--azul);width:50px;flex-shrink:0;}
-.gestion-tipo{font-size:12px;color:var(--muted);flex:1;line-height:1.3;}
-.gestion-sel{font-size:13px;padding:7px 10px;border:1.5px solid var(--borde);border-radius:8px;background:white;color:var(--texto);margin:0;width:auto;flex-shrink:0;}
-.gestion-toggle{width:44px;height:24px;border-radius:12px;border:none;cursor:pointer;flex-shrink:0;font-size:10px;font-weight:700;}
-.gestion-toggle.on{background:var(--verde);color:white;}
-.gestion-toggle.off{background:#ccc;color:white;}
-.gestion-seccion{font-size:11px;font-weight:700;color:white;text-transform:uppercase;letter-spacing:1px;background:var(--azul);padding:8px 16px;margin:0 -16px;}
 .cchk{width:26px;height:26px;border:2.5px solid var(--borde);border-radius:6px;background:white;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
 .cchk.on{background:var(--azul);border-color:var(--azul);}
 .cchk.on::after{content:'✓';color:white;font-size:16px;font-weight:900;line-height:1;}
@@ -130,25 +117,10 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .error-msg{background:#ffebee;color:var(--rojo);padding:12px 16px;border-radius:10px;font-size:14px;margin-bottom:12px;text-align:center;font-weight:500;}
 .seccion-titulo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
 .divider{height:1px;background:var(--borde);margin:16px 0;}
+
 </style>
 </head>
 <body>
-
-<!-- GESTIÓN DE FLOTA -->
-<div id="screen-gestion" class="screen">
-  <div class="topbar">
-    <img src="logo.png" alt="TSB">
-    <div class="topbar-info">
-      <div class="topbar-title">GESTIÓN DE FLOTA</div>
-      <div class="topbar-sub">Solo ADMIN</div>
-    </div>
-    <button class="btn-volver" onclick="mostrarScreen('screen-login')">← Volver</button>
-  </div>
-  <div class="contenido" style="padding-top:16px;">
-    <div id="gestion-loading" class="loading"><div class="spinner"></div>Cargando equipos...</div>
-    <div id="gestion-contenido" style="display:none;"></div>
-  </div>
-</div>
 
 <!-- LOGIN -->
 <div id="screen-login" class="screen active">
@@ -189,14 +161,12 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
         </div>
       </div>
       <a href="dashboard.html" class="btn-dashboard-acceso">📊 Acceso Gerencial</a>
-      <div style="text-align:center;margin-top:10px;">
-        <button onclick="abrirGestion()" style="background:none;border:none;color:rgba(255,255,255,0.3);font-size:18px;cursor:pointer;padding:8px;" title="Gestión de flota">⚙️</button>
-      </div>
+      <a href="gestion.html" class="btn-dashboard-acceso" style="margin-top:8px;font-size:12px;opacity:0.5;">⚙️ Gestión de flota</a>
     </div>
   </div>
 </div>
 
-<!-- CAMBIO DE CONTRASEÑA SUPERVISOR -->
+<!-- CAMBIO DE CONTRASEÑA -->
 <div id="screen-cambio-sup" class="screen">
   <div class="login-bg">
     <div class="login-overlay"></div>
@@ -207,7 +177,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
       </div>
       <div class="cambio-card">
         <div class="cambio-title">¡Bienvenido/a!</div>
-        <div class="cambio-sub">Es tu primer ingreso al sistema. Por seguridad, establecé tu contraseña personal.</div>
+        <div class="cambio-sub">Es tu primer ingreso. Por seguridad, establecé tu contraseña personal.</div>
         <div class="cambio-hint">🔑 Tu contraseña provisoria es <strong>1234</strong></div>
         <div id="cambio-sup-error" class="error-msg" style="display:none;"></div>
         <label>Nueva contraseña</label>
@@ -265,39 +235,13 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
       <div id="oncall-detalle" class="oncall-detalle">
         <div class="oncall-item" id="item-carreton" onclick="toggleOncallSimple('carreton')">
           <div class="cchk" id="cchk-carreton"></div>
-          <svg width="40" height="26" viewBox="0 0 130 70" style="flex-shrink:0;">
-            <rect x="0" y="42" width="130" height="14" rx="2" fill="#1e3070"/>
-            <rect x="0" y="14" width="30" height="30" rx="3" fill="#1e3070"/>
-            <rect x="4" y="18" width="20" height="12" rx="2" fill="#6fa832"/>
-            <rect x="28" y="34" width="102" height="10" rx="1" fill="#2a4090"/>
-            <rect x="55" y="18" width="42" height="17" rx="3" fill="#8dc63f"/>
-            <rect x="63" y="10" width="20" height="10" rx="2" fill="#6fa832"/>
-            <circle cx="16" cy="58" r="9" fill="#222"/><circle cx="16" cy="58" r="4" fill="#888"/>
-            <circle cx="65" cy="58" r="9" fill="#222"/><circle cx="65" cy="58" r="4" fill="#888"/>
-            <circle cx="108" cy="58" r="9" fill="#222"/><circle cx="108" cy="58" r="4" fill="#888"/>
-          </svg>
+          <svg width="40" height="26" viewBox="0 0 130 70" style="flex-shrink:0;"><rect x="0" y="42" width="130" height="14" rx="2" fill="#1e3070"/><rect x="0" y="14" width="30" height="30" rx="3" fill="#1e3070"/><rect x="4" y="18" width="20" height="12" rx="2" fill="#6fa832"/><rect x="28" y="34" width="102" height="10" rx="1" fill="#2a4090"/><rect x="55" y="18" width="42" height="17" rx="3" fill="#8dc63f"/><rect x="63" y="10" width="20" height="10" rx="2" fill="#6fa832"/><circle cx="16" cy="58" r="9" fill="#222"/><circle cx="16" cy="58" r="4" fill="#888"/><circle cx="65" cy="58" r="9" fill="#222"/><circle cx="65" cy="58" r="4" fill="#888"/><circle cx="108" cy="58" r="9" fill="#222"/><circle cx="108" cy="58" r="4" fill="#888"/></svg>
           <span class="oncall-item-nombre">Camión carretón</span>
           <span class="oncall-item-tag">tarifa día</span>
         </div>
         <div class="oncall-item" id="item-hormigon" onclick="toggleOncallCantidad('hormigon','hormigonM3')">
           <div class="cchk" id="cchk-hormigon"></div>
-          <svg width="40" height="26" viewBox="0 0 115 75" style="flex-shrink:0;">
-            <rect x="0" y="50" width="110" height="14" rx="2" fill="#1e3070"/>
-            <rect x="0" y="22" width="30" height="30" rx="3" fill="#1e3070"/>
-            <rect x="4" y="26" width="20" height="12" rx="2" fill="#6fa832"/>
-            <rect x="28" y="42" width="82" height="10" rx="1" fill="#2a4090"/>
-            <ellipse cx="45" cy="34" rx="10" ry="18" fill="#777"/>
-            <rect x="45" y="16" width="40" height="36" rx="2" fill="#888"/>
-            <ellipse cx="85" cy="34" rx="10" ry="18" fill="#999"/>
-            <line x1="45" y1="22" x2="85" y2="22" stroke="#aaa" stroke-width="1.2"/>
-            <line x1="45" y1="30" x2="85" y2="30" stroke="#aaa" stroke-width="1.2"/>
-            <line x1="45" y1="38" x2="85" y2="38" stroke="#aaa" stroke-width="1.2"/>
-            <line x1="45" y1="46" x2="85" y2="46" stroke="#aaa" stroke-width="1.2"/>
-            <polygon points="85,20 100,34 85,48" fill="#666"/>
-            <circle cx="15" cy="66" r="8" fill="#222"/><circle cx="15" cy="66" r="3" fill="#888"/>
-            <circle cx="80" cy="66" r="8" fill="#222"/><circle cx="80" cy="66" r="3" fill="#888"/>
-            <circle cx="100" cy="66" r="8" fill="#222"/><circle cx="100" cy="66" r="3" fill="#888"/>
-          </svg>
+          <svg width="40" height="26" viewBox="0 0 115 75" style="flex-shrink:0;"><rect x="0" y="50" width="110" height="14" rx="2" fill="#1e3070"/><rect x="0" y="22" width="30" height="30" rx="3" fill="#1e3070"/><rect x="4" y="26" width="20" height="12" rx="2" fill="#6fa832"/><rect x="28" y="42" width="82" height="10" rx="1" fill="#2a4090"/><ellipse cx="45" cy="34" rx="10" ry="18" fill="#777"/><rect x="45" y="16" width="40" height="36" rx="2" fill="#888"/><ellipse cx="85" cy="34" rx="10" ry="18" fill="#999"/><polygon points="85,20 100,34 85,48" fill="#666"/><circle cx="15" cy="66" r="8" fill="#222"/><circle cx="15" cy="66" r="3" fill="#888"/><circle cx="80" cy="66" r="8" fill="#222"/><circle cx="80" cy="66" r="3" fill="#888"/><circle cx="100" cy="66" r="8" fill="#222"/><circle cx="100" cy="66" r="3" fill="#888"/></svg>
           <span class="oncall-item-nombre">Hormigón</span>
         </div>
         <div class="oncall-cant" id="wrap-hormigon">
@@ -306,20 +250,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
         </div>
         <div class="oncall-item" id="item-geomembrana" onclick="toggleOncallCantidad('geomembrana','geomembranaM2')">
           <div class="cchk" id="cchk-geomembrana"></div>
-          <svg width="40" height="26" viewBox="0 0 90 90" style="flex-shrink:0;">
-            <ellipse cx="16" cy="45" rx="16" ry="40" fill="#222"/>
-            <ellipse cx="16" cy="45" rx="9" ry="30" fill="#444"/>
-            <ellipse cx="16" cy="45" rx="4" ry="14" fill="#666"/>
-            <rect x="16" y="5" width="55" height="80" rx="1" fill="#2a2a2a"/>
-            <ellipse cx="71" cy="45" rx="16" ry="40" fill="#333"/>
-            <ellipse cx="71" cy="45" rx="9" ry="30" fill="#4a4a4a"/>
-            <line x1="16" y1="18" x2="71" y2="18" stroke="#555" stroke-width="1.2"/>
-            <line x1="16" y1="30" x2="71" y2="30" stroke="#555" stroke-width="1.2"/>
-            <line x1="16" y1="42" x2="71" y2="42" stroke="#555" stroke-width="1.2"/>
-            <line x1="16" y1="54" x2="71" y2="54" stroke="#555" stroke-width="1.2"/>
-            <line x1="16" y1="66" x2="71" y2="66" stroke="#555" stroke-width="1.2"/>
-            <line x1="16" y1="78" x2="71" y2="78" stroke="#555" stroke-width="1.2"/>
-          </svg>
+          <svg width="40" height="26" viewBox="0 0 90 90" style="flex-shrink:0;"><ellipse cx="16" cy="45" rx="16" ry="40" fill="#222"/><ellipse cx="16" cy="45" rx="9" ry="30" fill="#444"/><rect x="16" y="5" width="55" height="80" rx="1" fill="#2a2a2a"/><ellipse cx="71" cy="45" rx="16" ry="40" fill="#333"/></svg>
           <span class="oncall-item-nombre">Geomembrana</span>
         </div>
         <div class="oncall-cant" id="wrap-geomembrana">
@@ -328,21 +259,7 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
         </div>
         <div class="oncall-item" id="item-malla" onclick="toggleOncallCantidad('malla','mallaM2')" style="border-bottom:none;">
           <div class="cchk" id="cchk-malla"></div>
-          <svg width="40" height="26" viewBox="0 0 90 80" style="flex-shrink:0;">
-            <rect x="0" y="10" width="90" height="60" rx="4" fill="none" stroke="#1e3070" stroke-width="2"/>
-            <line x1="18" y1="10" x2="18" y2="70" stroke="#1e3070" stroke-width="1.5"/>
-            <line x1="36" y1="10" x2="36" y2="70" stroke="#1e3070" stroke-width="1.5"/>
-            <line x1="54" y1="10" x2="54" y2="70" stroke="#1e3070" stroke-width="1.5"/>
-            <line x1="72" y1="10" x2="72" y2="70" stroke="#1e3070" stroke-width="1.5"/>
-            <line x1="0" y1="27" x2="90" y2="27" stroke="#1e3070" stroke-width="1.5"/>
-            <line x1="0" y1="44" x2="90" y2="44" stroke="#1e3070" stroke-width="1.5"/>
-            <line x1="0" y1="61" x2="90" y2="61" stroke="#1e3070" stroke-width="1.5"/>
-            <ellipse cx="45" cy="38" rx="8" ry="6" fill="#8dc63f"/>
-            <circle cx="51" cy="33" r="4" fill="#8dc63f"/>
-            <polygon points="54,32 58,33 54,35" fill="#e0a020"/>
-            <circle cx="53" cy="32" r="1" fill="#333"/>
-            <path d="M38 37 Q42 30 48 36" fill="#6fa832"/>
-          </svg>
+          <svg width="40" height="26" viewBox="0 0 90 80" style="flex-shrink:0;"><rect x="0" y="10" width="90" height="60" rx="4" fill="none" stroke="#1e3070" stroke-width="2"/><line x1="18" y1="10" x2="18" y2="70" stroke="#1e3070" stroke-width="1.5"/><line x1="36" y1="10" x2="36" y2="70" stroke="#1e3070" stroke-width="1.5"/><line x1="54" y1="10" x2="54" y2="70" stroke="#1e3070" stroke-width="1.5"/><line x1="72" y1="10" x2="72" y2="70" stroke="#1e3070" stroke-width="1.5"/><line x1="0" y1="27" x2="90" y2="27" stroke="#1e3070" stroke-width="1.5"/><line x1="0" y1="44" x2="90" y2="44" stroke="#1e3070" stroke-width="1.5"/><line x1="0" y1="61" x2="90" y2="61" stroke="#1e3070" stroke-width="1.5"/></svg>
           <span class="oncall-item-nombre">Malla antiaves</span>
         </div>
         <div class="oncall-cant" id="wrap-malla">
@@ -394,6 +311,8 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
   </div>
 </div>
 
+
+
 <script>
 var API="https://script.google.com/macros/s/AKfycbxUqQerIBYj76ohuo1mJtFQzcoufeM7VUxdSxxJATSk8gYghPAqP7iJZDbKUrvRiUWw/exec";
 var supervisores=[],todosEquipos=[],equiposDelParte=[],supervisorActual=null,yacimientoActual="";
@@ -401,8 +320,6 @@ var fechaGuardar="",fechaInput="";
 var onCallData={hayAdicionales:false,carreton:false,hormigonM3:0,geomembranaM2:0,mallaM2:0};
 var borradorPendiente=null;
 var MOTIVOS_TC=['Viento','Lluvia','Corte de ruta','Asamblea','VTV','Control médico','Renovación de licencia','Otro'];
-
-function fetchConTimeout(url,opciones,ms){
   ms=ms||25000;
   return Promise.race([
     fetch(url,opciones),
@@ -421,133 +338,8 @@ function inputToArgentina(v){var p=v.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
 function borradorKey(){return 'tsb_draft_'+yacimientoActual+'_'+fechaGuardar;}
 function setCchk(id,val){var el=document.getElementById(id);if(!el)return;if(val)el.classList.add('on');else el.classList.remove('on');}
 
-function toggleAdicionales(){
-  onCallData.hayAdicionales=!onCallData.hayAdicionales;
-  setCchk('cchk-adicionales',onCallData.hayAdicionales);
-  var fila=document.getElementById('fila-adicionales');
-  if(onCallData.hayAdicionales)fila.classList.add('on');else fila.classList.remove('on');
-  document.getElementById('oncall-detalle').style.display=onCallData.hayAdicionales?'block':'none';
-  autoguardar();
-}
-function toggleOncallSimple(tipo){
-  onCallData[tipo]=!onCallData[tipo];
-  setCchk('cchk-'+tipo,onCallData[tipo]);
-  var item=document.getElementById('item-'+tipo);
-  if(onCallData[tipo])item.classList.add('on');else item.classList.remove('on');
-  autoguardar();
-}
-function toggleOncallCantidad(tipo,campo){
-  var activo=!document.getElementById('cchk-'+tipo).classList.contains('on');
-  setCchk('cchk-'+tipo,activo);
-  var item=document.getElementById('item-'+tipo);
-  if(activo)item.classList.add('on');else item.classList.remove('on');
-  var wrap=document.getElementById('wrap-'+tipo);
-  wrap.style.display=activo?'flex':'none';
-  if(!activo){onCallData[campo]=0;wrap.querySelector('input').value='';}
-  else{setTimeout(function(){wrap.querySelector('input').focus();},150);}
-  autoguardar();
-}
-function setOC(campo,val){onCallData[campo]=val;autoguardar();}
-
-function sincronizarOnCallUI(){
-  setCchk('cchk-adicionales',onCallData.hayAdicionales);
-  var fila=document.getElementById('fila-adicionales');
-  if(onCallData.hayAdicionales)fila.classList.add('on');else fila.classList.remove('on');
-  document.getElementById('oncall-detalle').style.display=onCallData.hayAdicionales?'block':'none';
-  setCchk('cchk-carreton',onCallData.carreton);
-  var itemC=document.getElementById('item-carreton');
-  if(onCallData.carreton)itemC.classList.add('on');else itemC.classList.remove('on');
-  var tipos={hormigon:'hormigonM3',geomembrana:'geomembranaM2',malla:'mallaM2'};
-  Object.keys(tipos).forEach(function(t){
-    var campo=tipos[t];var tiene=onCallData[campo]>0;
-    setCchk('cchk-'+t,tiene);
-    var item=document.getElementById('item-'+t);
-    if(tiene)item.classList.add('on');else item.classList.remove('on');
-    var wrap=document.getElementById('wrap-'+t);
-    wrap.style.display=tiene?'flex':'none';
-    if(tiene)wrap.querySelector('input').value=onCallData[campo];
-  });
-}
-
-var YACS_LISTA=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez','Sin asignar'];
-
-function abrirGestion(){
-  var pass=prompt('Contraseña ADMIN:');
-  if(!pass)return;
-  // Buscar admin en supervisores ya cargados, o pedir igual si no cargaron aún
-  var admin=supervisores.find(function(s){return s.rol==='ADMIN'&&String(s.password)===String(pass);});
-  if(supervisores.length>0&&!admin){alert('Contraseña incorrecta');return;}
-  mostrarScreen('screen-gestion');
-  document.getElementById('gestion-loading').style.display='block';
-  document.getElementById('gestion-loading').innerHTML='<div class="spinner"></div>Cargando equipos...';
-  document.getElementById('gestion-contenido').style.display='none';
-  fetchConTimeout(API+'?action=getEquiposAdmin',{},20000)
-    .then(function(r){return r.json();})
-    .then(function(equipos){
-      renderGestion(equipos);
-      document.getElementById('gestion-loading').style.display='none';
-      document.getElementById('gestion-contenido').style.display='block';
-    })
-    .catch(function(){
-      document.getElementById('gestion-loading').innerHTML='<div class="error-msg">Error al cargar. Volvé e intentá de nuevo.</div>';
-    });
-}
-
-function renderGestion(equipos){
-  var grupos={};
-  YACS_LISTA.forEach(function(y){grupos[y]=[];});
-  equipos.forEach(function(eq){
-    var yac=eq.yacimiento||'Sin asignar';
-    if(!grupos[yac])grupos[yac]=[];
-    grupos[yac].push(eq);
-  });
-  var html='';
-  YACS_LISTA.forEach(function(yac){
-    var lista=grupos[yac]||[];
-    html+='<div class="gestion-seccion">'+yac+' ('+lista.length+')</div>';
-    if(lista.length===0){
-      html+='<div style="padding:12px 0;color:var(--muted);font-size:13px;">Sin equipos</div>';
-    }else{
-      lista.forEach(function(eq){
-        var optsYac=YACS_LISTA.map(function(y){
-          return '<option value="'+y+'" '+(eq.yacimiento===y?'selected':'')+'>'+y+'</option>';
-        }).join('');
-        html+=
-          '<div class="gestion-equipo-row">'+
-            '<div class="gestion-interno">'+eq.interno+'</div>'+
-            '<div class="gestion-tipo">'+eq.tipo.replace(/^TARIFA [AC] /i,'').replace(/\[.*\]/,'').trim()+'</div>'+
-            '<select class="gestion-sel" onchange="moverEquipo('+eq.fila+',this.value)">'+optsYac+'</select>'+
-            '<button class="gestion-toggle '+(eq.activo?'on':'off')+'" onclick="toggleActivo('+eq.fila+','+eq.activo+',this)">'+
-              (eq.activo?'ON':'OFF')+
-            '</button>'+
-          '</div>';
-      });
-    }
-  });
-  document.getElementById('gestion-contenido').innerHTML=html;
-}
-
-function moverEquipo(fila,nuevoYac){
-  var yacVal=nuevoYac==='Sin asignar'?'':nuevoYac;
-  fetchConTimeout(API+'?action=actualizarEquipo',{method:'POST',body:JSON.stringify({fila:fila,yacimiento:yacVal})},15000)
-    .then(function(r){return r.json();})
-    .then(function(d){if(!d.ok)alert('Error al guardar');})
-    .catch(function(){alert('Error de conexión');});
-}
-
-function toggleActivo(fila,actual,btn){
-  var nuevoActivo=!actual;
-  fetchConTimeout(API+'?action=actualizarEquipo',{method:'POST',body:JSON.stringify({fila:fila,activo:nuevoActivo})},15000)
-    .then(function(r){return r.json();})
-    .then(function(d){
-      if(d.ok){
-        btn.textContent=nuevoActivo?'ON':'OFF';
-        btn.className='gestion-toggle '+(nuevoActivo?'on':'off');
-        btn.setAttribute('onclick','toggleActivo('+fila+','+nuevoActivo+',this)');
-      }else{alert('Error al guardar');}
-    })
-    .catch(function(){alert('Error de conexión');});
-}
+// ── Login ────────────────────────────────────────────────────────────────
+window.onload=function(){
   fetchConTimeout(API+'?action=getLoginData',{},20000)
     .then(function(r){return r.json();})
     .then(function(data){
@@ -560,8 +352,7 @@ function toggleActivo(fila,actual,btn){
         opt.value=String(s.id);opt.textContent=s.nombre;
         sel.appendChild(opt);
       });
-      // Detectar cuando se selecciona un ADMIN para mostrar el selector
-      sel.addEventListener('change', function(){
+      sel.addEventListener('change',function(){
         var supId=this.value;
         var sup=supervisores.find(function(s){return String(s.id)===supId;});
         var wrapActuar=document.getElementById('wrap-actuar-como');
@@ -598,12 +389,11 @@ function hacerLogin(){
   if(!sup){mostrarError('Supervisor no encontrado');return;}
   if(String(sup.password)!==String(pass)){mostrarError('Contraseña incorrecta');return;}
   supervisorActual=sup;
-  // Si es ADMIN, usar el supervisor seleccionado para cargar el parte
   if(sup.rol==='ADMIN'){
     var actuarComoId=document.getElementById('sel-actuar-como').value;
     if(!actuarComoId){mostrarError('Seleccioná el supervisor como el que vas a cargar');return;}
     var supActuar=supervisores.find(function(s){return String(s.id)===actuarComoId;});
-    if(supActuar){supervisorActual=supActuar;}
+    if(supActuar)supervisorActual=supActuar;
   }
   yacimientoActual=yac;
   if(sup.debeCambiar){mostrarScreen('screen-cambio-sup');}
@@ -629,8 +419,6 @@ function cambiarPasswordSup(){
 
 function irAlParte(){
   mostrarScreen('screen-parte');
-  var btn=document.querySelector('#screen-parte .btn-success');
-  if(btn){btn.textContent='✓ CONFIRMAR Y GUARDAR PARTE';btn.disabled=false;}
   var hoy=new Date();
   fechaInput=hoyInput();fechaGuardar=fechaArgentina(hoy);
   onCallData={hayAdicionales:false,carreton:false,hormigonM3:0,geomembranaM2:0,mallaM2:0};
@@ -662,7 +450,6 @@ function irAlParte(){
         equiposDelParte=cargarDesdeUltimoParte(u);
       }else if(u&&u.length>0){
         equiposDelParte=cargarDesdeUltimoParte(u);
-        // Verificar si el último parte es de hoy — puede ser una corrección
         var hoyStr=fechaGuardar;
         var ultimaFechaStr=u[0]?u[0].fecha:'';
         if(ultimaFechaStr===hoyStr){
@@ -715,6 +502,54 @@ function cambiarFecha(val){
   autoguardar();
 }
 
+function toggleAdicionales(){
+  onCallData.hayAdicionales=!onCallData.hayAdicionales;
+  setCchk('cchk-adicionales',onCallData.hayAdicionales);
+  var fila=document.getElementById('fila-adicionales');
+  if(onCallData.hayAdicionales)fila.classList.add('on');else fila.classList.remove('on');
+  document.getElementById('oncall-detalle').style.display=onCallData.hayAdicionales?'block':'none';
+  autoguardar();
+}
+function toggleOncallSimple(tipo){
+  onCallData[tipo]=!onCallData[tipo];
+  setCchk('cchk-'+tipo,onCallData[tipo]);
+  var item=document.getElementById('item-'+tipo);
+  if(onCallData[tipo])item.classList.add('on');else item.classList.remove('on');
+  autoguardar();
+}
+function toggleOncallCantidad(tipo,campo){
+  var activo=!document.getElementById('cchk-'+tipo).classList.contains('on');
+  setCchk('cchk-'+tipo,activo);
+  var item=document.getElementById('item-'+tipo);
+  if(activo)item.classList.add('on');else item.classList.remove('on');
+  var wrap=document.getElementById('wrap-'+tipo);
+  wrap.style.display=activo?'flex':'none';
+  if(!activo){onCallData[campo]=0;wrap.querySelector('input').value='';}
+  else{setTimeout(function(){wrap.querySelector('input').focus();},150);}
+  autoguardar();
+}
+function setOC(campo,val){onCallData[campo]=val;autoguardar();}
+
+function sincronizarOnCallUI(){
+  setCchk('cchk-adicionales',onCallData.hayAdicionales);
+  var fila=document.getElementById('fila-adicionales');
+  if(onCallData.hayAdicionales)fila.classList.add('on');else fila.classList.remove('on');
+  document.getElementById('oncall-detalle').style.display=onCallData.hayAdicionales?'block':'none';
+  setCchk('cchk-carreton',onCallData.carreton);
+  var itemC=document.getElementById('item-carreton');
+  if(onCallData.carreton)itemC.classList.add('on');else itemC.classList.remove('on');
+  var tipos={hormigon:'hormigonM3',geomembrana:'geomembranaM2',malla:'mallaM2'};
+  Object.keys(tipos).forEach(function(t){
+    var campo=tipos[t];var tiene=onCallData[campo]>0;
+    setCchk('cchk-'+t,tiene);
+    var item=document.getElementById('item-'+t);
+    if(tiene)item.classList.add('on');else item.classList.remove('on');
+    var wrap=document.getElementById('wrap-'+t);
+    wrap.style.display=tiene?'flex':'none';
+    if(tiene)wrap.querySelector('input').value=onCallData[campo];
+  });
+}
+
 function renderizarEquipos(){
   var lista=document.getElementById('lista-equipos');
   if(equiposDelParte.length===0){lista.innerHTML='<div class="loading" style="padding:20px 0;">Sin equipos. Usá "+ Agregar equipo".</div>';return;}
@@ -743,6 +578,7 @@ function renderizarEquipos(){
           '<div class="tc-resumen" id="tc-res-'+idx+'" style="'+(resumenTC?'display:block':'display:none')+'">'+resumenTC+'</div>'+
         '</div>'+
       '</div>':'';
+    var obsObligatorio=claseItem==='no-operativo';
     div.innerHTML=
       '<div class="equipo-header">'+
         '<div><div class="equipo-interno">'+eq.interno+'</div><div class="equipo-tipo">'+eq.tipo+'</div></div>'+
@@ -754,7 +590,7 @@ function renderizarEquipos(){
         '<button class="toggle-btn toggle-btn-sc '+(esSC?'active-sc':'')+'" onclick="setEstado('+idx+',\'Sin chofer\')">SIN<br>CHOFER</button>'+
       '</div>'+
       scBadge+tarifaCHtml+
-      '<textarea class="obs-input" rows="2" id="obs-'+idx+'" placeholder="'+(claseItem==='no-operativo'?'⚠ OBLIGATORIO: Describí la falla del equipo...':'Observaciones del equipo...')+'" style="'+(claseItem==='no-operativo'?'border-color:#e53935;':'')+'" onchange="setObs('+idx+',this.value)">'+(eq.observaciones||'')+'</textarea>'+
+      '<textarea class="obs-input" rows="2" placeholder="'+(obsObligatorio?'⚠ OBLIGATORIO: Describí la falla...':'Observaciones del equipo...')+'" style="'+(obsObligatorio?'border-color:#e53935;':'')+'" onchange="setObs('+idx+',this.value)">'+(eq.observaciones||'')+'</textarea>'+
       '<button class="btn-quitar" onclick="quitarEquipo('+idx+')">✕ Quitar del parte</button>';
     lista.appendChild(div);
   });

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSB — Gestión de Flota</title>
+<meta name="theme-color" content="#1e3070">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{--azul:#1e3070;--azul2:#152558;--verde:#8dc63f;--verde2:#6fa832;--rojo:#e53935;--naranja:#f59e0b;--gris:#f0f2f5;--borde:#d1d9e6;--texto:#1a2340;--muted:#6b7a99;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--gris);color:var(--texto);min-height:100vh;}
+.login-bg{min-height:100vh;background:url('TOPA1.jpeg') center center/cover no-repeat;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;}
+.login-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(10,20,60,0.82) 0%,rgba(10,20,60,0.93) 100%);}
+.login-box{position:relative;z-index:2;width:100%;max-width:400px;}
+.login-logo-wrap{text-align:center;margin-bottom:24px;}
+.login-logo-wrap img{height:64px;filter:brightness(0) invert(1);}
+.login-titulo{color:white;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;opacity:0.9;margin-top:12px;}
+.login-card{background:rgba(255,255,255,0.97);border-radius:16px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.45);}
+.login-card-title{font-size:17px;font-weight:700;color:var(--azul);margin-bottom:20px;text-align:center;}
+.error-msg{background:#ffebee;color:var(--rojo);padding:12px 16px;border-radius:10px;font-size:14px;margin-bottom:12px;text-align:center;font-weight:500;}
+label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.8px;}
+input{width:100%;padding:13px 16px;border:1.5px solid var(--borde);border-radius:10px;font-size:15px;color:var(--texto);background:white;margin-bottom:14px;}
+input:focus{outline:none;border-color:var(--azul);}
+.btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;}
+.btn-primary{background:linear-gradient(135deg,var(--azul),var(--azul2));color:white;box-shadow:0 4px 12px rgba(30,48,112,0.3);}
+.back-link{display:block;text-align:center;margin-top:16px;color:rgba(255,255,255,0.7);font-size:13px;text-decoration:none;}
+.topbar{background:var(--azul);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.25);}
+.topbar img{height:28px;filter:brightness(0) invert(1);}
+.topbar-info{text-align:right;flex:1;margin:0 12px;}
+.topbar-title{color:white;font-size:13px;font-weight:700;letter-spacing:1px;}
+.topbar-sub{color:rgba(255,255,255,0.7);font-size:11px;margin-top:1px;}
+.btn-volver{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;}
+.btn-reload{background:rgba(141,198,63,0.25);border:1px solid rgba(141,198,63,0.5);color:white;padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;margin-right:8px;}
+.contenido{padding:16px;max-width:600px;margin:auto;}
+.loading{text-align:center;padding:40px 20px;color:var(--muted);}
+.spinner{width:36px;height:36px;border:3px solid var(--borde);border-top-color:var(--azul);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.gestion-seccion{font-size:11px;font-weight:700;color:white;text-transform:uppercase;letter-spacing:1px;background:var(--azul);padding:8px 16px;border-radius:10px 10px 0 0;margin-top:12px;}
+.gestion-card{background:white;border-radius:0 0 12px 12px;padding:4px 12px;margin-bottom:4px;box-shadow:0 2px 6px rgba(0,0,0,0.06);}
+.gestion-equipo-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--gris);}
+.gestion-equipo-row:last-child{border-bottom:none;}
+.gestion-interno{font-size:15px;font-weight:900;color:var(--azul);width:50px;flex-shrink:0;}
+.gestion-tipo{font-size:11px;color:var(--muted);flex:1;line-height:1.4;}
+.gestion-sel{font-size:12px;padding:7px 8px;border:1.5px solid var(--borde);border-radius:8px;background:white;color:var(--texto);margin:0;width:140px;flex-shrink:0;appearance:none;-webkit-appearance:none;}
+.gestion-toggle{width:46px;height:28px;border-radius:14px;border:none;cursor:pointer;flex-shrink:0;font-size:10px;font-weight:700;color:white;}
+.gestion-toggle.on{background:var(--verde2);}
+.gestion-toggle.off{background:#ccc;}
+.info-box{background:#e3f2fd;border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:13px;color:#1565c0;line-height:1.6;}
+</style>
+</head>
+<body>
+
+<div id="pantalla-login">
+  <div class="login-bg">
+    <div class="login-overlay"></div>
+    <div class="login-box">
+      <div class="login-logo-wrap">
+        <img src="logo.png" alt="TSB">
+        <div class="login-titulo">Gestión de Flota</div>
+      </div>
+      <div class="login-card">
+        <div class="login-card-title">⚙️ Acceso ADMIN</div>
+        <div id="login-error" class="error-msg" style="display:none;"></div>
+        <label>Contraseña ADMIN</label>
+        <input type="password" id="inp-pass" placeholder="Tu contraseña" onkeydown="if(event.key==='Enter')ingresar()">
+        <button class="btn btn-primary" onclick="ingresar()">INGRESAR</button>
+      </div>
+      <a href="index.html" class="back-link">← Volver al ingreso de supervisores</a>
+    </div>
+  </div>
+</div>
+
+<div id="pantalla-gestion" style="display:none;">
+  <div class="topbar">
+    <img src="logo.png" alt="TSB">
+    <div class="topbar-info">
+      <div class="topbar-title">GESTIÓN DE FLOTA</div>
+      <div class="topbar-sub">Mover y activar equipos</div>
+    </div>
+    <button class="btn-reload" onclick="cargarEquipos()">↻ Actualizar</button>
+    <a href="index.html" class="btn-volver">← Volver</a>
+  </div>
+  <div class="contenido">
+    <div class="info-box">
+      💡 Cambiá el yacimiento de un equipo con el selector. Usá ON/OFF para activar o desactivar. Los cambios se guardan al instante en el Sheets.
+    </div>
+    <div id="gestion-loading" class="loading"><div class="spinner"></div>Cargando equipos...</div>
+    <div id="gestion-contenido"></div>
+  </div>
+</div>
+
+<script>
+var API="https://script.google.com/macros/s/AKfycbxUqQerIBYj76ohuo1mJtFQzcoufeM7VUxdSxxJATSk8gYghPAqP7iJZDbKUrvRiUWw/exec";
+var YACS_LISTA=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez','Sin asignar'];
+
+function fetchConTimeout(url,opciones,ms){
+  ms=ms||25000;
+  return Promise.race([
+    fetch(url,opciones),
+    new Promise(function(_,reject){setTimeout(function(){reject(new Error('timeout'));},ms);})
+  ]);
+}
+
+function ingresar(){
+  var pass=document.getElementById('inp-pass').value.trim();
+  var errEl=document.getElementById('login-error');
+  errEl.style.display='none';
+  if(!pass){errEl.textContent='Ingresá tu contraseña';errEl.style.display='block';return;}
+  // Validar contra supervisores ADMIN
+  fetchConTimeout(API+'?action=getLoginData',{},20000)
+    .then(function(r){return r.json();})
+    .then(function(data){
+      var admin=data.supervisores.find(function(s){
+        return s.rol==='ADMIN'&&String(s.password)===String(pass);
+      });
+      if(!admin){errEl.textContent='Contraseña incorrecta';errEl.style.display='block';return;}
+      document.getElementById('pantalla-login').style.display='none';
+      document.getElementById('pantalla-gestion').style.display='block';
+      cargarEquipos();
+    })
+    .catch(function(){errEl.textContent='Error de conexión';errEl.style.display='block';});
+}
+
+function cargarEquipos(){
+  document.getElementById('gestion-loading').style.display='block';
+  document.getElementById('gestion-contenido').innerHTML='';
+  fetchConTimeout(API+'?action=getEquiposAdmin',{},20000)
+    .then(function(r){return r.json();})
+    .then(function(equipos){
+      renderGestion(equipos);
+      document.getElementById('gestion-loading').style.display='none';
+    })
+    .catch(function(){
+      document.getElementById('gestion-loading').innerHTML='<div style="background:#ffebee;color:#e53935;padding:12px;border-radius:10px;text-align:center;">Error al cargar. <button onclick="cargarEquipos()" style="background:var(--azul);color:white;border:none;border-radius:6px;padding:6px 12px;cursor:pointer;margin-left:8px;">Reintentar</button></div>';
+    });
+}
+
+function renderGestion(equipos){
+  var grupos={};
+  YACS_LISTA.forEach(function(y){grupos[y]=[];});
+  equipos.forEach(function(eq){
+    var yac=eq.yacimiento||'Sin asignar';
+    if(!grupos[yac])grupos[yac]=[];
+    grupos[yac].push(eq);
+  });
+  var html='';
+  YACS_LISTA.forEach(function(yac){
+    var lista=grupos[yac]||[];
+    html+='<div class="gestion-seccion">'+yac+' — '+lista.length+' equipo'+(lista.length!==1?'s':'')+'</div>';
+    html+='<div class="gestion-card">';
+    if(lista.length===0){
+      html+='<div style="color:var(--muted);font-size:13px;padding:10px 0;">Sin equipos asignados</div>';
+    }else{
+      lista.forEach(function(eq){
+        var yacActual=eq.yacimiento||'Sin asignar';
+        var optsYac=YACS_LISTA.map(function(y){
+          return '<option value="'+y+'" '+(yacActual===y?'selected':'')+'>'+y+'</option>';
+        }).join('');
+        html+=
+          '<div class="gestion-equipo-row">'+
+            '<div class="gestion-interno">'+eq.interno+'</div>'+
+            '<div class="gestion-tipo">'+eq.tipo.replace(/^TARIFA [AC] /i,'').replace(/\[.*\]/,'').trim()+'</div>'+
+            '<select class="gestion-sel" onchange="moverEquipo('+eq.fila+',this.value,this)">'+optsYac+'</select>'+
+            '<button class="gestion-toggle '+(eq.activo?'on':'off')+'" onclick="toggleActivo('+eq.fila+','+eq.activo+',this)">'+
+              (eq.activo?'ON':'OFF')+
+            '</button>'+
+          '</div>';
+      });
+    }
+    html+='</div>';
+  });
+  document.getElementById('gestion-contenido').innerHTML=html;
+}
+
+function moverEquipo(fila,nuevoYac,sel){
+  var yacVal=nuevoYac==='Sin asignar'?'':nuevoYac;
+  var colorOrig=sel.style.borderColor;
+  sel.style.borderColor='#f59e0b';
+  fetchConTimeout(API+'?action=actualizarEquipo',{method:'POST',body:JSON.stringify({fila:fila,yacimiento:yacVal})},15000)
+    .then(function(r){return r.json();})
+    .then(function(d){
+      sel.style.borderColor=d.ok?'#6fa832':'#e53935';
+      setTimeout(function(){sel.style.borderColor=colorOrig;},1500);
+    })
+    .catch(function(){
+      sel.style.borderColor='#e53935';
+      alert('Error al guardar. Verificá la conexión.');
+    });
+}
+
+function toggleActivo(fila,actual,btn){
+  var nuevoActivo=!actual;
+  btn.style.opacity='0.5';
+  fetchConTimeout(API+'?action=actualizarEquipo',{method:'POST',body:JSON.stringify({fila:fila,activo:nuevoActivo})},15000)
+    .then(function(r){return r.json();})
+    .then(function(d){
+      btn.style.opacity='1';
+      if(d.ok){
+        btn.textContent=nuevoActivo?'ON':'OFF';
+        btn.className='gestion-toggle '+(nuevoActivo?'on':'off');
+        btn.setAttribute('onclick','toggleActivo('+fila+','+nuevoActivo+',this)');
+      }
+    })
+    .catch(function(){btn.style.opacity='1';alert('Error al guardar.');});
+}
+</script>
+</body>
+</html>
