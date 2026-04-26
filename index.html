@@ -320,6 +320,14 @@ var fechaGuardar="",fechaInput="";
 var onCallData={hayAdicionales:false,carreton:false,hormigonM3:0,geomembranaM2:0,mallaM2:0};
 var borradorPendiente=null;
 var MOTIVOS_TC=['Viento','Lluvia','Corte de ruta','Asamblea','VTV','Control médico','Renovación de licencia','Otro'];
+
+function fetchConTimeout(url,opciones,ms){
+  ms=ms||25000;
+  return Promise.race([
+    fetch(url,opciones),
+    new Promise(function(_,reject){setTimeout(function(){reject(new Error('timeout'));},ms);})
+  ]);
+}
   ms=ms||25000;
   return Promise.race([
     fetch(url,opciones),
