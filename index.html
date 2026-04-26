@@ -89,7 +89,15 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .tc-fields label{font-size:10px;margin-bottom:4px;}
 .tc-fields input,.tc-fields select{margin-bottom:0;padding:9px 10px;font-size:14px;}
 .tc-resumen{font-size:12px;font-weight:700;color:var(--azul);margin-top:8px;text-align:center;background:white;border-radius:6px;padding:7px;display:none;}
-.cchk{width:26px;height:26px;border:2.5px solid var(--borde);border-radius:6px;background:white;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.gestion-equipo-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gris);}
+.gestion-equipo-row:last-child{border-bottom:none;}
+.gestion-interno{font-size:16px;font-weight:900;color:var(--azul);width:50px;flex-shrink:0;}
+.gestion-tipo{font-size:12px;color:var(--muted);flex:1;line-height:1.3;}
+.gestion-sel{font-size:13px;padding:7px 10px;border:1.5px solid var(--borde);border-radius:8px;background:white;color:var(--texto);margin:0;width:auto;flex-shrink:0;}
+.gestion-toggle{width:44px;height:24px;border-radius:12px;border:none;cursor:pointer;flex-shrink:0;font-size:10px;font-weight:700;}
+.gestion-toggle.on{background:var(--verde);color:white;}
+.gestion-toggle.off{background:#ccc;color:white;}
+.gestion-seccion{font-size:11px;font-weight:700;color:white;text-transform:uppercase;letter-spacing:1px;background:var(--azul);padding:8px 16px;margin:0 -16px;}border:2.5px solid var(--borde);border-radius:6px;background:white;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
 .cchk.on{background:var(--azul);border-color:var(--azul);}
 .cchk.on::after{content:'✓';color:white;font-size:16px;font-weight:900;line-height:1;}
 .oncall-fila{display:flex;align-items:center;gap:14px;padding:14px 16px;background:white;border:1.5px solid var(--borde);border-radius:12px;margin-bottom:8px;cursor:pointer;user-select:none;}
@@ -124,6 +132,22 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 </style>
 </head>
 <body>
+
+<!-- GESTIÓN DE FLOTA -->
+<div id="screen-gestion" class="screen">
+  <div class="topbar">
+    <img src="logo.png" alt="TSB">
+    <div class="topbar-info">
+      <div class="topbar-title">GESTIÓN DE FLOTA</div>
+      <div class="topbar-sub">Solo ADMIN</div>
+    </div>
+    <button class="btn-volver" onclick="mostrarScreen('screen-login')">← Volver</button>
+  </div>
+  <div class="contenido" style="padding-top:16px;">
+    <div id="gestion-loading" class="loading"><div class="spinner"></div>Cargando equipos...</div>
+    <div id="gestion-contenido" style="display:none;"></div>
+  </div>
+</div>
 
 <!-- LOGIN -->
 <div id="screen-login" class="screen active">
@@ -164,6 +188,9 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
         </div>
       </div>
       <a href="dashboard.html" class="btn-dashboard-acceso">📊 Acceso Gerencial</a>
+      <div style="text-align:center;margin-top:10px;">
+        <button onclick="abrirGestion()" style="background:none;border:none;color:rgba(255,255,255,0.3);font-size:18px;cursor:pointer;padding:8px;" title="Gestión de flota">⚙️</button>
+      </div>
     </div>
   </div>
 </div>
@@ -441,7 +468,83 @@ function sincronizarOnCallUI(){
   });
 }
 
-window.onload=function(){
+var YACS_LISTA=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez','Sin asignar'];
+
+function abrirGestion(){
+  var pass=prompt('Contraseña ADMIN:');
+  if(!pass)return;
+  var admin=supervisores.find(function(s){return s.rol==='ADMIN'&&String(s.password)===String(pass);});
+  if(!admin){alert('Contraseña incorrecta');return;}
+  mostrarScreen('screen-gestion');
+  document.getElementById('gestion-loading').style.display='block';
+  document.getElementById('gestion-contenido').style.display='none';
+  fetchConTimeout(API+'?action=getEquiposAdmin',{},20000)
+    .then(function(r){return r.json();})
+    .then(function(equipos){
+      renderGestion(equipos);
+      document.getElementById('gestion-loading').style.display='none';
+      document.getElementById('gestion-contenido').style.display='block';
+    })
+    .catch(function(){
+      document.getElementById('gestion-loading').innerHTML='<div class="error-msg">Error al cargar. Reintentar.</div>';
+    });
+}
+
+function renderGestion(equipos){
+  var grupos={};
+  YACS_LISTA.forEach(function(y){grupos[y]=[];});
+  equipos.forEach(function(eq){
+    var yac=eq.yacimiento||'Sin asignar';
+    if(!grupos[yac])grupos[yac]=[];
+    grupos[yac].push(eq);
+  });
+  var html='';
+  YACS_LISTA.forEach(function(yac){
+    var lista=grupos[yac]||[];
+    html+='<div class="gestion-seccion">'+yac+' ('+lista.length+')</div>';
+    if(lista.length===0){
+      html+='<div style="padding:12px 0;color:var(--muted);font-size:13px;">Sin equipos</div>';
+    }else{
+      lista.forEach(function(eq){
+        var optsYac=YACS_LISTA.map(function(y){
+          return '<option value="'+y+'" '+(eq.yacimiento===y?'selected':'')+'>'+y+'</option>';
+        }).join('');
+        html+=
+          '<div class="gestion-equipo-row">'+
+            '<div class="gestion-interno">'+eq.interno+'</div>'+
+            '<div class="gestion-tipo">'+eq.tipo.replace(/^TARIFA [AC] /i,'').replace(/\[.*\]/,'').trim()+'</div>'+
+            '<select class="gestion-sel" onchange="moverEquipo('+eq.fila+',this.value)">'+optsYac+'</select>'+
+            '<button class="gestion-toggle '+(eq.activo?'on':'off')+'" onclick="toggleActivo('+eq.fila+','+eq.activo+',this)">'+
+              (eq.activo?'ON':'OFF')+
+            '</button>'+
+          '</div>';
+      });
+    }
+  });
+  document.getElementById('gestion-contenido').innerHTML=html;
+}
+
+function moverEquipo(fila,nuevoYac){
+  var yacVal=nuevoYac==='Sin asignar'?'':nuevoYac;
+  fetchConTimeout(API+'?action=actualizarEquipo',{method:'POST',body:JSON.stringify({fila:fila,yacimiento:yacVal})},15000)
+    .then(function(r){return r.json();})
+    .then(function(d){if(!d.ok)alert('Error al guardar');})
+    .catch(function(){alert('Error de conexión');});
+}
+
+function toggleActivo(fila,actual,btn){
+  var nuevoActivo=!actual;
+  fetchConTimeout(API+'?action=actualizarEquipo',{method:'POST',body:JSON.stringify({fila:fila,activo:nuevoActivo})},15000)
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.ok){
+        btn.textContent=nuevoActivo?'ON':'OFF';
+        btn.className='gestion-toggle '+(nuevoActivo?'on':'off');
+        btn.setAttribute('onclick','toggleActivo('+fila+','+nuevoActivo+',this)');
+      }else{alert('Error al guardar');}
+    })
+    .catch(function(){alert('Error de conexión');});
+}
   fetchConTimeout(API+'?action=getLoginData',{},20000)
     .then(function(r){return r.json();})
     .then(function(data){
