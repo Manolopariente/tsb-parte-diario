@@ -83,6 +83,19 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .leyenda-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
 .leyenda-line{width:10px;height:2px;background:var(--azul);flex-shrink:0;}
 .objetivo-dias{text-align:center;font-size:11px;color:var(--muted);margin-top:4px;}
+/* ── VELOCÍMETRO DE RITMO ── */
+.veloci-card{background:white;border-radius:14px;padding:18px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;display:flex;align-items:center;gap:16px;}
+.veloci-gauge{flex-shrink:0;}
+.veloci-datos{flex:1;min-width:0;}
+.veloci-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:10px;}
+.veloci-badge.bien{background:#e8f5e9;color:#2e7d32;}
+.veloci-badge.riesgo{background:#fff8e1;color:#f57f17;}
+.veloci-badge.bajo{background:#ffebee;color:var(--rojo);}
+.veloci-fila{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--gris);}
+.veloci-fila:last-child{border-bottom:none;}
+.veloci-label{font-size:12px;font-weight:600;color:var(--muted);}
+.veloci-val{font-size:13px;font-weight:900;}
+/* ── FIN VELOCÍMETRO ── */
 .seccion-titulo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
 .eficiencia-card{background:white;border-radius:14px;padding:18px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;display:flex;align-items:center;gap:20px;}
 .eficiencia-donut{flex-shrink:0;}
@@ -238,6 +251,8 @@ td.pct-cell{text-align:center;}
       <div class="kpi-grid" id="kpi-grid"></div>
       <div class="seccion-titulo">Acumulado período — Contrato 4900100500</div>
       <div class="objetivo-card" id="objetivo-card"></div>
+      <div class="seccion-titulo">Ritmo de facturación</div>
+      <div id="veloci-card"></div>
       <div class="seccion-titulo">Eficiencia del último parte cargado</div>
       <div id="eficiencia-card"></div>
       <div class="seccion-titulo">Seguimiento diario del período</div>
@@ -303,6 +318,70 @@ function donutSVG(pct){
     '<text x="'+cx+'" y="'+(cy+5)+'" text-anchor="middle" font-size="18" font-weight="900" fill="'+color+'" font-family="sans-serif">'+pct+'%</text>'+
   '</svg>';
 }
+
+// ── VELOCÍMETRO DE RITMO ──────────────────────────────────────────────────────
+function parseFecha(str){
+  if(!str)return null;
+  var p=str.split('/');
+  if(p.length!==3)return null;
+  return new Date(Number(p[2]),Number(p[1])-1,Number(p[0]));
+}
+
+function velocimetroSVG(pctReal,pctEsp){
+  var cx=100,cy=90,r=72;
+  // color según estado
+  var color=pctReal>=pctEsp?'#6fa832':pctReal>=(pctEsp-3)?'#f59e0b':'#e53935';
+
+  // convierte % (0-100) a coordenadas xy sobre el arco
+  function angXY(pct,radio){
+    var a=Math.PI*(1-pct/100); // 0%=izq(π), 100%=der(0)
+    return{
+      x:parseFloat((cx+radio*Math.cos(a)).toFixed(2)),
+      y:parseFloat((cy-radio*Math.sin(a)).toFixed(2))
+    };
+  }
+
+  // arco de fondo (gris) de 0% a 100%
+  var p0=angXY(0,r),p100=angXY(100,r);
+  var bgArc='M '+p0.x+' '+p0.y+' A '+r+' '+r+' 0 0 1 '+p100.x+' '+p100.y;
+
+  // arco coloreado de 0% a pctReal
+  var pR=angXY(pctReal,r);
+  var largeArc=pctReal>50?1:0;
+  var colorArc=pctReal>0
+    ?'<path d="M '+p0.x+' '+p0.y+' A '+r+' '+r+' 0 '+largeArc+' 1 '+pR.x+' '+pR.y+'" fill="none" stroke="'+color+'" stroke-width="14" stroke-linecap="round"/>'
+    :'';
+
+  // aguja desde el centro hasta pctReal
+  var needle=angXY(pctReal,64);
+
+  // línea punteada azul para pctEsp
+  var espOuter=angXY(pctEsp,r+10);
+  var espInner=angXY(pctEsp,r-20);
+
+  // labels 0% / 50% / 100%
+  var p50=angXY(50,r+14);
+
+  var svg='<svg viewBox="0 0 200 108" style="width:175px;height:96px;">';
+  // track gris
+  svg+='<path d="'+bgArc+'" fill="none" stroke="#eaecf2" stroke-width="14" stroke-linecap="round"/>';
+  // arco coloreado
+  svg+=colorArc;
+  // línea punteada esperado
+  svg+='<line x1="'+espInner.x+'" y1="'+espInner.y+'" x2="'+espOuter.x+'" y2="'+espOuter.y+'" stroke="#60a5fa" stroke-width="2.5" stroke-dasharray="4,3"/>';
+  // aguja
+  svg+='<line x1="'+cx+'" y1="'+cy+'" x2="'+needle.x+'" y2="'+needle.y+'" stroke="'+color+'" stroke-width="3.5" stroke-linecap="round"/>';
+  // punto central
+  svg+='<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="'+color+'"/>';
+  // labels
+  svg+='<text x="20" y="106" text-anchor="middle" font-size="9" fill="#6b7a99" font-family="sans-serif">0%</text>';
+  svg+='<text x="'+p50.x+'" y="'+(p50.y-3)+'" text-anchor="middle" font-size="9" fill="#6b7a99" font-family="sans-serif">50%</text>';
+  svg+='<text x="180" y="106" text-anchor="middle" font-size="9" fill="#6b7a99" font-family="sans-serif">100%</text>';
+  svg+='</svg>';
+  return svg;
+}
+// ── FIN VELOCÍMETRO ───────────────────────────────────────────────────────────
+
 function diasDesdeHoy(fechaStr){
   if(!fechaStr)return 999;
   var p=fechaStr.split('/');
@@ -586,6 +665,47 @@ function renderDashboard(d){
       '<div class="barra-leyenda-item"><div class="leyenda-line"></div>Objetivo TSB</div>'+
     '</div>'+
     '<div class="objetivo-dias">Objetivo diario: '+fmtPeso(d.objetivoDiarioHoy)+' · Standby: '+fmtPeso(d.standbyDia)+'/día</div>';
+
+  // ── VELOCÍMETRO DE RITMO ─────────────────────────────────────────────────
+  var velDiv=document.getElementById('veloci-card');
+  var fDesde=parseFecha(d.periodoDesde);
+  var fHasta=parseFecha(d.periodoHasta);
+  var hoy=new Date();hoy.setHours(0,0,0,0);
+  var totalDias=fDesde&&fHasta?Math.round((fHasta-fDesde)/(1000*60*60*24)):30;
+  var diasTransc=fDesde?Math.round((hoy-fDesde)/(1000*60*60*24)):0;
+  diasTransc=Math.max(0,Math.min(diasTransc,totalDias));
+  var pctReal2=d.objetivo>0?Math.min(Math.round(d.acumulado/d.objetivo*100),100):0;
+  var pctEsp=totalDias>0?Math.min(Math.round(diasTransc/totalDias*100),100):0;
+  var dif=pctReal2-pctEsp;
+  var ritmoBadge=pctReal2>=pctEsp?'bien':pctReal2>=(pctEsp-3)?'riesgo':'bajo';
+  var ritmoTexto=pctReal2>=pctEsp?'✓ EN RITMO':pctReal2>=(pctEsp-3)?'⚠ EN RIESGO':'✗ ATRASADO';
+  var difTexto=(dif>=0?'+':'')+dif+' pp';
+  var difColor=dif>=0?'var(--verde2)':dif>=-3?'var(--naranja2)':'var(--rojo)';
+  var realColor=pctReal2>=pctEsp?'var(--verde2)':pctReal2>=(pctEsp-3)?'var(--naranja2)':'var(--rojo)';
+  velDiv.innerHTML=
+    '<div class="veloci-card">'+
+      '<div class="veloci-gauge">'+velocimetroSVG(pctReal2,pctEsp)+'</div>'+
+      '<div class="veloci-datos">'+
+        '<span class="veloci-badge '+ritmoBadge+'">'+ritmoTexto+'</span>'+
+        '<div class="veloci-fila">'+
+          '<span class="veloci-label">Avance real</span>'+
+          '<span class="veloci-val" style="color:'+realColor+';">'+pctReal2+'%</span>'+
+        '</div>'+
+        '<div class="veloci-fila">'+
+          '<span class="veloci-label">Esperado hoy</span>'+
+          '<span class="veloci-val" style="color:#60a5fa;">'+pctEsp+'%</span>'+
+        '</div>'+
+        '<div class="veloci-fila">'+
+          '<span class="veloci-label">Diferencia</span>'+
+          '<span class="veloci-val" style="color:'+difColor+';">'+difTexto+'</span>'+
+        '</div>'+
+        '<div class="veloci-fila">'+
+          '<span class="veloci-label">Día '+diasTransc+' de '+totalDias+'</span>'+
+          '<span class="veloci-val" style="color:var(--muted);">período</span>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  // ── FIN VELOCÍMETRO ──────────────────────────────────────────────────────
 
   var efDiv=document.getElementById('eficiencia-card');
   if(d.eficienciaHoy){
