@@ -291,7 +291,31 @@
 </head>
 <body>
 
-<div id="app">
+<!-- LOGIN -->
+<div id="login-screen" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div style="width:100%;max-width:360px;">
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-size:13px;font-weight:700;color:var(--accent);letter-spacing:2px;text-transform:uppercase;">TSB · Resumen de Período</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px;font-family:var(--mono);">Contrato 4900100500 — YPF</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px 24px;">
+      <div id="login-error" style="display:none;background:#2d1a1a;border:1px solid var(--red);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:16px;text-align:center;"></div>
+      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;">Usuario</div>
+      <select id="login-usuario" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:11px 14px;font-size:14px;margin-bottom:16px;appearance:none;">
+        <option value="">— Seleccioná tu nombre —</option>
+      </select>
+      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;">Contraseña</div>
+      <input type="password" id="login-pass" placeholder="Contraseña" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:11px 14px;font-size:14px;margin-bottom:20px;" onkeydown="if(event.key==='Enter')doLogin()">
+      <button onclick="doLogin()" style="width:100%;background:var(--accent2);color:white;border:none;border-radius:8px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:0.5px;">INGRESAR</button>
+    </div>
+    <div style="text-align:center;margin-top:16px;">
+      <a href="index.html" style="font-size:12px;color:var(--muted);text-decoration:none;">← Volver al inicio</a>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="app" style="display:none;">
   <div class="loader-wrap">
     <div class="spinner"></div>
     <p>Cargando datos del período...</p>
@@ -595,21 +619,60 @@ function sortTabla(col) {
   filtrarTabla();
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────
-(async () => {
+// ─── LOGIN ────────────────────────────────────────────────────────
+let dashUsers = [];
+
+async function initLogin() {
+  try {
+    const r = await fetch(`${SCRIPT_URL}?action=getDashboardUsers`);
+    const data = await r.json();
+    dashUsers = data || [];
+    const sel = document.getElementById('login-usuario');
+    dashUsers.forEach(u => {
+      const opt = document.createElement('option');
+      opt.value = String(u.id);
+      opt.textContent = u.nombre;
+      sel.appendChild(opt);
+    });
+  } catch (err) {
+    document.getElementById('login-error').textContent = 'Error al cargar usuarios. Verificá conexión.';
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+function doLogin() {
+  const errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
+  const id   = document.getElementById('login-usuario').value;
+  const pass = document.getElementById('login-pass').value.trim();
+  if (!id)   { errEl.textContent = 'Seleccioná tu usuario'; errEl.style.display = 'block'; return; }
+  if (!pass) { errEl.textContent = 'Ingresá tu contraseña'; errEl.style.display = 'block'; return; }
+  const user = dashUsers.find(u => String(u.id) === id);
+  if (!user || String(user.password) !== pass) {
+    errEl.textContent = 'Contraseña incorrecta';
+    errEl.style.display = 'block';
+    return;
+  }
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadDashboard();
+}
+
+async function loadDashboard() {
   try {
     const result = await fetchDatos();
     renderApp(result);
-    // Initial sort by pct desc
     sortTabla('pct');
   } catch (err) {
     document.getElementById('app').innerHTML = `
       <div class="loader-wrap">
         <p style="color:var(--red)">Error al cargar datos: ${err.message}</p>
-        <p style="font-size:12px">Verificá que la URL del script esté actualizada en resumen.html</p>
       </div>`;
   }
-})();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────
+initLogin();
 </script>
 </body>
 </html>
