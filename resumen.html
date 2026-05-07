@@ -374,46 +374,47 @@ async function fetchDatos() {
 
 // ─── CALCULAR MÉTRICAS ────────────────────────────────────────────
 function calcularMetricas(partes) {
-  // Agrupar por equipo
+  // ── Tabla de equipos: supervisor = el más reciente (para saber dónde está hoy)
   const equipos = {};
   for (const p of partes) {
-    const key = p.interno;
-    if (!equipos[key]) {
-      equipos[key] = { interno: p.interno, tipo: p.tipo, supervisor: p.supervisor, yacimiento: p.yacimiento, partes: [] };
+    if (!equipos[p.interno]) {
+      equipos[p.interno] = { interno: p.interno, tipo: p.tipo, supervisor: p.supervisor, yacimiento: p.yacimiento, partes: [] };
     }
-    equipos[key].partes.push(p);
-    // Actualizar supervisor y yacimiento con el dato más reciente
-    equipos[key].supervisor  = p.supervisor;
-    equipos[key].yacimiento  = p.yacimiento;
+    equipos[p.interno].partes.push(p);
+    equipos[p.interno].supervisor = p.supervisor;
+    equipos[p.interno].yacimiento = p.yacimiento;
   }
-
   const listaEquipos = Object.values(equipos).map(eq => {
-    const total  = eq.partes.length;
+    const total     = eq.partes.length;
     const operativo = eq.partes.filter(p => ESTADOS_OPERATIVO.includes(p.estado)).length;
     const caido     = eq.partes.filter(p => ESTADOS_CAIDO.includes(p.estado)).length;
     const pct = total > 0 ? Math.round((operativo / total) * 100) : 0;
     return { ...eq, total, operativo, caido, pct };
   });
 
-  // Agrupar por supervisor
-  const supervisores = {};
-  for (const eq of listaEquipos) {
-    const s = eq.supervisor || 'Sin asignar';
-    if (!supervisores[s]) supervisores[s] = { supervisor: s, equipos: [] };
-    supervisores[s].equipos.push(eq);
+  // ── Ranking de supervisores: contamos directamente desde los partes
+  // (cada parte tiene su supervisor correcto asignado por el backend)
+  const supMap = {};
+  for (const p of partes) {
+    const s = p.supervisor || 'Sin asignar';
+    if (!supMap[s]) supMap[s] = { supervisor: s, diasOp: 0, diasCaido: 0, internosSet: new Set() };
+    supMap[s].internosSet.add(p.interno);
+    if (ESTADOS_OPERATIVO.includes(p.estado)) supMap[s].diasOp++;
+    else if (ESTADOS_CAIDO.includes(p.estado)) supMap[s].diasCaido++;
   }
-
-  const listaSups = Object.values(supervisores).map(s => {
-    const pcts    = s.equipos.map(e => e.pct);
-    const prom    = Math.round(pcts.reduce((a, b) => a + b, 0) / pcts.length);
-    const operTotal = s.equipos.reduce((a, e) => a + e.operativo, 0);
-    const caidoTotal = s.equipos.reduce((a, e) => a + e.caido, 0);
-    return { ...s, prom, operTotal, caidoTotal };
+  const listaSups = Object.values(supMap).map(s => {
+    const totalDias = s.diasOp + s.diasCaido;
+    const prom = totalDias > 0 ? Math.round(s.diasOp / totalDias * 100) : 100;
+    return {
+      supervisor:  s.supervisor,
+      equipos:     s.internosSet.size,
+      operTotal:   s.diasOp,
+      caidoTotal:  s.diasCaido,
+      prom
+    };
   }).sort((a, b) => b.prom - a.prom);
 
-  // Top caídos
   const topCaidos = [...listaEquipos].sort((a, b) => b.caido - a.caido).slice(0, 5);
-
   return { listaEquipos, listaSups, topCaidos };
 }
 
@@ -440,9 +441,12 @@ function renderApp({ data, periodo }) {
         <h1>TSB · Resumen de Período</h1>
         <p>Contrato YPF 4900100500 · Vaca Muerta</p>
       </div>
-      <div class="badge-periodo">
-        <div class="label">Período</div>
-        <div class="value">${fmtFecha(periodo.inicio)} → ${fmtFecha(periodo.fin)}</div>
+      <div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+        <a href="index.html" style="display:inline-block;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;">← Volver</a>
+        <div class="badge-periodo">
+          <div class="label">Período</div>
+          <div class="value">${fmtFecha(periodo.inicio)} → ${fmtFecha(periodo.fin)}</div>
+        </div>
       </div>
     </div>
 
@@ -489,7 +493,7 @@ function renderApp({ data, periodo }) {
             <div class="sup-bar-fill" style="width:${s.prom}%; background:${hexPct(s.prom)}"></div>
           </div>
           <div class="sup-meta">
-            <span><b>${s.equipos.length}</b> equipos</span>
+            <span><b>${s.equipos}</b> equipos</span>
             <span><b>${s.operTotal}</b> días-op</span>
             <span><b>${s.caidoTotal}</b> días caído</span>
           </div>
