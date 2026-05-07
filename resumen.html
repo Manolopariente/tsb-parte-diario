@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSB · Resumen de Período</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0a0f1e;
+    --surface:   #111827;
+    --surface2:  #1a2235;
+    --border:    #1e2d45;
+    --accent:    #00b4d8;
+    --accent2:   #0077b6;
+    --green:     #22c55e;
+    --yellow:    #f59e0b;
+    --red:       #ef4444;
+    --text:      #e2e8f0;
+    --muted:     #64748b;
+    --mono:      'IBM Plex Mono', monospace;
+    --sans:      'IBM Plex Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-left h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: var(--accent);
+  }
+  .header-left p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-family: var(--mono);
+  }
+  .badge-periodo {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 16px;
+    text-align: right;
+  }
+  .badge-periodo .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .badge-periodo .value { font-size: 15px; font-family: var(--mono); font-weight: 600; color: var(--text); margin-top: 2px; }
+
+  /* ── KPI ROW ── */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .kpi-card .k-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .kpi-card .k-value { font-size: 28px; font-weight: 700; font-family: var(--mono); margin-top: 6px; line-height: 1; }
+  .kpi-card .k-sub   { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .kpi-card.accent .k-value { color: var(--accent); }
+  .kpi-card.green  .k-value { color: var(--green); }
+  .kpi-card.yellow .k-value { color: var(--yellow); }
+  .kpi-card.red    .k-value { color: var(--red); }
+
+  /* ── SECTION HEADER ── */
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── SUPERVISOR RANKING ── */
+  .supervisor-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .sup-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .sup-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .sup-rank { font-size: 22px; font-weight: 700; font-family: var(--mono); color: var(--border); width: 32px; }
+  .sup-rank.gold   { color: #f59e0b; }
+  .sup-rank.silver { color: #94a3b8; }
+  .sup-rank.bronze { color: #b45309; }
+  .sup-name { font-size: 15px; font-weight: 600; flex: 1; padding: 0 8px; }
+  .sup-pct  { font-size: 20px; font-weight: 700; font-family: var(--mono); }
+  .sup-pct.high { color: var(--green); }
+  .sup-pct.mid  { color: var(--yellow); }
+  .sup-pct.low  { color: var(--red); }
+  .sup-bar-bg {
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .sup-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.8s ease;
+  }
+  .sup-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .sup-meta span {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+  .sup-meta span b { color: var(--text); font-weight: 600; }
+
+  /* ── EQUIPO TABLE ── */
+  .table-wrap {
+    overflow-x: auto;
+    margin-bottom: 32px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead th {
+    background: var(--surface2);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  thead th:hover { color: var(--accent); }
+  thead th.sorted { color: var(--accent); }
+  tbody tr {
+    border-top: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  tbody tr:hover { background: var(--surface2); }
+  tbody td { padding: 10px 14px; vertical-align: middle; }
+  .td-interno { font-family: var(--mono); font-weight: 600; font-size: 14px; color: var(--accent); }
+  .td-tipo    { color: var(--muted); font-size: 12px; max-width: 160px; }
+  .td-sup     { font-size: 12px; }
+  .td-yac     { font-size: 12px; color: var(--muted); }
+  .td-dias    { font-family: var(--mono); text-align: center; }
+  .mini-bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .mini-bar-bg { flex: 1; height: 5px; background: var(--surface2); border-radius: 3px; min-width: 60px; }
+  .mini-bar-fill { height: 100%; border-radius: 3px; }
+  .td-pct { font-family: var(--mono); font-weight: 600; font-size: 13px; white-space: nowrap; }
+  .pct-high { color: var(--green); }
+  .pct-mid  { color: var(--yellow); }
+  .pct-low  { color: var(--red); }
+
+  /* ── TOP CAIDOS ── */
+  .caidos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .caido-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--red);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .caido-interno { font-family: var(--mono); font-size: 16px; font-weight: 700; color: var(--red); width: 60px; }
+  .caido-info { flex: 1; min-width: 120px; }
+  .caido-info .tipo { font-size: 12px; color: var(--muted); }
+  .caido-info .sup  { font-size: 13px; margin-top: 2px; }
+  .caido-dias { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--red); text-align: right; }
+  .caido-dias span { font-size: 12px; font-weight: 400; color: var(--muted); display: block; }
+
+  /* ── LOADER & ESTADO ── */
+  .loader-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    gap: 16px;
+    color: var(--muted);
+  }
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .sort-arrow { margin-left: 4px; opacity: 0.5; }
+  .sort-arrow.active { opacity: 1; }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter-bar input, .filter-bar select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 7px 12px;
+    font-size: 13px;
+    font-family: var(--sans);
+    outline: none;
+  }
+  .filter-bar input:focus, .filter-bar select:focus { border-color: var(--accent); }
+  .filter-bar input { flex: 1; min-width: 120px; }
+  .filter-count { font-size: 12px; color: var(--muted); font-family: var(--mono); margin-left: auto; }
+
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 40px;
+    font-family: var(--mono);
+  }
+
+  @media (max-width: 600px) {
+    .kpi-card .k-value { font-size: 22px; }
+    .sup-name { font-size: 13px; }
+    .caido-dias { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="loader-wrap">
+    <div class="spinner"></div>
+    <p>Cargando datos del período...</p>
+  </div>
+</div>
+
+<script>
+// ─── CONFIGURACIÓN ───────────────────────────────────────────────
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUqQer.../exec'; // ← REEMPLAZAR con URL completa
+const ESTADOS_OPERATIVO = ['Operativo', 'Sin chofer'];
+const ESTADOS_CAIDO     = ['No operativo'];
+
+// ─── PERÍODO ─────────────────────────────────────────────────────
+function calcularPeriodo() {
+  const hoy = new Date();
+  let inicio, fin;
+  if (hoy.getDate() >= 21) {
+    inicio = new Date(hoy.getFullYear(), hoy.getMonth(), 21);
+    fin    = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 20);
+  } else {
+    inicio = new Date(hoy.getFullYear(), hoy.getMonth() - 1, 21);
+    fin    = new Date(hoy.getFullYear(), hoy.getMonth(), 20);
+  }
+  const diasTotales   = Math.round((fin - inicio) / 86400000) + 1;
+  const diasTransc    = Math.min(Math.round((hoy - inicio) / 86400000) + 1, diasTotales);
+  const diasRestantes = diasTotales - diasTransc;
+  return { inicio, fin, diasTotales, diasTransc, diasRestantes };
+}
+
+function fmtFecha(d) {
+  return d.toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit', year:'numeric' });
+}
+
+// ─── COLOR SEGÚN % ────────────────────────────────────────────────
+function colorPct(pct) {
+  if (pct >= 85) return 'high';
+  if (pct >= 65) return 'mid';
+  return 'low';
+}
+function hexPct(pct) {
+  if (pct >= 85) return '#22c55e';
+  if (pct >= 65) return '#f59e0b';
+  return '#ef4444';
+}
+
+// ─── FETCH DATOS ─────────────────────────────────────────────────
+async function fetchDatos() {
+  const periodo = calcularPeriodo();
+  const desde = periodo.inicio.toISOString().split('T')[0];
+  const hasta = new Date().toISOString().split('T')[0];
+  const url = `${SCRIPT_URL}?action=getResumenPeriodo&desde=${desde}&hasta=${hasta}`;
+  const resp = await fetch(url);
+  const data = await resp.json();
+  return { data, periodo };
+}
+
+// ─── CALCULAR MÉTRICAS ────────────────────────────────────────────
+function calcularMetricas(partes) {
+  // Agrupar por equipo
+  const equipos = {};
+  for (const p of partes) {
+    const key = p.interno;
+    if (!equipos[key]) {
+      equipos[key] = { interno: p.interno, tipo: p.tipo, supervisor: p.supervisor, yacimiento: p.yacimiento, partes: [] };
+    }
+    equipos[key].partes.push(p);
+    // Actualizar supervisor y yacimiento con el dato más reciente
+    equipos[key].supervisor  = p.supervisor;
+    equipos[key].yacimiento  = p.yacimiento;
+  }
+
+  const listaEquipos = Object.values(equipos).map(eq => {
+    const total  = eq.partes.length;
+    const operativo = eq.partes.filter(p => ESTADOS_OPERATIVO.includes(p.estado)).length;
+    const caido     = eq.partes.filter(p => ESTADOS_CAIDO.includes(p.estado)).length;
+    const pct = total > 0 ? Math.round((operativo / total) * 100) : 0;
+    return { ...eq, total, operativo, caido, pct };
+  });
+
+  // Agrupar por supervisor
+  const supervisores = {};
+  for (const eq of listaEquipos) {
+    const s = eq.supervisor || 'Sin asignar';
+    if (!supervisores[s]) supervisores[s] = { supervisor: s, equipos: [] };
+    supervisores[s].equipos.push(eq);
+  }
+
+  const listaSups = Object.values(supervisores).map(s => {
+    const pcts    = s.equipos.map(e => e.pct);
+    const prom    = Math.round(pcts.reduce((a, b) => a + b, 0) / pcts.length);
+    const operTotal = s.equipos.reduce((a, e) => a + e.operativo, 0);
+    const caidoTotal = s.equipos.reduce((a, e) => a + e.caido, 0);
+    return { ...s, prom, operTotal, caidoTotal };
+  }).sort((a, b) => b.prom - a.prom);
+
+  // Top caídos
+  const topCaidos = [...listaEquipos].sort((a, b) => b.caido - a.caido).slice(0, 5);
+
+  return { listaEquipos, listaSups, topCaidos };
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────
+let allEquipos = [];
+let sortCol = 'pct', sortDir = 1;
+
+function renderApp({ data, periodo }) {
+  const partes = data.partes || [];
+  const { listaEquipos, listaSups, topCaidos } = calcularMetricas(partes);
+  allEquipos = listaEquipos;
+
+  const totalEquipos = listaEquipos.length;
+  const pctGlobal    = totalEquipos > 0
+    ? Math.round(listaEquipos.reduce((a, e) => a + e.pct, 0) / totalEquipos)
+    : 0;
+  const equiposCaidos = listaEquipos.filter(e => e.pct < 100).length;
+  const rankColors    = ['gold', 'silver', 'bronze'];
+
+  document.getElementById('app').innerHTML = `
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-left">
+        <h1>TSB · Resumen de Período</h1>
+        <p>Contrato YPF 4900100500 · Vaca Muerta</p>
+      </div>
+      <div class="badge-periodo">
+        <div class="label">Período</div>
+        <div class="value">${fmtFecha(periodo.inicio)} → ${fmtFecha(periodo.fin)}</div>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-row">
+      <div class="kpi-card accent">
+        <div class="k-label">Días transcurridos</div>
+        <div class="k-value">${periodo.diasTransc}</div>
+        <div class="k-sub">de ${periodo.diasTotales} días del período</div>
+      </div>
+      <div class="kpi-card ${colorPct(pctGlobal)}">
+        <div class="k-label">Disponibilidad global</div>
+        <div class="k-value">${pctGlobal}%</div>
+        <div class="k-sub">promedio de flota</div>
+      </div>
+      <div class="kpi-card accent">
+        <div class="k-label">Equipos registrados</div>
+        <div class="k-value">${totalEquipos}</div>
+        <div class="k-sub">con parte en el período</div>
+      </div>
+      <div class="kpi-card ${equiposCaidos > 0 ? 'red' : 'green'}">
+        <div class="k-label">Con días caídos</div>
+        <div class="k-value">${equiposCaidos}</div>
+        <div class="k-sub">equipos con ≥1 día fuera</div>
+      </div>
+      <div class="kpi-card">
+        <div class="k-label">Supervisores</div>
+        <div class="k-value" style="color:var(--text)">${listaSups.length}</div>
+        <div class="k-sub">con partes cargados</div>
+      </div>
+    </div>
+
+    <!-- RANKING SUPERVISORES -->
+    <div class="section-title">Ranking de supervisores</div>
+    <div class="supervisor-grid">
+      ${listaSups.map((s, i) => `
+        <div class="sup-card">
+          <div class="sup-top">
+            <div class="sup-rank ${rankColors[i] || ''}">#${i+1}</div>
+            <div class="sup-name">${s.supervisor}</div>
+            <div class="sup-pct ${colorPct(s.prom)}">${s.prom}%</div>
+          </div>
+          <div class="sup-bar-bg">
+            <div class="sup-bar-fill" style="width:${s.prom}%; background:${hexPct(s.prom)}"></div>
+          </div>
+          <div class="sup-meta">
+            <span><b>${s.equipos.length}</b> equipos</span>
+            <span><b>${s.operTotal}</b> días-op</span>
+            <span><b>${s.caidoTotal}</b> días caído</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- TABLE EQUIPOS -->
+    <div class="section-title">Disponibilidad por equipo</div>
+    <div class="filter-bar">
+      <input type="text" id="filtroTexto" placeholder="Buscar interno, tipo, supervisor..." oninput="filtrarTabla()">
+      <select id="filtroSup" onchange="filtrarTabla()">
+        <option value="">Todos los supervisores</option>
+        ${[...new Set(allEquipos.map(e => e.supervisor))].sort().map(s => `<option value="${s}">${s}</option>`).join('')}
+      </select>
+      <select id="filtroYac" onchange="filtrarTabla()">
+        <option value="">Todos los yacimientos</option>
+        ${[...new Set(allEquipos.map(e => e.yacimiento))].sort().map(y => `<option value="${y}">${y}</option>`).join('')}
+      </select>
+      <span class="filter-count" id="filtroCount">${allEquipos.length} equipos</span>
+    </div>
+    <div class="table-wrap">
+      <table id="tablaEquipos">
+        <thead>
+          <tr>
+            <th onclick="sortTabla('interno')">Interno <span class="sort-arrow" id="arr-interno">↕</span></th>
+            <th onclick="sortTabla('tipo')">Tipo <span class="sort-arrow" id="arr-tipo">↕</span></th>
+            <th onclick="sortTabla('supervisor')">Supervisor <span class="sort-arrow" id="arr-supervisor">↕</span></th>
+            <th onclick="sortTabla('yacimiento')">Yacimiento <span class="sort-arrow" id="arr-yacimiento">↕</span></th>
+            <th onclick="sortTabla('operativo')" style="text-align:center">Días Op. <span class="sort-arrow" id="arr-operativo">↕</span></th>
+            <th onclick="sortTabla('caido')" style="text-align:center">Días Caído <span class="sort-arrow" id="arr-caido">↕</span></th>
+            <th onclick="sortTabla('pct')">Disponibilidad <span class="sort-arrow active" id="arr-pct">↑</span></th>
+          </tr>
+        </thead>
+        <tbody id="tablaBody"></tbody>
+      </table>
+    </div>
+
+    <!-- TOP CAIDOS -->
+    <div class="section-title">Top equipos con más días caídos</div>
+    <div class="caidos-list">
+      ${topCaidos.filter(e => e.caido > 0).map(e => `
+        <div class="caido-card">
+          <div class="caido-interno">${e.interno}</div>
+          <div class="caido-info">
+            <div class="tipo">${e.tipo}</div>
+            <div class="sup">${e.supervisor} · ${e.yacimiento}</div>
+          </div>
+          <div class="caido-dias">${e.caido}<span>días caído</span></div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="footer">TSB · Uso interno · Resp: M. Pariente · Generado ${new Date().toLocaleString('es-AR')}</div>
+  `;
+
+  renderTabla(allEquipos);
+}
+
+function renderTabla(datos) {
+  const tbody = document.getElementById('tablaBody');
+  if (!tbody) return;
+  if (datos.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px">Sin resultados</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = datos.map(e => `
+    <tr>
+      <td class="td-interno">${e.interno}</td>
+      <td class="td-tipo">${e.tipo}</td>
+      <td class="td-sup">${e.supervisor}</td>
+      <td class="td-yac">${e.yacimiento}</td>
+      <td class="td-dias" style="text-align:center">${e.operativo}</td>
+      <td class="td-dias" style="text-align:center;color:${e.caido > 0 ? 'var(--red)' : 'var(--muted)'}">${e.caido}</td>
+      <td>
+        <div class="mini-bar-wrap">
+          <div class="mini-bar-bg">
+            <div class="mini-bar-fill" style="width:${e.pct}%;background:${hexPct(e.pct)}"></div>
+          </div>
+          <span class="td-pct pct-${colorPct(e.pct)}">${e.pct}%</span>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filtrarTabla() {
+  const txt = document.getElementById('filtroTexto').value.toLowerCase();
+  const sup = document.getElementById('filtroSup').value;
+  const yac = document.getElementById('filtroYac').value;
+  let filtrados = allEquipos.filter(e => {
+    const matchTxt = !txt ||
+      String(e.interno).toLowerCase().includes(txt) ||
+      (e.tipo || '').toLowerCase().includes(txt) ||
+      (e.supervisor || '').toLowerCase().includes(txt);
+    const matchSup = !sup || e.supervisor === sup;
+    const matchYac = !yac || e.yacimiento === yac;
+    return matchTxt && matchSup && matchYac;
+  });
+  // Aplicar sort actual
+  filtrados = aplicarSort(filtrados);
+  document.getElementById('filtroCount').textContent = `${filtrados.length} equipos`;
+  renderTabla(filtrados);
+}
+
+function aplicarSort(datos) {
+  return [...datos].sort((a, b) => {
+    const va = a[sortCol], vb = b[sortCol];
+    if (typeof va === 'number') return (va - vb) * sortDir;
+    return String(va).localeCompare(String(vb)) * sortDir;
+  });
+}
+
+function sortTabla(col) {
+  if (sortCol === col) {
+    sortDir *= -1;
+  } else {
+    sortCol = col;
+    sortDir = col === 'pct' || col === 'caido' ? -1 : 1;
+  }
+  // Update arrows
+  document.querySelectorAll('.sort-arrow').forEach(el => {
+    el.textContent = '↕'; el.classList.remove('active');
+  });
+  const arr = document.getElementById(`arr-${col}`);
+  if (arr) { arr.textContent = sortDir === 1 ? '↑' : '↓'; arr.classList.add('active'); }
+  filtrarTabla();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────
+(async () => {
+  try {
+    const result = await fetchDatos();
+    renderApp(result);
+    // Initial sort by pct desc
+    sortTabla('pct');
+  } catch (err) {
+    document.getElementById('app').innerHTML = `
+      <div class="loader-wrap">
+        <p style="color:var(--red)">Error al cargar datos: ${err.message}</p>
+        <p style="font-size:12px">Verificá que la URL del script esté actualizada en resumen.html</p>
+      </div>`;
+  }
+})();
+</script>
+</body>
+</html>
