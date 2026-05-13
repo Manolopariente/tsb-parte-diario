@@ -573,7 +573,7 @@ function renderizarEquipos(){
         '</div>'+
         '<div class="tc-detalle" id="tc-det-'+idx+'" style="'+(eq.aplicaTarifaC?'display:block':'display:none')+'">'+
           '<div class="tc-fields">'+
-            '<div><label>Horas Tarifa C</label><input type="number" id="tc-hs-'+idx+'" min="0.5" max="8" step="0.5" value="'+(eq.horasTarifaC||'')+'" placeholder="ej: 2" onchange="setHorasTarifaC('+idx+',parseFloat(this.value)||0)"></div>'+
+            '<div><label>Horas Tarifa C</label><input type="number" id="tc-hs-'+idx+'" min="0.5" max="8" step="0.5" value="'+(eq.horasTarifaC||'')+'" placeholder="ej: 2" oninput="setHorasTarifaC('+idx+',parseFloat(this.value)||0)"></div>'+
             '<div><label>Motivo</label><select id="tc-mot-'+idx+'" onchange="setMotivoTarifaC('+idx+',this.value)"><option value="">— Motivo —</option>'+motivosOpts+'</select></div>'+
           '</div>'+
           '<div class="tc-resumen" id="tc-res-'+idx+'" style="'+(resumenTC?'display:block':'display:none')+'">'+resumenTC+'</div>'+
@@ -610,7 +610,6 @@ function toggleTarifaC(idx,checked){
   actualizarResumenTC(idx);autoguardar();
 }
 function setHorasTarifaC(idx,val){
-  // Permite de 0.5 a 8 horas — si son 8 el día completo es Tarifa C
   val=Math.min(8,Math.max(0.5,val));
   equiposDelParte[idx].horasTarifaC=val;
   actualizarResumenTC(idx);autoguardar();
@@ -622,11 +621,8 @@ function actualizarResumenTC(idx){
   if(!res)return;
   if(eq.aplicaTarifaC&&eq.horasTarifaC>0){
     var hsA=8-eq.horasTarifaC;
-    if(hsA>0){
-      res.textContent=hsA+' hs Tarifa A  +  '+eq.horasTarifaC+' hs Tarifa C  =  8 hs';
-    }else{
-      res.textContent=eq.horasTarifaC+' hs Tarifa C  =  8 hs';
-    }
+    if(hsA>0){res.textContent=hsA+' hs Tarifa A  +  '+eq.horasTarifaC+' hs Tarifa C  =  8 hs';}
+    else{res.textContent=eq.horasTarifaC+' hs Tarifa C  =  8 hs';}
     res.style.display='block';
   }else{res.textContent='';res.style.display='none';}
 }
@@ -672,6 +668,14 @@ function volverAlParte(){mostrarScreen('screen-parte');renderizarEquipos();}
 
 function guardarParte(){
   if(equiposDelParte.length===0){alert('No hay equipos en el parte. Agregá al menos uno.');return;}
+  // ── Sincronizar valores de Tarifa C desde el DOM antes de validar ──
+  equiposDelParte.forEach(function(eq,idx){
+    var hsInput=document.getElementById('tc-hs-'+idx);
+    var motInput=document.getElementById('tc-mot-'+idx);
+    if(hsInput)eq.horasTarifaC=parseFloat(hsInput.value)||0;
+    if(motInput)eq.motivoTarifaC=motInput.value||'';
+  });
+  // ──────────────────────────────────────────────────────────────────
   for(var i=0;i<equiposDelParte.length;i++){
     var eq=equiposDelParte[i];
     if(eq.estado==='No operativo'&&(!eq.observaciones||eq.observaciones.trim()==='')){ alert('Equipo '+eq.interno+': describí la falla antes de guardar.');return;}
