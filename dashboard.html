@@ -9,11 +9,7 @@
 <meta name="theme-color" content="#1e3070">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-:root{
-  --azul:#1e3070;--azul2:#152558;--verde:#8dc63f;--verde2:#6fa832;
-  --rojo:#e53935;--naranja:#f59e0b;--naranja2:#d97706;
-  --gris:#f0f2f5;--borde:#d1d9e6;--texto:#1a2340;--muted:#6b7a99;
-}
+:root{--azul:#1e3070;--azul2:#152558;--verde:#8dc63f;--verde2:#6fa832;--rojo:#e53935;--naranja:#f59e0b;--naranja2:#d97706;--gris:#f0f2f5;--borde:#d1d9e6;--texto:#1a2340;--muted:#6b7a99;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--gris);color:var(--texto);min-height:100vh;}
 .screen{display:none;}.screen.active{display:block;}
 .login-bg{min-height:100vh;background:url('TOPA1.jpeg') center center/cover no-repeat;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;}
@@ -61,22 +57,19 @@ select:focus,input:focus{outline:none;border-color:var(--azul);}
 .kpi-azul .kpi-val{color:var(--azul);}
 .kpi-naranja .kpi-val{color:var(--naranja2);}
 .objetivo-card{background:white;border-radius:14px;padding:18px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;}
-.objetivo-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
 .objetivo-titulo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
 .objetivo-periodo{font-size:10px;color:var(--muted);margin-top:2px;}
-.objetivo-montos{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+.objetivo-montos{display:grid;gap:8px;margin-bottom:14px;}
 .objetivo-monto-item{text-align:center;background:var(--gris);border-radius:10px;padding:10px 6px;}
 .objetivo-monto-label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;}
 .objetivo-monto-val{font-size:13px;font-weight:900;color:var(--azul);line-height:1.2;}
 .objetivo-monto-val.acum{color:var(--verde2);}
-.objetivo-monto-val.proyect{color:var(--naranja2);}
 .barra-doble-wrap{position:relative;margin-bottom:6px;}
 .barra-fondo{background:var(--gris);border-radius:20px;height:14px;overflow:hidden;position:relative;}
 .barra-real{height:100%;border-radius:20px 0 0 20px;transition:width 1.2s ease;position:absolute;left:0;top:0;}
 .barra-real.bien{background:linear-gradient(90deg,var(--verde),var(--verde2));}
 .barra-real.riesgo{background:linear-gradient(90deg,#f59e0b,#d97706);}
 .barra-real.bajo{background:linear-gradient(90deg,var(--rojo),#c62828);}
-.barra-proyeccion{height:100%;position:absolute;top:0;transition:all 1.2s ease;background:rgba(180,180,180,0.35);}
 .barra-contractual{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--azul);border-radius:2px;z-index:2;}
 .barra-leyenda{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;}
 .barra-leyenda-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);font-weight:600;}
@@ -136,7 +129,6 @@ td.pct-cell{text-align:center;}
 .oncall-resumen-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
 .oncall-item-card{background:var(--gris);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;}
 .oncall-item-icon{font-size:20px;flex-shrink:0;}
-.oncall-item-data{}
 .oncall-item-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;}
 .oncall-item-qty{font-size:18px;font-weight:900;color:var(--azul);line-height:1.1;}
 .oncall-item-unit{font-size:10px;font-weight:600;color:var(--muted);}
@@ -200,9 +192,7 @@ td.pct-cell{text-align:center;}
       <div class="login-card">
         <div class="login-card-title">Acceso Gerencial</div>
         <div class="login-card-hint">Contraseña por defecto: <strong>123456</strong></div>
-        <div id="login-loading" class="loading" style="padding:20px 0;">
-          <div class="spinner"></div>Cargando...
-        </div>
+        <div id="login-loading" class="loading" style="padding:20px 0;"><div class="spinner"></div>Cargando...</div>
         <div id="login-form" style="display:none;">
           <div id="login-error" class="error-msg" style="display:none;"></div>
           <span class="form-label">Usuario</span>
@@ -262,12 +252,8 @@ td.pct-cell{text-align:center;}
       <div class="kpi-grid" id="kpi-grid"></div>
       <div class="seccion-titulo">Acumulado período — Contrato 4900100500</div>
       <div class="objetivo-card" id="objetivo-card"></div>
-
-      <!-- ─── NUEVO: Acumulado por yacimiento ─── -->
       <div class="seccion-titulo">Acumulado por yacimiento — período</div>
       <div class="tabla-card" id="yac-acum-card"></div>
-      <!-- ─────────────────────────────────────── -->
-
       <div class="seccion-titulo">Ritmo de facturación</div>
       <div id="veloci-card"></div>
       <div class="seccion-titulo">Eficiencia del último parte cargado</div>
@@ -276,12 +262,7 @@ td.pct-cell{text-align:center;}
       <div class="tabla-card">
         <div class="tabla-scroll">
           <table>
-            <thead><tr>
-              <th>Fecha</th>
-              <th style="text-align:right">Resultado</th>
-              <th style="text-align:right">Objetivo</th>
-              <th>% Efic.</th>
-            </tr></thead>
+            <thead><tr><th>Fecha</th><th style="text-align:right">Resultado</th><th style="text-align:right">Objetivo</th><th>% Efic.</th></tr></thead>
             <tbody id="tbody-seguimiento"></tbody>
           </table>
         </div>
@@ -307,62 +288,40 @@ var usuarios=[],usuarioActual=null,dashData=null;
 
 function fetchConTimeout(url,opciones,ms){
   ms=ms||25000;
-  return Promise.race([
-    fetch(url,opciones),
-    new Promise(function(_,reject){setTimeout(function(){reject(new Error('timeout'));},ms);})
-  ]);
+  return Promise.race([fetch(url,opciones),new Promise(function(_,r){setTimeout(function(){r(new Error('timeout'));},ms);})]);
 }
-
-function fmtPeso(n){
-  return '$'+Math.round(n).toLocaleString('es-AR');
-}
+function fmtPeso(n){return '$'+Math.round(n).toLocaleString('es-AR');}
 function fmtB(n){
   if(n>=1000000000)return '$'+(n/1000000000).toFixed(2)+'B';
   if(n>=1000000)return '$'+(n/1000000).toFixed(0)+'M';
   return fmtPeso(n);
 }
-
-function limpiarTipo(tipo){
-  if(!tipo)return'Sin tipo';
-  return tipo.replace(/^TARIFA [AC] /i,'').replace(/\[.*\]/,'').trim();
-}
+function limpiarTipo(tipo){if(!tipo)return'Sin tipo';return tipo.replace(/^TARIFA [AC] /i,'').replace(/\[.*\]/,'').trim();}
 function donutSVG(pct){
   var color=pct>=90?'#6fa832':pct>=70?'#f59e0b':'#e53935';
   var r=40,cx=50,cy=50,circ=2*Math.PI*r,fill=circ*(pct/100);
   return '<svg width="100" height="100" viewBox="0 0 100 100">'+
     '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#f0f2f5" stroke-width="12"/>'+
-    '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="12"'+
-      ' stroke-dasharray="'+fill+' '+circ+'" stroke-linecap="round"'+
-      ' transform="rotate(-90 '+cx+' '+cy+')"/>'+
-    '<text x="'+cx+'" y="'+(cy+5)+'" text-anchor="middle" font-size="18" font-weight="900" fill="'+color+'" font-family="sans-serif">'+pct+'%</text>'+
-  '</svg>';
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="12" stroke-dasharray="'+fill+' '+circ+'" stroke-linecap="round" transform="rotate(-90 '+cx+' '+cy+')"/>'+
+    '<text x="'+cx+'" y="'+(cy+5)+'" text-anchor="middle" font-size="18" font-weight="900" fill="'+color+'" font-family="sans-serif">'+pct+'%</text></svg>';
 }
-
-function parseFecha(str){
-  if(!str)return null;
-  var p=str.split('/');
-  if(p.length!==3)return null;
-  return new Date(Number(p[2]),Number(p[1])-1,Number(p[0]));
+function parseFecha(str){if(!str)return null;var p=str.split('/');if(p.length!==3)return null;return new Date(Number(p[2]),Number(p[1])-1,Number(p[0]));}
+function diasDesdeHoy(fechaStr){
+  if(!fechaStr)return 999;
+  var p=fechaStr.split('/');if(p.length!==3)return 999;
+  var d=new Date(Number(p[2]),Number(p[1])-1,Number(p[0]));
+  var hoy=new Date();hoy.setHours(0,0,0,0);
+  return Math.round((hoy-d)/(1000*60*60*24));
 }
-
 function velocimetroSVG(pctReal,pctEsp){
   var cx=100,cy=90,r=72;
   var color=pctReal>=pctEsp?'#6fa832':pctReal>=(pctEsp-3)?'#f59e0b':'#e53935';
-  function angXY(pct,radio){
-    var a=Math.PI*(1-pct/100);
-    return{x:parseFloat((cx+radio*Math.cos(a)).toFixed(2)),y:parseFloat((cy-radio*Math.sin(a)).toFixed(2))};
-  }
+  function angXY(pct,radio){var a=Math.PI*(1-pct/100);return{x:parseFloat((cx+radio*Math.cos(a)).toFixed(2)),y:parseFloat((cy-radio*Math.sin(a)).toFixed(2))};}
   var p0=angXY(0,r),p100=angXY(100,r);
   var bgArc='M '+p0.x+' '+p0.y+' A '+r+' '+r+' 0 0 1 '+p100.x+' '+p100.y;
-  var pR=angXY(pctReal,r);
-  var largeArc=pctReal>50?1:0;
-  var colorArc=pctReal>0
-    ?'<path d="M '+p0.x+' '+p0.y+' A '+r+' '+r+' 0 '+largeArc+' 1 '+pR.x+' '+pR.y+'" fill="none" stroke="'+color+'" stroke-width="14" stroke-linecap="round"/>'
-    :'';
-  var needle=angXY(pctReal,64);
-  var espOuter=angXY(pctEsp,r+10);
-  var espInner=angXY(pctEsp,r-20);
-  var p50=angXY(50,r+14);
+  var pR=angXY(pctReal,r),largeArc=pctReal>50?1:0;
+  var colorArc=pctReal>0?'<path d="M '+p0.x+' '+p0.y+' A '+r+' '+r+' 0 '+largeArc+' 1 '+pR.x+' '+pR.y+'" fill="none" stroke="'+color+'" stroke-width="14" stroke-linecap="round"/>':'';
+  var needle=angXY(pctReal,64),espOuter=angXY(pctEsp,r+10),espInner=angXY(pctEsp,r-20),p50=angXY(50,r+14);
   var svg='<svg viewBox="0 0 200 108" style="width:175px;height:96px;">';
   svg+='<path d="'+bgArc+'" fill="none" stroke="#eaecf2" stroke-width="14" stroke-linecap="round"/>';
   svg+=colorArc;
@@ -376,15 +335,6 @@ function velocimetroSVG(pctReal,pctEsp){
   return svg;
 }
 
-function diasDesdeHoy(fechaStr){
-  if(!fechaStr)return 999;
-  var p=fechaStr.split('/');
-  if(p.length!==3)return 999;
-  var d=new Date(Number(p[2]),Number(p[1])-1,Number(p[0]));
-  var hoy=new Date();hoy.setHours(0,0,0,0);
-  return Math.round((hoy-d)/(1000*60*60*24));
-}
-
 window.onload=function(){
   fetchConTimeout(API+'?action=getDashboardUsers',{},20000)
     .then(function(r){return r.json();})
@@ -392,24 +342,17 @@ window.onload=function(){
       usuarios=data;
       var sel=document.getElementById('sel-usuario');
       sel.innerHTML='<option value="">— Seleccioná tu nombre —</option>';
-      usuarios.forEach(function(u){
-        var opt=document.createElement('option');
-        opt.value=String(u.id);opt.textContent=u.nombre;
-        sel.appendChild(opt);
-      });
+      usuarios.forEach(function(u){var opt=document.createElement('option');opt.value=String(u.id);opt.textContent=u.nombre;sel.appendChild(opt);});
       document.getElementById('login-loading').style.display='none';
       document.getElementById('login-form').style.display='block';
     })
-    .catch(function(){
-      document.getElementById('login-loading').innerHTML='<div class="error-msg">Error al cargar. Verificá tu conexión.</div>';
-    });
+    .catch(function(){document.getElementById('login-loading').innerHTML='<div class="error-msg">Error al cargar. Verificá tu conexión.</div>';});
 };
 
 function hacerLogin(){
   var userId=document.getElementById('sel-usuario').value;
   var pass=document.getElementById('inp-password').value.trim();
-  var errEl=document.getElementById('login-error');
-  errEl.style.display='none';
+  var errEl=document.getElementById('login-error');errEl.style.display='none';
   if(!userId){errEl.textContent='Seleccioná tu nombre';errEl.style.display='block';return;}
   if(!pass){errEl.textContent='Ingresá tu contraseña';errEl.style.display='block';return;}
   var user=usuarios.find(function(u){return String(u.id)===userId;});
@@ -423,19 +366,14 @@ function hacerLogin(){
 function cambiarPassword(){
   var nueva=document.getElementById('inp-nueva').value.trim();
   var confirma=document.getElementById('inp-confirma').value.trim();
-  var errEl=document.getElementById('cambio-error');
-  errEl.style.display='none';
+  var errEl=document.getElementById('cambio-error');errEl.style.display='none';
   if(nueva.length<6){errEl.textContent='Mínimo 6 caracteres';errEl.style.display='block';return;}
   if(nueva!==confirma){errEl.textContent='Las contraseñas no coinciden';errEl.style.display='block';return;}
   fetchConTimeout(API+'?action=cambiarPasswordDashboard',{method:'POST',body:JSON.stringify({id:usuarioActual.id,nuevaPassword:nueva})},20000)
     .then(function(r){return r.json();})
     .then(function(data){
-      if(data.ok){
-        usuarioActual.password=nueva;usuarioActual.debeCambiar=false;
-        mostrarScreen('screen-dash');
-        document.getElementById('topbar-usuario').textContent=usuarioActual.nombre;
-        cargarDashboard();
-      }else{errEl.textContent='Error al guardar';errEl.style.display='block';}
+      if(data.ok){usuarioActual.password=nueva;usuarioActual.debeCambiar=false;mostrarScreen('screen-dash');document.getElementById('topbar-usuario').textContent=usuarioActual.nombre;cargarDashboard();}
+      else{errEl.textContent='Error al guardar';errEl.style.display='block';}
     })
     .catch(function(){errEl.textContent='Error de conexión';errEl.style.display='block';});
 }
@@ -451,11 +389,10 @@ function cargarDashboard(){
       renderDashboard(d);
       document.getElementById('dash-loading').style.display='none';
       document.getElementById('dash-contenido').style.display='block';
-      setTimeout(function(){ animarBarras(d); },400);
+      setTimeout(function(){animarBarras(d);},400);
     })
     .catch(function(){
-      document.getElementById('dash-loading').innerHTML=
-        '<div class="error-msg">Error al cargar datos. <button class="btn-refresh" onclick="cargarDashboard()">Reintentar</button></div>';
+      document.getElementById('dash-loading').innerHTML='<div class="error-msg">Error al cargar datos. <button class="btn-refresh" onclick="cargarDashboard()">Reintentar</button></div>';
     });
 }
 
@@ -472,16 +409,14 @@ function animarBarras(d){
 function compartirWhatsApp(){
   if(!dashData){alert('Esperá que carguen los datos.');return;}
   var d=dashData;
+  var YACS=d.yacimientosActivos||[]; // ← DINÁMICO
   var totalOp=0,totalNop=0,totalSC=0;
-  Object.values(d.estadoFlota).forEach(function(yac){
-    totalOp+=yac.operativos;totalNop+=yac.caidos;totalSC+=(yac.sinChofer||0);
-  });
+  Object.values(d.estadoFlota).forEach(function(yac){totalOp+=yac.operativos;totalNop+=yac.caidos;totalSC+=(yac.sinChofer||0);});
   var total=totalOp+totalNop+totalSC;
   var pctOp=total>0?Math.round((totalOp+totalSC)/total*100):0;
   var pctAcum=d.objetivo>0?Math.round(d.acumulado/d.objetivo*100):0;
   var uptimeColor=pctOp>=90?'#4ade80':pctOp>=70?'#fbbf24':'#f87171';
   var billingColor=pctAcum>=90?'#4ade80':pctAcum>=70?'#fbbf24':'#f87171';
-  var YACS=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez'];
   var yacsHtml='';
   YACS.forEach(function(nombre){
     var info=d.estadoFlota[nombre];
@@ -493,8 +428,7 @@ function compartirWhatsApp(){
     yacsHtml+='<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">'+
       '<div style="width:8px;height:8px;border-radius:50%;background:'+dot+';flex-shrink:0;"></div>'+
       '<span style="font-size:11px;color:#94a3b8;flex:1;">'+nombre+'</span>'+
-      '<span style="font-size:11px;color:#e8eaf0;font-weight:600;">'+detalle+'</span>'+
-    '</div>';
+      '<span style="font-size:11px;color:#e8eaf0;font-weight:600;">'+detalle+'</span></div>';
   });
   var caidosHtml='';
   if(d.equiposCaidos&&d.equiposCaidos.length>0){
@@ -506,89 +440,51 @@ function compartirWhatsApp(){
         (eq.costoPausa>0?'<span style="font-size:10px;color:#f87171;margin-left:4px;">'+fmtB(eq.costoPausa)+'</span>':'')+
       '</div>';
     });
-  }else{
-    caidosHtml='<div style="font-size:11px;color:#4ade80;padding:6px 0;">✓ Sin equipos fuera de servicio</div>';
-  }
+  }else{caidosHtml='<div style="font-size:11px;color:#4ade80;padding:6px 0;">✓ Sin equipos fuera de servicio</div>';}
   var card=document.createElement('div');
   card.style.cssText='position:fixed;left:-9999px;top:0;width:420px;background:#0a0f1e;font-family:-apple-system,BlinkMacSystemFont,sans-serif;border-radius:16px;overflow:hidden;';
   card.innerHTML=
     '<div style="background:#0d1530;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center;">'+
-      '<div><div style="font-size:13px;font-weight:700;color:#e8eaf0;letter-spacing:0.3px;">CONTRATO 4900100500 — YPF RDLS</div>'+
+      '<div><div style="font-size:13px;font-weight:700;color:#e8eaf0;">CONTRATO 4900100500 — YPF RDLS</div>'+
         '<div style="font-size:10px;color:#4a6fa5;margin-top:2px;">Movimiento de Suelos · Neuquén</div></div>'+
       '<div style="text-align:right;"><div style="font-size:10px;color:#4a6fa5;">'+d.fechaActualizacion+'</div>'+
-        '<div style="font-size:10px;color:#60a5fa;margin-top:2px;font-weight:500;">'+d.periodoDesde+' → '+d.periodoHasta+'</div></div>'+
-    '</div>'+
+        '<div style="font-size:10px;color:#60a5fa;margin-top:2px;font-weight:500;">'+d.periodoDesde+' → '+d.periodoHasta+'</div></div></div>'+
     '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;border-bottom:1px solid rgba(255,255,255,0.06);">'+
-      '<div style="padding:14px 12px;border-right:1px solid rgba(255,255,255,0.06);">'+
-        '<div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Uptime</div>'+
-        '<div style="font-size:22px;font-weight:900;color:'+uptimeColor+';">'+pctOp+'%</div>'+
-        '<div style="font-size:10px;color:#4a6fa5;margin-top:2px;">'+totalOp+' op / '+total+' tot</div></div>'+
-      '<div style="padding:14px 12px;border-right:1px solid rgba(255,255,255,0.06);">'+
-        '<div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Facturado</div>'+
-        '<div style="font-size:22px;font-weight:900;color:'+billingColor+';">'+pctAcum+'%</div>'+
-        '<div style="font-size:10px;color:#4a6fa5;margin-top:2px;">'+fmtB(d.acumulado)+'</div></div>'+
-      '<div style="padding:14px 12px;border-right:1px solid rgba(255,255,255,0.06);">'+
-        '<div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Objetivo</div>'+
-        '<div style="font-size:22px;font-weight:900;color:#60a5fa;">'+fmtB(d.objetivo)+'</div>'+
-        '<div style="font-size:10px;color:#4a6fa5;margin-top:2px;">'+d.diasRestantes+' días rest.</div></div>'+
-      '<div style="padding:14px 12px;">'+
-        '<div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Caídos</div>'+
-        '<div style="font-size:22px;font-weight:900;color:'+(totalNop>0?'#f87171':'#4ade80')+';">'+totalNop+'</div>'+
-        '<div style="font-size:10px;color:#4a6fa5;margin-top:2px;">equipos</div></div>'+
-    '</div>'+
-    '<div style="padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);">'+
-      '<div style="display:flex;justify-content:space-between;font-size:10px;color:#4a6fa5;margin-bottom:5px;">'+
-        '<span>Avance del período</span><span style="color:'+billingColor+';font-weight:600;">'+pctAcum+'% del objetivo</span></div>'+
-      '<div style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;">'+
-        '<div style="height:100%;width:'+Math.min(pctAcum,100)+'%;background:'+(pctAcum>=90?'#22c55e':pctAcum>=70?'#f59e0b':'#ef4444')+';border-radius:4px;"></div></div>'+
-    '</div>'+
-    '<div style="padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);">'+
-      '<div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Estado por yacimiento</div>'+yacsHtml+'</div>'+
-    '<div style="padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);">'+
-      '<div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Equipos fuera de servicio</div>'+caidosHtml+'</div>'+
-    '<div style="padding:10px 20px;display:flex;justify-content:space-between;align-items:center;">'+
-      '<div style="font-size:9px;color:#2d4a7a;">TSB · Uso interno · Contrato RDLS</div>'+
-      '<div style="font-size:9px;color:#2d4a7a;">Resp: M. Pariente</div></div>';
+      '<div style="padding:14px 12px;border-right:1px solid rgba(255,255,255,0.06);"><div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Uptime</div><div style="font-size:22px;font-weight:900;color:'+uptimeColor+';">'+pctOp+'%</div><div style="font-size:10px;color:#4a6fa5;margin-top:2px;">'+totalOp+' op / '+total+' tot</div></div>'+
+      '<div style="padding:14px 12px;border-right:1px solid rgba(255,255,255,0.06);"><div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Facturado</div><div style="font-size:22px;font-weight:900;color:'+billingColor+';">'+pctAcum+'%</div><div style="font-size:10px;color:#4a6fa5;margin-top:2px;">'+fmtB(d.acumulado)+'</div></div>'+
+      '<div style="padding:14px 12px;border-right:1px solid rgba(255,255,255,0.06);"><div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Objetivo</div><div style="font-size:22px;font-weight:900;color:#60a5fa;">'+fmtB(d.objetivo)+'</div><div style="font-size:10px;color:#4a6fa5;margin-top:2px;">'+d.diasRestantes+' días rest.</div></div>'+
+      '<div style="padding:14px 12px;"><div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Caídos</div><div style="font-size:22px;font-weight:900;color:'+(totalNop>0?'#f87171':'#4ade80')+';">'+totalNop+'</div><div style="font-size:10px;color:#4a6fa5;margin-top:2px;">equipos</div></div></div>'+
+    '<div style="padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);"><div style="display:flex;justify-content:space-between;font-size:10px;color:#4a6fa5;margin-bottom:5px;"><span>Avance del período</span><span style="color:'+billingColor+';font-weight:600;">'+pctAcum+'% del objetivo</span></div><div style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;"><div style="height:100%;width:'+Math.min(pctAcum,100)+'%;background:'+(pctAcum>=90?'#22c55e':pctAcum>=70?'#f59e0b':'#ef4444')+';border-radius:4px;"></div></div></div>'+
+    '<div style="padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);"><div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Estado por yacimiento</div>'+yacsHtml+'</div>'+
+    '<div style="padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);"><div style="font-size:9px;color:#4a6fa5;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Equipos fuera de servicio</div>'+caidosHtml+'</div>'+
+    '<div style="padding:10px 20px;display:flex;justify-content:space-between;align-items:center;"><div style="font-size:9px;color:#2d4a7a;">TSB · Uso interno · Contrato RDLS</div><div style="font-size:9px;color:#2d4a7a;">Resp: M. Pariente</div></div>';
   document.body.appendChild(card);
   html2canvas(card,{backgroundColor:'#0a0f1e',scale:2,useCORS:true,logging:false}).then(function(canvas){
     document.body.removeChild(card);
     canvas.toBlob(function(blob){
       var file=new File([blob],'TSB_RDLS_'+new Date().toLocaleDateString('es-AR').replace(/\//g,'-')+'.png',{type:'image/png'});
-      if(navigator.canShare&&navigator.canShare({files:[file]})){
-        navigator.share({files:[file],title:'TSB — Contrato RDLS',text:'Dashboard operativo YPF RDLS · '+d.fechaActualizacion});
-      }else{
-        var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=file.name;a.click();
-      }
+      if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:'TSB — Contrato RDLS',text:'Dashboard operativo YPF RDLS · '+d.fechaActualizacion});}
+      else{var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=file.name;a.click();}
     },'image/png');
   });
 }
 
 function renderDashboard(d){
-  document.getElementById('txt-actualizacion').innerHTML=
-    'Actualizado: '+d.fechaActualizacion+
-    '<button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button>';
-
+  document.getElementById('txt-actualizacion').innerHTML='Actualizado: '+d.fechaActualizacion+'<button class="btn-refresh" onclick="cargarDashboard()">↻ Actualizar</button>';
   var totalOp=0,totalNop=0,totalSC=0;
-  Object.values(d.estadoFlota).forEach(function(yac){
-    totalOp+=yac.operativos;totalNop+=yac.caidos;totalSC+=(yac.sinChofer||0);
-  });
+  Object.values(d.estadoFlota).forEach(function(yac){totalOp+=yac.operativos;totalNop+=yac.caidos;totalSC+=(yac.sinChofer||0);});
   var total=totalOp+totalNop+totalSC;
   var pctOp=total>0?Math.round((totalOp+totalSC)/total*100):0;
   document.getElementById('kpi-grid').innerHTML=
     '<div class="kpi-card kpi-verde"><div class="kpi-label">Operativos</div><div class="kpi-val">'+totalOp+'</div><div class="kpi-sub">equipos en campo</div></div>'+
     '<div class="kpi-card kpi-rojo"><div class="kpi-label">Fuera de servicio</div><div class="kpi-val">'+totalNop+'</div><div class="kpi-sub">equipos caídos</div></div>'+
     '<div class="kpi-card kpi-naranja"><div class="kpi-label">Sin chofer</div><div class="kpi-val">'+totalSC+'</div><div class="kpi-sub">bajas YPF</div></div>'+
-    '<div class="kpi-card '+(pctOp>=80?'kpi-verde':pctOp>=60?'kpi-azul':'kpi-rojo')+'">'+
-      '<div class="kpi-label">Operatividad</div><div class="kpi-val">'+pctOp+'%</div>'+
-      '<div class="kpi-sub">(op + s/c) vs rotos</div></div>';
+    '<div class="kpi-card '+(pctOp>=80?'kpi-verde':pctOp>=60?'kpi-azul':'kpi-rojo')+'"><div class="kpi-label">Operatividad</div><div class="kpi-val">'+pctOp+'%</div><div class="kpi-sub">(op + s/c) vs rotos</div></div>';
 
   var pctAcum=d.objetivo>0?Math.round(d.acumulado/d.objetivo*100):0;
   var barraClass=pctAcum>=95?'bien':pctAcum>=70?'riesgo':'bajo';
   document.getElementById('objetivo-card').innerHTML=
-    '<div class="objetivo-header"><div>'+
-      '<div class="objetivo-titulo">Acumulado y proyección</div>'+
-      '<div class="objetivo-periodo">'+d.periodoDesde+' → '+d.periodoHasta+' · '+d.diasRestantes+' días restantes</div>'+
-    '</div></div>'+
+    '<div style="margin-bottom:14px;"><div class="objetivo-titulo">Acumulado y proyección</div><div class="objetivo-periodo">'+d.periodoDesde+' → '+d.periodoHasta+' · '+d.diasRestantes+' días restantes</div></div>'+
     '<div class="objetivo-montos" style="grid-template-columns:1fr 1fr;">'+
       '<div class="objetivo-monto-item"><div class="objetivo-monto-label">Acumulado real</div><div class="objetivo-monto-val acum">'+fmtPeso(d.acumulado)+'</div></div>'+
       '<div class="objetivo-monto-item"><div class="objetivo-monto-label">Objetivo TSB</div><div class="objetivo-monto-val">'+fmtPeso(d.objetivo)+'</div></div>'+
@@ -603,44 +499,22 @@ function renderDashboard(d){
     '</div>'+
     '<div class="objetivo-dias">Objetivo diario: '+fmtPeso(d.objetivoDiarioHoy)+' · Standby: '+fmtPeso(d.standbyDia)+'/día</div>';
 
-  // ─── NUEVO: ACUMULADO POR YACIMIENTO ─────────────────────────────────────
-  var yacAcumEl = document.getElementById('yac-acum-card');
-  if (d.resumenPorYac && d.resumenPorYac.length > 0) {
-    var totPartes = d.resumenPorYac.reduce(function(s,r){return s+r.partes;},0);
-    var totOncall = d.resumenPorYac.reduce(function(s,r){return s+r.oncall;},0);
-    var totTodo   = d.resumenPorYac.reduce(function(s,r){return s+r.total;},0);
-    yacAcumEl.innerHTML =
-      '<div class="tabla-scroll"><table>'+
-      '<thead><tr>'+
-        '<th>Yacimiento</th>'+
-        '<th style="text-align:right">Partes</th>'+
-        '<th style="text-align:right">Adicionales</th>'+
-        '<th style="text-align:right">Total período</th>'+
-      '</tr></thead><tbody>'+
-      d.resumenPorYac.map(function(r){
-        return '<tr>'+
-          '<td>'+r.yac+'</td>'+
-          '<td class="num">'+fmtPeso(r.partes)+'</td>'+
-          '<td class="num">'+(r.oncall>0?fmtPeso(r.oncall):'—')+'</td>'+
-          '<td class="num" style="color:var(--azul);font-size:13px;">'+fmtPeso(r.total)+'</td>'+
-        '</tr>';
-      }).join('')+
-      '<tr class="fila-total">'+
-        '<td style="font-size:11px;letter-spacing:0.5px;">TOTAL</td>'+
-        '<td class="num">'+fmtPeso(totPartes)+'</td>'+
-        '<td class="num">'+fmtPeso(totOncall)+'</td>'+
-        '<td class="num" style="color:var(--azul);font-size:14px;">'+fmtPeso(totTodo)+'</td>'+
-      '</tr>'+
+  // ACUMULADO POR YACIMIENTO
+  var yacAcumEl=document.getElementById('yac-acum-card');
+  if(d.resumenPorYac&&d.resumenPorYac.length>0){
+    var totP=d.resumenPorYac.reduce(function(s,r){return s+r.partes;},0);
+    var totO=d.resumenPorYac.reduce(function(s,r){return s+r.oncall;},0);
+    var totT=d.resumenPorYac.reduce(function(s,r){return s+r.total;},0);
+    yacAcumEl.innerHTML='<div class="tabla-scroll"><table>'+
+      '<thead><tr><th>Yacimiento</th><th style="text-align:right">Partes</th><th style="text-align:right">Adicionales</th><th style="text-align:right">Total período</th></tr></thead><tbody>'+
+      d.resumenPorYac.map(function(r){return'<tr><td>'+r.yac+'</td><td class="num">'+fmtPeso(r.partes)+'</td><td class="num">'+(r.oncall>0?fmtPeso(r.oncall):'—')+'</td><td class="num" style="color:var(--azul);font-size:13px;">'+fmtPeso(r.total)+'</td></tr>';}).join('')+
+      '<tr class="fila-total"><td style="font-size:11px;letter-spacing:0.5px;">TOTAL</td><td class="num">'+fmtPeso(totP)+'</td><td class="num">'+fmtPeso(totO)+'</td><td class="num" style="color:var(--azul);font-size:14px;">'+fmtPeso(totT)+'</td></tr>'+
       '</tbody></table></div>';
-  } else {
-    yacAcumEl.innerHTML='<div style="padding:16px;text-align:center;color:var(--muted);font-size:13px;">Sin datos en el período</div>';
-  }
-  // ─────────────────────────────────────────────────────────────────────────
+  }else{yacAcumEl.innerHTML='<div style="padding:16px;text-align:center;color:var(--muted);font-size:13px;">Sin datos en el período</div>';}
 
   // VELOCÍMETRO
   var velDiv=document.getElementById('veloci-card');
-  var fDesde=parseFecha(d.periodoDesde);
-  var fHasta=parseFecha(d.periodoHasta);
+  var fDesde=parseFecha(d.periodoDesde),fHasta=parseFecha(d.periodoHasta);
   var hoy=new Date();hoy.setHours(0,0,0,0);
   var totalDias=fDesde&&fHasta?Math.round((fHasta-fDesde)/(1000*60*60*24)):30;
   var diasTransc=fDesde?Math.round((hoy-fDesde)/(1000*60*60*24)):0;
@@ -653,36 +527,25 @@ function renderDashboard(d){
   var difTexto=(dif>=0?'+':'')+dif+' pp';
   var difColor=dif>=0?'var(--verde2)':dif>=-3?'var(--naranja2)':'var(--rojo)';
   var realColor=pctReal2>=pctEsp?'var(--verde2)':pctReal2>=(pctEsp-3)?'var(--naranja2)':'var(--rojo)';
-  velDiv.innerHTML=
-    '<div class="veloci-card">'+
-      '<div class="veloci-gauge">'+velocimetroSVG(pctReal2,pctEsp)+'</div>'+
-      '<div class="veloci-datos">'+
-        '<span class="veloci-badge '+ritmoBadge+'">'+ritmoTexto+'</span>'+
-        '<div class="veloci-fila"><span class="veloci-label">Avance real</span><span class="veloci-val" style="color:'+realColor+';">'+pctReal2+'%</span></div>'+
-        '<div class="veloci-fila"><span class="veloci-label">Esperado hoy</span><span class="veloci-val" style="color:#60a5fa;">'+pctEsp+'%</span></div>'+
-        '<div class="veloci-fila"><span class="veloci-label">Diferencia</span><span class="veloci-val" style="color:'+difColor+';">'+difTexto+'</span></div>'+
-        '<div class="veloci-fila"><span class="veloci-label">Día '+diasTransc+' de '+totalDias+'</span><span class="veloci-val" style="color:var(--muted);">período</span></div>'+
-      '</div>'+
-    '</div>';
+  velDiv.innerHTML='<div class="veloci-card"><div class="veloci-gauge">'+velocimetroSVG(pctReal2,pctEsp)+'</div>'+
+    '<div class="veloci-datos"><span class="veloci-badge '+ritmoBadge+'">'+ritmoTexto+'</span>'+
+    '<div class="veloci-fila"><span class="veloci-label">Avance real</span><span class="veloci-val" style="color:'+realColor+';">'+pctReal2+'%</span></div>'+
+    '<div class="veloci-fila"><span class="veloci-label">Esperado hoy</span><span class="veloci-val" style="color:#60a5fa;">'+pctEsp+'%</span></div>'+
+    '<div class="veloci-fila"><span class="veloci-label">Diferencia</span><span class="veloci-val" style="color:'+difColor+';">'+difTexto+'</span></div>'+
+    '<div class="veloci-fila"><span class="veloci-label">Día '+diasTransc+' de '+totalDias+'</span><span class="veloci-val" style="color:var(--muted);">período</span></div>'+
+    '</div></div>';
 
   // EFICIENCIA HOY
   var efDiv=document.getElementById('eficiencia-card');
   if(d.eficienciaHoy){
-    var eh=d.eficienciaHoy;
-    var perdida=eh.objetivo-eh.resultado;
-    efDiv.innerHTML=
-      '<div class="eficiencia-card">'+
-        '<div class="eficiencia-donut">'+donutSVG(eh.pct)+'</div>'+
-        '<div class="eficiencia-datos">'+
-          '<div class="eficiencia-fecha">Parte del '+eh.fecha+'</div>'+
-          '<div class="eficiencia-fila"><span class="eficiencia-fila-label">Resultado</span><span class="eficiencia-fila-val verde">'+fmtPeso(eh.resultado)+'</span></div>'+
-          '<div class="eficiencia-fila"><span class="eficiencia-fila-label">Objetivo día</span><span class="eficiencia-fila-val">'+fmtPeso(eh.objetivo)+'</span></div>'+
-          '<div class="eficiencia-fila"><span class="eficiencia-fila-label">Pérdida día</span><span class="eficiencia-fila-val rojo">'+fmtPeso(perdida)+'</span></div>'+
-        '</div>'+
-      '</div>';
-  }else{
-    efDiv.innerHTML='<div style="background:white;border-radius:14px;padding:16px;text-align:center;color:var(--muted);font-size:13px;margin-bottom:14px;">Sin datos del período actual</div>';
-  }
+    var eh=d.eficienciaHoy,perdida=eh.objetivo-eh.resultado;
+    efDiv.innerHTML='<div class="eficiencia-card"><div class="eficiencia-donut">'+donutSVG(eh.pct)+'</div>'+
+      '<div class="eficiencia-datos"><div class="eficiencia-fecha">Parte del '+eh.fecha+'</div>'+
+      '<div class="eficiencia-fila"><span class="eficiencia-fila-label">Resultado</span><span class="eficiencia-fila-val verde">'+fmtPeso(eh.resultado)+'</span></div>'+
+      '<div class="eficiencia-fila"><span class="eficiencia-fila-label">Objetivo día</span><span class="eficiencia-fila-val">'+fmtPeso(eh.objetivo)+'</span></div>'+
+      '<div class="eficiencia-fila"><span class="eficiencia-fila-label">Pérdida día</span><span class="eficiencia-fila-val rojo">'+fmtPeso(perdida)+'</span></div>'+
+      '</div></div>';
+  }else{efDiv.innerHTML='<div style="background:white;border-radius:14px;padding:16px;text-align:center;color:var(--muted);font-size:13px;margin-bottom:14px;">Sin datos del período actual</div>';}
 
   // TABLA SEGUIMIENTO
   var tbody=document.getElementById('tbody-seguimiento');
@@ -691,100 +554,42 @@ function renderDashboard(d){
     tbody.innerHTML=d.seguimientoDiario.map(function(fila){
       var pillClass=fila.pct>=90?'bien':fila.pct>=70?'riesgo':'bajo';
       var esHoy=fila.fecha===ultimaFecha?'fila-hoy':'';
-      return '<tr class="'+esHoy+'">'+
-        '<td>'+fila.fecha+(esHoy?' ★':'')+'</td>'+
-        '<td class="num">'+fmtPeso(fila.resultado)+'</td>'+
-        '<td class="num">'+fmtPeso(fila.objetivo)+'</td>'+
-        '<td class="pct-cell"><span class="pct-pill '+pillClass+'">'+fila.pct+'%</span></td>'+
-      '</tr>';
+      return'<tr class="'+esHoy+'"><td>'+fila.fecha+(esHoy?' ★':'')+'</td><td class="num">'+fmtPeso(fila.resultado)+'</td><td class="num">'+fmtPeso(fila.objetivo)+'</td><td class="pct-cell"><span class="pct-pill '+pillClass+'">'+fila.pct+'%</span></td></tr>';
     }).join('');
-  }else{
-    tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted);">Sin datos en el período</td></tr>';
-  }
+  }else{tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted);">Sin datos en el período</td></tr>';}
 
   // FLOTA POR TIPO
   var flotaHtml='';
   if(d.flotaPorTipo&&d.flotaPorTipo.length>0){
     d.flotaPorTipo.forEach(function(f){
-      flotaHtml+=
-        '<div class="flota-row">'+
-          '<span class="flota-tipo">'+f.tipo+'</span>'+
-          '<span class="flota-total">'+f.total+'</span>'+
-          '<div class="flota-chips">'+
-            '<span class="chip chip-op">'+f.op+' op</span>'+
-            (f.sc>0?'<span class="chip chip-sc">'+f.sc+' s/c</span>':'')+
-            (f.nop>0?'<span class="chip chip-nop">'+f.nop+' caído'+(f.nop>1?'s':'')+'</span>':'')+
-          '</div>'+
-        '</div>';
+      flotaHtml+='<div class="flota-row"><span class="flota-tipo">'+f.tipo+'</span><span class="flota-total">'+f.total+'</span>'+
+        '<div class="flota-chips"><span class="chip chip-op">'+f.op+' op</span>'+
+        (f.sc>0?'<span class="chip chip-sc">'+f.sc+' s/c</span>':'')+
+        (f.nop>0?'<span class="chip chip-nop">'+f.nop+' caído'+(f.nop>1?'s':'')+'</span>':'')+
+        '</div></div>';
     });
-  }else{
-    flotaHtml='<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px 0;">Sin datos</div>';
-  }
+  }else{flotaHtml='<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px 0;">Sin datos</div>';}
   document.getElementById('flota-card').innerHTML=flotaHtml;
 
-  // ONCALL ACUMULADO
+  // ONCALL
   var oc=d.oncallResumen||{};
   var tieneOncall=(oc.carretonDias>0||oc.hormigonM3>0||oc.geomembranaM2>0||oc.mallaM2>0);
   var oncallEl=document.getElementById('oncall-card');
   var tituloOncall=document.getElementById('titulo-oncall');
-  if(!tieneOncall){
-    tituloOncall.style.display='none';
-    oncallEl.innerHTML='';
-  }else{
+  if(!tieneOncall){tituloOncall.style.display='none';oncallEl.innerHTML='';}
+  else{
     tituloOncall.style.display='block';
     var items='';
-    if(oc.carretonDias>0){
-      items+='<div class="oncall-item-card">'+
-        '<div class="oncall-item-icon">🚛</div>'+
-        '<div class="oncall-item-data">'+
-          '<div class="oncall-item-label">Camión Carretón</div>'+
-          '<div class="oncall-item-qty">'+oc.carretonDias+' <span class="oncall-item-unit">días</span></div>'+
-          '<div class="oncall-item-val">'+fmtPeso(oc.carretonValor)+'</div>'+
-        '</div>'+
-      '</div>';
-    }
-    if(oc.hormigonM3>0){
-      items+='<div class="oncall-item-card">'+
-        '<div class="oncall-item-icon">🏗️</div>'+
-        '<div class="oncall-item-data">'+
-          '<div class="oncall-item-label">Hormigón</div>'+
-          '<div class="oncall-item-qty">'+oc.hormigonM3.toFixed(1)+' <span class="oncall-item-unit">m³</span></div>'+
-          '<div class="oncall-item-val">'+fmtPeso(oc.hormigonValor)+'</div>'+
-        '</div>'+
-      '</div>';
-    }
-    if(oc.geomembranaM2>0){
-      items+='<div class="oncall-item-card">'+
-        '<div class="oncall-item-icon">🛢️</div>'+
-        '<div class="oncall-item-data">'+
-          '<div class="oncall-item-label">Geomembrana</div>'+
-          '<div class="oncall-item-qty">'+oc.geomembranaM2.toFixed(1)+' <span class="oncall-item-unit">m²</span></div>'+
-          '<div class="oncall-item-val">'+fmtPeso(oc.geomembranaValor)+'</div>'+
-        '</div>'+
-      '</div>';
-    }
-    if(oc.mallaM2>0){
-      items+='<div class="oncall-item-card">'+
-        '<div class="oncall-item-icon">🕸️</div>'+
-        '<div class="oncall-item-data">'+
-          '<div class="oncall-item-label">Malla antiaves</div>'+
-          '<div class="oncall-item-qty">'+oc.mallaM2.toFixed(1)+' <span class="oncall-item-unit">m²</span></div>'+
-          '<div class="oncall-item-val">'+fmtPeso(oc.mallaValor)+'</div>'+
-        '</div>'+
-      '</div>';
-    }
-    oncallEl.innerHTML=
-      '<div class="oncall-resumen-card">'+
-        '<div class="oncall-resumen-grid">'+items+'</div>'+
-        '<div class="oncall-total-row">'+
-          '<span class="oncall-total-label">Total acumulado adicionales</span>'+
-          '<span class="oncall-total-val">'+fmtPeso(oc.totalValor)+'</span>'+
-        '</div>'+
-      '</div>';
+    if(oc.carretonDias>0)items+='<div class="oncall-item-card"><div class="oncall-item-icon">🚛</div><div class="oncall-item-data"><div class="oncall-item-label">Camión Carretón</div><div class="oncall-item-qty">'+oc.carretonDias+' <span class="oncall-item-unit">días</span></div><div class="oncall-item-val">'+fmtPeso(oc.carretonValor)+'</div></div></div>';
+    if(oc.hormigonM3>0)items+='<div class="oncall-item-card"><div class="oncall-item-icon">🏗️</div><div class="oncall-item-data"><div class="oncall-item-label">Hormigón</div><div class="oncall-item-qty">'+oc.hormigonM3.toFixed(1)+' <span class="oncall-item-unit">m³</span></div><div class="oncall-item-val">'+fmtPeso(oc.hormigonValor)+'</div></div></div>';
+    if(oc.geomembranaM2>0)items+='<div class="oncall-item-card"><div class="oncall-item-icon">🛢️</div><div class="oncall-item-data"><div class="oncall-item-label">Geomembrana</div><div class="oncall-item-qty">'+oc.geomembranaM2.toFixed(1)+' <span class="oncall-item-unit">m²</span></div><div class="oncall-item-val">'+fmtPeso(oc.geomembranaValor)+'</div></div></div>';
+    if(oc.mallaM2>0)items+='<div class="oncall-item-card"><div class="oncall-item-icon">🕸️</div><div class="oncall-item-data"><div class="oncall-item-label">Malla antiaves</div><div class="oncall-item-qty">'+oc.mallaM2.toFixed(1)+' <span class="oncall-item-unit">m²</span></div><div class="oncall-item-val">'+fmtPeso(oc.mallaValor)+'</div></div></div>';
+    oncallEl.innerHTML='<div class="oncall-resumen-card"><div class="oncall-resumen-grid">'+items+'</div>'+
+      '<div class="oncall-total-row"><span class="oncall-total-label">Total acumulado adicionales</span><span class="oncall-total-val">'+fmtPeso(oc.totalValor)+'</span></div></div>';
   }
 
-  // YACIMIENTOS
-  var YACS=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez'];
+  // YACIMIENTOS — dinámico desde el Sheet
+  var YACS=d.yacimientosActivos||[]; // ← DINÁMICO
   var yacHtml='';
   YACS.forEach(function(nombre){
     var info=d.estadoFlota[nombre];
@@ -798,8 +603,7 @@ function renderDashboard(d){
       var tiposMap={};
       if(info.equipos){
         info.equipos.forEach(function(eq){
-          var tipo=limpiarTipo(eq.tipo);
-          if(!tipo)return;
+          var tipo=limpiarTipo(eq.tipo);if(!tipo)return;
           var en=String(eq.estadoN||eq.estado||'').toLowerCase();
           var estadoKey=en==='operativo'?'op':en==='sin chofer'?'sc':'nop';
           var clave=tipo+'|'+estadoKey;
@@ -808,29 +612,18 @@ function renderDashboard(d){
         });
       }
       var chipsHtml='';
-      Object.keys(tiposMap).sort().forEach(function(clave){
-        var t=tiposMap[clave];
-        chipsHtml+='<span class="yac-equipo-chip '+t.estadoKey+'">'+t.count+' '+t.tipo+'</span>';
-      });
-      yacHtml+=
-        '<div class="yac-card '+clase+'">'+alertaPendiente+
-          '<div class="yac-header">'+
-            '<div class="yac-header-izq"><div class="yac-dot '+dotClass+'"></div><div class="yac-nombre">'+nombre+'</div></div>'+
-            '<div class="yac-totales">'+
-              '<span class="yac-tot op">'+info.operativos+' op</span>'+
-              (sc>0?'<span class="yac-tot sc">'+sc+' s/c</span>':'')+
-              (info.caidos>0?'<span class="yac-tot nop">'+info.caidos+' caído'+(info.caidos>1?'s':'')+'</span>':'')+
-            '</div>'+
-          '</div>'+
-          '<div class="yac-meta"><span class="yac-supervisor">👤 '+(info.supervisor||'—')+'</span><span class="yac-fecha">'+info.fecha+'</span></div>'+
-          '<div class="yac-flota">'+chipsHtml+'</div>'+
-        '</div>';
+      Object.keys(tiposMap).sort().forEach(function(clave){var t=tiposMap[clave];chipsHtml+='<span class="yac-equipo-chip '+t.estadoKey+'">'+t.count+' '+t.tipo+'</span>';});
+      yacHtml+='<div class="yac-card '+clase+'">'+alertaPendiente+
+        '<div class="yac-header"><div class="yac-header-izq"><div class="yac-dot '+dotClass+'"></div><div class="yac-nombre">'+nombre+'</div></div>'+
+        '<div class="yac-totales"><span class="yac-tot op">'+info.operativos+' op</span>'+
+        (sc>0?'<span class="yac-tot sc">'+sc+' s/c</span>':'')+
+        (info.caidos>0?'<span class="yac-tot nop">'+info.caidos+' caído'+(info.caidos>1?'s':'')+'</span>':'')+
+        '</div></div>'+
+        '<div class="yac-meta"><span class="yac-supervisor">👤 '+(info.supervisor||'—')+'</span><span class="yac-fecha">'+info.fecha+'</span></div>'+
+        '<div class="yac-flota">'+chipsHtml+'</div></div>';
     }else{
-      yacHtml+=
-        '<div class="yac-card pendiente">'+
-          '<div class="alerta-pendiente">⚠ SIN PARTES CARGADOS</div>'+
-          '<div class="yac-header"><div class="yac-header-izq"><div class="yac-dot dot-rojo"></div><div class="yac-nombre">'+nombre+'</div></div></div>'+
-        '</div>';
+      yacHtml+='<div class="yac-card pendiente"><div class="alerta-pendiente">⚠ SIN PARTES CARGADOS</div>'+
+        '<div class="yac-header"><div class="yac-header-izq"><div class="yac-dot dot-rojo"></div><div class="yac-nombre">'+nombre+'</div></div></div></div>';
     }
   });
   document.getElementById('yac-lista').innerHTML=yacHtml;
@@ -845,14 +638,9 @@ function renderDashboard(d){
     tituloCaidos.textContent='Equipos fuera de servicio ('+d.equiposCaidos.length+')';
     tituloCaidos.style.display='block';
     listaCaidos.innerHTML=d.equiposCaidos.map(function(eq){
-      return '<div class="caido-item">'+
-        '<div class="caido-header"><div class="caido-interno">'+eq.interno+'</div><span class="caido-dias">'+eq.diasCaido+(eq.diasCaido===1?' día':' días')+'</span></div>'+
-        '<div class="caido-tipo">'+limpiarTipo(eq.tipo)+'</div>'+
-        '<div class="caido-yac">📍 '+eq.yac+'</div>'+
-        (eq.costoPausa>0?'<div style="display:flex;gap:10px;margin-top:6px;flex-wrap:wrap;">'+
-          '<div style="background:#fff5f5;border:1px solid #ffbdbd;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--rojo);">💸 Día: '+fmtPeso(Math.round(eq.costoPausa/Math.max(eq.diasCaido,1)))+'</div>'+
-          '<div style="background:#ffebee;border:1px solid #ffbdbd;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--rojo);">📉 Acumulado: '+fmtPeso(eq.costoPausa)+'</div>'+
-        '</div>':'')+
+      return'<div class="caido-item"><div class="caido-header"><div class="caido-interno">'+eq.interno+'</div><span class="caido-dias">'+eq.diasCaido+(eq.diasCaido===1?' día':' días')+'</span></div>'+
+        '<div class="caido-tipo">'+limpiarTipo(eq.tipo)+'</div><div class="caido-yac">📍 '+eq.yac+'</div>'+
+        (eq.costoPausa>0?'<div style="display:flex;gap:10px;margin-top:6px;flex-wrap:wrap;"><div style="background:#fff5f5;border:1px solid #ffbdbd;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--rojo);">💸 Día: '+fmtPeso(Math.round(eq.costoPausa/Math.max(eq.diasCaido,1)))+'</div><div style="background:#ffebee;border:1px solid #ffbdbd;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--rojo);">📉 Acumulado: '+fmtPeso(eq.costoPausa)+'</div></div>':'')+
         (eq.obs?'<div class="caido-obs">📋 '+eq.obs+'</div>':'')+
       '</div>';
     }).join('');
@@ -865,38 +653,19 @@ function renderDashboard(d){
     tituloSC.textContent='Equipos sin chofer — Bajas YPF ('+d.equiposSinChofer.length+')';
     tituloSC.style.display='block';
     listaSC.innerHTML=d.equiposSinChofer.map(function(eq){
-      return '<div class="sc-item">'+
-        '<div class="caido-header"><div class="caido-interno">'+eq.interno+'</div><span class="sc-dias">'+eq.diasSinChofer+(eq.diasSinChofer===1?' día':' días')+'</span></div>'+
-        '<div class="caido-tipo">'+limpiarTipo(eq.tipo)+'</div>'+
-        '<div class="caido-yac">📍 '+eq.yac+'</div>'+
+      return'<div class="sc-item"><div class="caido-header"><div class="caido-interno">'+eq.interno+'</div><span class="sc-dias">'+eq.diasSinChofer+(eq.diasSinChofer===1?' día':' días')+'</span></div>'+
+        '<div class="caido-tipo">'+limpiarTipo(eq.tipo)+'</div><div class="caido-yac">📍 '+eq.yac+'</div>'+
         (eq.obs?'<div class="caido-obs">📋 '+eq.obs+'</div>':'')+
       '</div>';
     }).join('');
-  }else{
-    tituloSC.style.display='none';
-    listaSC.innerHTML='';
-  }
+  }else{tituloSC.style.display='none';listaSC.innerHTML='';}
 }
 
-function mostrarScreen(id){
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
-}
-function salir(){
-  usuarioActual=null;dashData=null;
-  document.getElementById('inp-password').value='';
-  document.getElementById('sel-usuario').value='';
-  document.getElementById('login-error').style.display='none';
-  mostrarScreen('screen-login');
-}
+function mostrarScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function salir(){usuarioActual=null;dashData=null;document.getElementById('inp-password').value='';document.getElementById('sel-usuario').value='';document.getElementById('login-error').style.display='none';mostrarScreen('screen-login');}
 </script>
 <script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load',function(){
-    navigator.serviceWorker.register('/tsb-parte-diario/sw.js');
-  });
-}
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/tsb-parte-diario/sw.js');});}
 </script>
 </body>
 </html>
