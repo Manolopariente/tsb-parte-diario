@@ -113,6 +113,7 @@ thead th{padding:10px 12px;text-align:left;font-size:10px;font-weight:700;letter
 tbody tr{border-bottom:1px solid var(--gris);}
 tbody tr:last-child{border-bottom:none;}
 tbody tr.fila-hoy{background:#f0f4ff;}
+tbody tr.fila-total{background:#f0f4ff;}
 tbody td{padding:9px 12px;color:var(--texto);white-space:nowrap;}
 tbody td:first-child{font-weight:700;}
 td.num{text-align:right;font-weight:700;font-variant-numeric:tabular-nums;}
@@ -131,7 +132,6 @@ td.pct-cell{text-align:center;}
 .chip-op{background:#e8f5e9;color:#2e7d32;}
 .chip-nop{background:#ffebee;color:var(--rojo);}
 .chip-sc{background:#fff8e1;color:#92400e;}
-/* ── ONCALL CARD ── */
 .oncall-resumen-card{background:white;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1.5px solid var(--borde);margin-bottom:14px;}
 .oncall-resumen-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
 .oncall-item-card{background:var(--gris);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;}
@@ -144,7 +144,6 @@ td.pct-cell{text-align:center;}
 .oncall-total-row{background:linear-gradient(135deg,var(--azul),var(--azul2));border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;}
 .oncall-total-label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:1px;}
 .oncall-total-val{font-size:18px;font-weight:900;color:white;}
-/* ── FIN ONCALL ── */
 .yac-card{background:white;border-radius:12px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.06);border:2px solid var(--borde);margin-bottom:10px;}
 .yac-card.verde{border-color:#c5e89a;background:#f7fbf0;}
 .yac-card.rojo{border-color:#ffbdbd;background:#fff5f5;}
@@ -263,6 +262,12 @@ td.pct-cell{text-align:center;}
       <div class="kpi-grid" id="kpi-grid"></div>
       <div class="seccion-titulo">Acumulado período — Contrato 4900100500</div>
       <div class="objetivo-card" id="objetivo-card"></div>
+
+      <!-- ─── NUEVO: Acumulado por yacimiento ─── -->
+      <div class="seccion-titulo">Acumulado por yacimiento — período</div>
+      <div class="tabla-card" id="yac-acum-card"></div>
+      <!-- ─────────────────────────────────────── -->
+
       <div class="seccion-titulo">Ritmo de facturación</div>
       <div id="veloci-card"></div>
       <div class="seccion-titulo">Eficiencia del último parte cargado</div>
@@ -598,6 +603,40 @@ function renderDashboard(d){
     '</div>'+
     '<div class="objetivo-dias">Objetivo diario: '+fmtPeso(d.objetivoDiarioHoy)+' · Standby: '+fmtPeso(d.standbyDia)+'/día</div>';
 
+  // ─── NUEVO: ACUMULADO POR YACIMIENTO ─────────────────────────────────────
+  var yacAcumEl = document.getElementById('yac-acum-card');
+  if (d.resumenPorYac && d.resumenPorYac.length > 0) {
+    var totPartes = d.resumenPorYac.reduce(function(s,r){return s+r.partes;},0);
+    var totOncall = d.resumenPorYac.reduce(function(s,r){return s+r.oncall;},0);
+    var totTodo   = d.resumenPorYac.reduce(function(s,r){return s+r.total;},0);
+    yacAcumEl.innerHTML =
+      '<div class="tabla-scroll"><table>'+
+      '<thead><tr>'+
+        '<th>Yacimiento</th>'+
+        '<th style="text-align:right">Partes</th>'+
+        '<th style="text-align:right">Adicionales</th>'+
+        '<th style="text-align:right">Total período</th>'+
+      '</tr></thead><tbody>'+
+      d.resumenPorYac.map(function(r){
+        return '<tr>'+
+          '<td>'+r.yac+'</td>'+
+          '<td class="num">'+fmtPeso(r.partes)+'</td>'+
+          '<td class="num">'+(r.oncall>0?fmtPeso(r.oncall):'—')+'</td>'+
+          '<td class="num" style="color:var(--azul);font-size:13px;">'+fmtPeso(r.total)+'</td>'+
+        '</tr>';
+      }).join('')+
+      '<tr class="fila-total">'+
+        '<td style="font-size:11px;letter-spacing:0.5px;">TOTAL</td>'+
+        '<td class="num">'+fmtPeso(totPartes)+'</td>'+
+        '<td class="num">'+fmtPeso(totOncall)+'</td>'+
+        '<td class="num" style="color:var(--azul);font-size:14px;">'+fmtPeso(totTodo)+'</td>'+
+      '</tr>'+
+      '</tbody></table></div>';
+  } else {
+    yacAcumEl.innerHTML='<div style="padding:16px;text-align:center;color:var(--muted);font-size:13px;">Sin datos en el período</div>';
+  }
+  // ─────────────────────────────────────────────────────────────────────────
+
   // VELOCÍMETRO
   var velDiv=document.getElementById('veloci-card');
   var fDesde=parseFecha(d.periodoDesde);
@@ -683,7 +722,7 @@ function renderDashboard(d){
   }
   document.getElementById('flota-card').innerHTML=flotaHtml;
 
-  // ── ONCALL ACUMULADO ─────────────────────────────────────────────────────
+  // ONCALL ACUMULADO
   var oc=d.oncallResumen||{};
   var tieneOncall=(oc.carretonDias>0||oc.hormigonM3>0||oc.geomembranaM2>0||oc.mallaM2>0);
   var oncallEl=document.getElementById('oncall-card');
@@ -743,7 +782,6 @@ function renderDashboard(d){
         '</div>'+
       '</div>';
   }
-  // ── FIN ONCALL ────────────────────────────────────────────────────────────
 
   // YACIMIENTOS
   var YACS=['Señal Picada','BDT - NAR','Obras','Lomita','Puesto Hernandez'];
