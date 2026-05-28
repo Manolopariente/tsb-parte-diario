@@ -360,7 +360,9 @@ function calcularPeriodoDash(offset) {
   var fin = new Date(anioF, mesF, 20);
   function iso(d) { return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
   var hasta = offset < 0 ? iso(fin) : iso(new Date());
-  return { desde: iso(inicio), hasta: hasta };
+  // periodoKey = YYYY-MM del mes de CIERRE (mes del día 20)
+  var periodoKey = anioF + '-' + String(mesF + 1).padStart(2,'0');
+  return { desde: iso(inicio), hasta: hasta, periodoKey: periodoKey };
 }
 
 function cambiarPeriodoDash(offset) {
@@ -418,7 +420,7 @@ function cargarDashboard(){
   document.getElementById('dash-contenido').style.display='none';
   (function(){
     var per = calcularPeriodoDash(periodoOffsetDash);
-    var url = API+'?action=getDashboardData&desde='+per.desde+'&hasta='+per.hasta+'&t='+Date.now();
+    var url = API+'?action=getDashboardData&desde='+per.desde+'&hasta='+per.hasta+'&periodoKey='+per.periodoKey+'&t='+Date.now();
     return fetchConTimeout(url,{cache:'no-store'},30000);
   })()
     .then(function(r){return r.json();})
