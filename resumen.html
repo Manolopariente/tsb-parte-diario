@@ -140,7 +140,9 @@ function calcularPeriodo(offset=0) {
   const fin = new Date(anioF, mesF, 20);
   const diasTotales = Math.round((fin-inicio)/86400000)+1;
   const diasTransc  = offset<0 ? diasTotales : Math.min(Math.round((new Date()-inicio)/86400000)+1, diasTotales);
-  return { inicio, fin, diasTotales, diasTransc };
+  // periodoKey = YYYY-MM del mes de cierre (mes del día 20)
+  const periodoKey = anioF + '-' + String(mesF+1).padStart(2,'0');
+  return { inicio, fin, diasTotales, diasTransc, periodoKey };
 }
 
 function fmtFecha(d){ return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'}); }
@@ -153,7 +155,7 @@ async function fetchDatos(offset=0) {
   const periodo = calcularPeriodo(offset);
   const desde   = periodo.inicio.toISOString().split('T')[0];
   const hasta   = (offset<0 ? periodo.fin : new Date()).toISOString().split('T')[0];
-  const url = `${SCRIPT_URL}?action=getResumenPeriodo&desde=${desde}&hasta=${hasta}`;
+  const url = `${SCRIPT_URL}?action=getResumenPeriodo&desde=${desde}&hasta=${hasta}&periodoKey=${periodo.periodoKey}`;
   const resp = await fetch(url);
   const data = await resp.json();
   return { data, periodo };
