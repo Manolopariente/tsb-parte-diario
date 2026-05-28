@@ -6,12 +6,7 @@
 <title>TSB · Resumen de Período</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:#f0f2f5;--surface:#ffffff;--surface2:#e8edf2;--border:#d1d9e6;
-    --accent:#1e3070;--accent2:#152558;--green:#6fa832;--yellow:#d97706;
-    --red:#e53935;--text:#1a2340;--muted:#6b7a99;
-    --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
-  }
+  :root{--bg:#f0f2f5;--surface:#ffffff;--surface2:#e8edf2;--border:#d1d9e6;--accent:#1e3070;--accent2:#152558;--green:#6fa832;--yellow:#d97706;--red:#e53935;--text:#1a2340;--muted:#6b7a99;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;padding:24px 16px 60px;}
   .header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border);}
@@ -36,7 +31,6 @@
   .kpi-card.red    .k-value{color:var(--red);}
   .section-title{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
   .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
-  /* Yacimiento cards */
   .yac-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:28px;}
   .yac-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;}
   .yac-card .yac-name{font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;}
@@ -47,21 +41,19 @@
   .yac-divider{border:none;border-top:1px solid var(--border);margin:8px 0;}
   .yac-pct-bar{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-top:8px;}
   .yac-pct-fill{height:100%;border-radius:3px;}
-  /* Supervisor cards */
   .supervisor-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:28px;}
   .sup-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
   .sup-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px;}
   .sup-rank{font-size:22px;font-weight:700;font-family:var(--mono);color:var(--border);width:32px;}
-  .sup-rank.gold{color:#f59e0b;} .sup-rank.silver{color:#94a3b8;} .sup-rank.bronze{color:#b45309;}
+  .sup-rank.gold{color:#f59e0b;}.sup-rank.silver{color:#94a3b8;}.sup-rank.bronze{color:#b45309;}
   .sup-name{font-size:15px;font-weight:600;flex:1;padding:0 8px;}
   .sup-pct{font-size:20px;font-weight:700;font-family:var(--mono);}
-  .sup-pct.high{color:var(--green);} .sup-pct.mid{color:var(--yellow);} .sup-pct.low{color:var(--red);}
+  .sup-pct.high{color:var(--green);}.sup-pct.mid{color:var(--yellow);}.sup-pct.low{color:var(--red);}
   .sup-bar-bg{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:8px;}
   .sup-bar-fill{height:100%;border-radius:3px;transition:width 0.8s ease;}
   .sup-meta{display:flex;gap:16px;flex-wrap:wrap;}
   .sup-meta span{font-size:12px;color:var(--muted);font-family:var(--mono);}
   .sup-meta span b{color:var(--text);font-weight:600;}
-  /* Tabla equipos */
   .table-wrap{overflow-x:auto;margin-bottom:28px;border-radius:10px;border:1px solid var(--border);}
   table{width:100%;border-collapse:collapse;font-size:13px;}
   thead th{background:var(--surface2);padding:10px 14px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);white-space:nowrap;cursor:pointer;user-select:none;}
@@ -76,8 +68,7 @@
   .mini-bar-bg{flex:1;height:5px;background:var(--surface2);border-radius:3px;min-width:60px;}
   .mini-bar-fill{height:100%;border-radius:3px;}
   .td-pct{font-family:var(--mono);font-weight:600;font-size:13px;white-space:nowrap;}
-  .pct-high{color:var(--green);} .pct-mid{color:var(--yellow);} .pct-low{color:var(--red);}
-  /* Caídos */
+  .pct-high{color:var(--green);}.pct-mid{color:var(--yellow);}.pct-low{color:var(--red);}
   .caidos-list{display:flex;flex-direction:column;gap:8px;margin-bottom:28px;}
   .caido-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:12px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
   .caido-interno{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--red);width:60px;}
@@ -86,7 +77,6 @@
   .caido-info .sup{font-size:13px;margin-top:2px;}
   .caido-dias{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--red);text-align:right;}
   .caido-dias span{font-size:12px;font-weight:400;color:var(--muted);display:block;}
-  /* Loader */
   .loader-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:16px;color:var(--muted);}
   .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg);}}
@@ -98,12 +88,7 @@
   .filter-bar input{flex:1;min-width:120px;}
   .filter-count{font-size:12px;color:var(--muted);font-family:var(--mono);margin-left:auto;}
   .footer{text-align:center;font-size:12px;color:var(--muted);margin-top:40px;font-family:var(--mono);}
-  @media(max-width:600px){
-    .kpi-card .k-value{font-size:20px;}
-    .sup-name{font-size:13px;}
-    .caido-dias{font-size:18px;}
-    .periodo-btn{padding:0 10px;font-size:11px;}
-  }
+  @media(max-width:600px){.kpi-card .k-value{font-size:20px;}.sup-name{font-size:13px;}.caido-dias{font-size:18px;}.periodo-btn{padding:0 10px;font-size:11px;}}
 </style>
 </head>
 <body>
@@ -140,7 +125,6 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUqQerIBYj76ohuo1mJtFQzcoufeM7VUxdSxxJATSk8gYghPAqP7iJZDbKUrvRiUWw/exec';
 const ESTADOS_OPERATIVO = ['Operativo','Sin chofer'];
 const ESTADOS_CAIDO     = ['No operativo'];
-
 let periodoOffset = 0;
 
 function calcularPeriodo(offset=0) {
@@ -155,22 +139,20 @@ function calcularPeriodo(offset=0) {
   if(mesF>11){mesF=0;anioF++;}
   const fin = new Date(anioF, mesF, 20);
   const diasTotales = Math.round((fin-inicio)/86400000)+1;
-  const diasTransc  = offset<0 ? diasTotales : Math.min(Math.round((hoy-inicio)/86400000)+1, diasTotales);
+  const diasTransc  = offset<0 ? diasTotales : Math.min(Math.round((new Date()-inicio)/86400000)+1, diasTotales);
   return { inicio, fin, diasTotales, diasTransc };
 }
 
 function fmtFecha(d){ return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'}); }
 function fmtPesos(n){ return '$'+Math.round(n).toLocaleString('es-AR'); }
 function labelMes(offset){ const p=calcularPeriodo(offset); return p.inicio.toLocaleDateString('es-AR',{month:'short',year:'2-digit'}); }
-
 function colorPct(p){ return p>=85?'high':p>=65?'mid':'low'; }
 function hexPct(p){ return p>=85?'#22c55e':p>=65?'#f59e0b':'#ef4444'; }
 
 async function fetchDatos(offset=0) {
   const periodo = calcularPeriodo(offset);
   const desde   = periodo.inicio.toISOString().split('T')[0];
-  const hastaDate = offset<0 ? periodo.fin : new Date();
-  const hasta   = hastaDate.toISOString().split('T')[0];
+  const hasta   = (offset<0 ? periodo.fin : new Date()).toISOString().split('T')[0];
   const url = `${SCRIPT_URL}?action=getResumenPeriodo&desde=${desde}&hasta=${hasta}`;
   const resp = await fetch(url);
   const data = await resp.json();
@@ -201,26 +183,21 @@ function renderApp({ data, periodo }) {
   const partes = data.partes || [];
   const { listaEquipos, topCaidos } = calcularMetricas(partes);
   allEquipos = listaEquipos;
-
   const totalEquipos  = listaEquipos.length;
   const pctGlobal     = totalEquipos>0 ? Math.round(listaEquipos.reduce((a,e)=>a+e.pct,0)/totalEquipos) : 0;
   const equiposCaidos = listaEquipos.filter(e=>e.pct<100).length;
   const esPasado      = periodoOffset<0;
   const rankColors    = ['gold','silver','bronze'];
-
-  // Datos económicos del backend
-  const acumulado  = data.acumulado  || 0;
-  const objetivo   = data.objetivo   || 0;
-  const pctEco     = objetivo>0 ? Math.round(acumulado/objetivo*100) : 0;
-  const partesAcum = data.partesAcum || 0;
-  const oncallAcum = data.oncallAcum || 0;
-
-  const resumenYac       = data.resumenYac        || [];
-  const disponibilidadYac= data.disponibilidadYac || [];
-  const disponibilidadSup= data.disponibilidadSup || [];
+  const acumulado     = data.acumulado  || 0;
+  const objetivo      = data.objetivo   || 0;
+  const pctEco        = objetivo>0 ? Math.round(acumulado/objetivo*100) : 0;
+  const partesAcum    = data.partesAcum || 0;
+  const oncallAcum    = data.oncallAcum || 0;
+  const resumenYac        = data.resumenYac        || [];
+  const disponibilidadYac = data.disponibilidadYac || [];
+  const disponibilidadSup = data.disponibilidadSup || [];
 
   document.getElementById('app').innerHTML = `
-    <!-- HEADER -->
     <div class="header">
       <div class="header-left">
         <h1>TSB · Resumen de Período</h1>
@@ -241,7 +218,6 @@ function renderApp({ data, periodo }) {
       </div>
     </div>
 
-    <!-- KPIs OPERATIVOS -->
     <div class="section-title">Disponibilidad</div>
     <div class="kpi-row">
       <div class="kpi-card accent">
@@ -271,7 +247,6 @@ function renderApp({ data, periodo }) {
       </div>
     </div>
 
-    <!-- KPIs ECONÓMICOS -->
     <div class="section-title">Facturación del período</div>
     <div class="kpi-row">
       <div class="kpi-card ${colorPct(pctEco)}">
@@ -283,7 +258,7 @@ function renderApp({ data, periodo }) {
       <div class="kpi-card accent">
         <div class="k-label">Objetivo mensual</div>
         <div class="k-value" style="font-size:20px">${fmtPesos(objetivo)}</div>
-        <div class="k-sub">según CONFIG</div>
+        <div class="k-sub">según hoja OBJETIVOS</div>
       </div>`:''}
       <div class="kpi-card">
         <div class="k-label">Partes operativos</div>
@@ -296,4 +271,202 @@ function renderApp({ data, periodo }) {
         <div class="k-value" style="font-size:20px;color:var(--text)">${fmtPesos(oncallAcum)}</div>
         <div class="k-sub">carretón, mat., etc.</div>
       </div>`:''}
-      <div class="kpi-card">
+    </div>
+
+    <div class="section-title">Acumulado por yacimiento</div>
+    <div class="yac-grid">
+      ${resumenYac.map(y=>`
+        <div class="yac-card">
+          <div class="yac-name">${y.yac}</div>
+          <div class="yac-row"><span class="yl">Partes equipos</span><span class="yv">${fmtPesos(y.partes)}</span></div>
+          ${y.oncall>0?`<div class="yac-row"><span class="yl">On-call</span><span class="yv">${fmtPesos(y.oncall)}</span></div>`:''}
+          <hr class="yac-divider">
+          <div class="yac-row"><span class="yl">Total</span><span class="yv total">${fmtPesos(y.total)}</span></div>
+          ${acumulado>0?`<div class="yac-pct-bar" style="margin-top:10px;"><div class="yac-pct-fill" style="width:${Math.round(y.total/acumulado*100)}%;background:var(--accent);"></div></div><div style="font-size:11px;color:var(--muted);margin-top:4px;font-family:var(--mono);">${Math.round(y.total/acumulado*100)}% del total</div>`:''}
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="section-title">Disponibilidad por yacimiento</div>
+    <div class="yac-grid">
+      ${disponibilidadYac.map(y=>`
+        <div class="yac-card">
+          <div class="yac-name">${y.yac}</div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px;">
+            <span style="font-size:28px;font-weight:700;font-family:var(--mono);color:${hexPct(y.pct)}">${y.pct}%</span>
+            <span style="font-size:12px;color:var(--muted)">disponibilidad</span>
+          </div>
+          <div class="yac-pct-bar"><div class="yac-pct-fill" style="width:${y.pct}%;background:${hexPct(y.pct)};"></div></div>
+          <div style="display:flex;gap:12px;margin-top:10px;font-size:12px;font-family:var(--mono);">
+            <span style="color:var(--green)">✓ ${y.op} op.</span>
+            ${y.caido>0?`<span style="color:var(--red)">✗ ${y.caido} caído</span>`:''}
+            ${y.sc>0?`<span style="color:var(--yellow)">⚠ ${y.sc} s/ch</span>`:''}
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;font-family:var(--mono);">${y.total} registros en el período</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="section-title">Disponibilidad por supervisor</div>
+    <div class="supervisor-grid">
+      ${disponibilidadSup.map((s,i)=>`
+        <div class="sup-card">
+          <div class="sup-top">
+            <div class="sup-rank ${rankColors[i]||''}">#${i+1}</div>
+            <div class="sup-name">${s.supervisor}</div>
+            <div class="sup-pct ${colorPct(s.pct)}">${s.pct}%</div>
+          </div>
+          <div class="sup-bar-bg"><div class="sup-bar-fill" style="width:${s.pct}%;background:${hexPct(s.pct)}"></div></div>
+          <div class="sup-meta">
+            <span><b>${s.equipos}</b> equipos</span>
+            <span><b>${s.op}</b> días-op</span>
+            <span><b>${s.caido}</b> días caído</span>
+            ${s.sc>0?`<span><b>${s.sc}</b> sin chofer</span>`:''}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="section-title">Disponibilidad por equipo</div>
+    <div class="filter-bar">
+      <input type="text" id="filtroTexto" placeholder="Buscar interno, tipo, supervisor..." oninput="filtrarTabla()">
+      <select id="filtroSup" onchange="filtrarTabla()">
+        <option value="">Todos los supervisores</option>
+        ${[...new Set(allEquipos.map(e=>e.supervisor))].sort().map(s=>`<option value="${s}">${s}</option>`).join('')}
+      </select>
+      <select id="filtroYac" onchange="filtrarTabla()">
+        <option value="">Todos los yacimientos</option>
+        ${[...new Set(allEquipos.map(e=>e.yacimiento))].sort().map(y=>`<option value="${y}">${y}</option>`).join('')}
+      </select>
+      <span class="filter-count" id="filtroCount">${allEquipos.length} equipos</span>
+    </div>
+    <div class="table-wrap">
+      <table id="tablaEquipos">
+        <thead><tr>
+          <th onclick="sortTabla('interno')">Interno <span class="sort-arrow" id="arr-interno">↕</span></th>
+          <th onclick="sortTabla('tipo')">Tipo <span class="sort-arrow" id="arr-tipo">↕</span></th>
+          <th onclick="sortTabla('supervisor')">Supervisor <span class="sort-arrow" id="arr-supervisor">↕</span></th>
+          <th onclick="sortTabla('yacimiento')">Yacimiento <span class="sort-arrow" id="arr-yacimiento">↕</span></th>
+          <th onclick="sortTabla('operativo')" style="text-align:center">Días Op. <span class="sort-arrow" id="arr-operativo">↕</span></th>
+          <th onclick="sortTabla('caido')" style="text-align:center">Días Caído <span class="sort-arrow" id="arr-caido">↕</span></th>
+          <th onclick="sortTabla('pct')">Disponibilidad <span class="sort-arrow active" id="arr-pct">↓</span></th>
+        </tr></thead>
+        <tbody id="tablaBody"></tbody>
+      </table>
+    </div>
+
+    <div class="section-title">Top equipos con más días caídos</div>
+    <div class="caidos-list">
+      ${topCaidos.filter(e=>e.caido>0).map(e=>`
+        <div class="caido-card">
+          <div class="caido-interno">${e.interno}</div>
+          <div class="caido-info">
+            <div class="tipo">${e.tipo}</div>
+            <div class="sup">${e.supervisor} · ${e.yacimiento}</div>
+          </div>
+          <div class="caido-dias">${e.caido}<span>días caído</span></div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="footer">TSB · Uso interno · Resp: M. Pariente · Generado ${new Date().toLocaleString('es-AR')}</div>
+  `;
+  renderTabla(allEquipos);
+  sortTabla('pct');
+}
+
+async function cambiarPeriodo(offset) {
+  if(offset===periodoOffset) return;
+  periodoOffset=offset;
+  document.getElementById('app').innerHTML=`<div class="loader-wrap"><div class="spinner"></div><p>Cargando datos del período...</p></div>`;
+  try{ const result=await fetchDatos(periodoOffset); renderApp(result); }
+  catch(err){ document.getElementById('app').innerHTML=`<div class="loader-wrap"><p style="color:var(--red)">Error: ${err.message}</p></div>`; }
+}
+
+function renderTabla(datos) {
+  const tbody=document.getElementById('tablaBody');
+  if(!tbody) return;
+  if(!datos.length){ tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px">Sin resultados</td></tr>`; return; }
+  tbody.innerHTML=datos.map(e=>`
+    <tr>
+      <td class="td-interno">${e.interno}</td>
+      <td class="td-tipo">${e.tipo}</td>
+      <td>${e.supervisor}</td>
+      <td style="font-size:12px;color:var(--muted)">${e.yacimiento}</td>
+      <td class="td-dias">${e.operativo}</td>
+      <td class="td-dias" style="color:${e.caido>0?'var(--red)':'var(--muted)'}">${e.caido}</td>
+      <td><div class="mini-bar-wrap"><div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${e.pct}%;background:${hexPct(e.pct)}"></div></div><span class="td-pct pct-${colorPct(e.pct)}">${e.pct}%</span></div></td>
+    </tr>`).join('');
+}
+
+function filtrarTabla() {
+  const txt=document.getElementById('filtroTexto').value.toLowerCase();
+  const sup=document.getElementById('filtroSup').value;
+  const yac=document.getElementById('filtroYac').value;
+  let f=allEquipos.filter(e=>{
+    const mt=!txt||String(e.interno).toLowerCase().includes(txt)||(e.tipo||'').toLowerCase().includes(txt)||(e.supervisor||'').toLowerCase().includes(txt);
+    return mt&&(!sup||e.supervisor===sup)&&(!yac||e.yacimiento===yac);
+  });
+  f=aplicarSort(f);
+  document.getElementById('filtroCount').textContent=`${f.length} equipos`;
+  renderTabla(f);
+}
+
+function aplicarSort(datos) {
+  return [...datos].sort((a,b)=>{
+    const va=a[sortCol],vb=b[sortCol];
+    return typeof va==='number'?(va-vb)*sortDir:String(va).localeCompare(String(vb))*sortDir;
+  });
+}
+
+function sortTabla(col) {
+  if(sortCol===col) sortDir*=-1; else{ sortCol=col; sortDir=(col==='pct'||col==='caido')?-1:1; }
+  document.querySelectorAll('.sort-arrow').forEach(el=>{el.textContent='↕';el.classList.remove('active');});
+  const arr=document.getElementById(`arr-${col}`);
+  if(arr){arr.textContent=sortDir===1?'↑':'↓';arr.classList.add('active');}
+  filtrarTabla();
+}
+
+// ─── LOGIN ────────────────────────────────────────────────────────
+let dashUsers=[];
+
+async function initLogin() {
+  try {
+    const r=await fetch(`${SCRIPT_URL}?action=getDashboardUsers`);
+    dashUsers=await r.json()||[];
+    const sel=document.getElementById('login-usuario');
+    dashUsers.forEach(u=>{
+      const o=document.createElement('option');
+      o.value=String(u.id);
+      o.textContent=u.nombre;
+      sel.appendChild(o);
+    });
+  } catch(err) {
+    const e=document.getElementById('login-error');
+    e.textContent='Error al cargar usuarios. Verificá tu conexión.';
+    e.style.display='block';
+  }
+}
+
+function doLogin() {
+  const errEl=document.getElementById('login-error'); errEl.style.display='none';
+  const id=document.getElementById('login-usuario').value;
+  const pass=document.getElementById('login-pass').value.trim();
+  if(!id){errEl.textContent='Seleccioná tu usuario';errEl.style.display='block';return;}
+  if(!pass){errEl.textContent='Ingresá tu contraseña';errEl.style.display='block';return;}
+  const user=dashUsers.find(u=>String(u.id)===id);
+  if(!user||String(user.password)!==pass){errEl.textContent='Contraseña incorrecta';errEl.style.display='block';return;}
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  loadDashboard();
+}
+
+async function loadDashboard() {
+  try{ const result=await fetchDatos(periodoOffset); renderApp(result); }
+  catch(err){ document.getElementById('app').innerHTML=`<div class="loader-wrap"><p style="color:var(--red)">Error: ${err.message}</p></div>`; }
+}
+
+initLogin();
+</script>
+</body>
+</html>
