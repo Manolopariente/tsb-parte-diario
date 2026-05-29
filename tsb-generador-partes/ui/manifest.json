@@ -1,0 +1,13 @@
+{
+  "name": "TSB · Generador de Partes",
+  "short_name": "TSB Partes",
+  "description": "Sistema de generación de partes diarios YPF - Contrato 4900100500",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#003896",
+  "theme_color": "#003896",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

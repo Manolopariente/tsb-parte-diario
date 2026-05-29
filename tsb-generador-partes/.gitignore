@@ -1,0 +1,19 @@
+# Salidas generadas
+outputs/
+temp/
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Archivos temporales
+_tmp_*.pdf
+_firma_tmp.png
+_xl_export.py
+
+# Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/

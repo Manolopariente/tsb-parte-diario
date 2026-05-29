@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSB · Generador de Partes</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── VARIABLES ─────────────────────────────────────── */
+:root {
+  --tsb-blue:   #003896;
+  --tsb-blue-d: #002a70;
+  --tsb-green:  #7DC242;
+  --tsb-green-d:#5fa030;
+  --bg:         #f0f2f7;
+  --surface:    #ffffff;
+  --surface-2:  #f7f8fc;
+  --border:     #e2e6f0;
+  --border-2:   #c8cfe0;
+  --text-1:     #0d1421;
+  --text-2:     #4a5568;
+  --text-3:     #8492a6;
+  --danger:     #e53e3e;
+  --warn:       #dd6b20;
+  --warn-bg:    #fff8ee;
+  --radius:     12px;
+  --radius-sm:  8px;
+  --shadow:     0 2px 12px rgba(0,56,150,0.08);
+  --shadow-lg:  0 8px 32px rgba(0,56,150,0.12);
+  --transition: 0.18s ease;
+}
+
+/* ─── RESET ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-1); }
+button { font-family: inherit; cursor: pointer; border: none; }
+input, select, textarea { font-family: inherit; }
+
+/* ─── LAYOUT ─────────────────────────────────────────── */
+#app {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: 56px 1fr;
+}
+
+/* ─── TOP BAR ─────────────────────────────────────────── */
+.topbar {
+  background: var(--tsb-blue);
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.topbar::after {
+  content: '';
+  position: absolute; right: 0; top: 0;
+  width: 220px; height: 100%;
+  background: var(--tsb-green);
+  clip-path: polygon(28% 0%, 100% 0%, 100% 100%, 0% 100%);
+  opacity: 0.9;
+}
+.topbar::before {
+  content: '';
+  position: absolute; right: 140px; top: 0;
+  width: 80px; height: 100%;
+  background: rgba(255,255,255,0.1);
+  clip-path: polygon(40% 0%, 100% 0%, 60% 100%, 0% 100%);
+}
+.topbar-logo {
+  display: flex; align-items: center; gap: 10px;
+  z-index: 2;
+}
+.topbar-logo-box {
+  width: 32px; height: 32px;
+  background: #fff; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+}
+.topbar-logo-box svg { width: 22px; height: 18px; }
+.topbar-brand { font-size: 15px; font-weight: 700; color: #fff; letter-spacing: 0.1em; }
+.topbar-sub   { font-size: 10px; color: rgba(255,255,255,0.6); letter-spacing: 0.15em; font-weight: 500; }
+
+.topbar-sep { flex: 1; }
+
+.topbar-info {
+  z-index: 2;
+  display: flex; align-items: center; gap: 20px;
+}
+.topbar-badge {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff; font-size: 11px; font-weight: 600;
+  padding: 4px 12px; border-radius: 20px;
+  letter-spacing: 0.06em;
+}
+.topbar-step {
+  color: rgba(255,255,255,0.7); font-size: 12px;
+  font-family: 'DM Mono', monospace;
+}
+
+/* ─── MAIN ─────────────────────────────────────────── */
+main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 24px;
+}
+
+.screen {
+  width: 100%;
+  max-width: 680px;
+  display: none;
+  animation: fadeUp 0.22s ease;
+}
+.screen.active { display: block; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── CARD ─────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+.card-title {
+  font-size: 18px; font-weight: 700;
+  color: var(--text-1); margin-bottom: 4px;
+}
+.card-sub {
+  font-size: 13px; color: var(--text-2);
+  margin-bottom: 24px;
+}
+
+/* ─── PROGRESS BAR ─────────────────────────────────── */
+.progress-bar {
+  display: flex; gap: 6px;
+  margin-bottom: 28px;
+}
+.progress-step {
+  height: 4px; border-radius: 4px; flex: 1;
+  background: var(--border);
+  transition: background var(--transition);
+}
+.progress-step.done    { background: var(--tsb-green); }
+.progress-step.current { background: var(--tsb-blue); }
+
+/* ─── FORM FIELDS ──────────────────────────────────── */
+.field-group { margin-bottom: 20px; }
+.field-label {
+  font-size: 11px; font-weight: 600; color: var(--text-2);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 6px; display: block;
+}
+.field-input, .field-select {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 14px; color: var(--text-1);
+  transition: border-color var(--transition);
+  appearance: none;
+}
+.field-input:focus, .field-select:focus {
+  outline: none;
+  border-color: var(--tsb-blue);
+  box-shadow: 0 0 0 3px rgba(0,56,150,0.08);
+}
+
+/* ─── YAC SELECTOR ─────────────────────────────────── */
+.yac-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px; margin-bottom: 24px;
+}
+.yac-card {
+  padding: 16px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  text-align: center; cursor: pointer;
+  transition: all var(--transition);
+}
+.yac-card:hover { border-color: var(--tsb-blue); background: #f0f4ff; }
+.yac-card.active {
+  border-color: var(--tsb-blue);
+  background: var(--tsb-blue); color: #fff;
+}
+.yac-card-icon { font-size: 22px; margin-bottom: 6px; display: block; }
+.yac-card-name { font-size: 12px; font-weight: 700; letter-spacing: 0.04em; }
+.yac-card-detail { font-size: 10px; color: var(--text-3); margin-top: 2px; }
+.yac-card.active .yac-card-detail { color: rgba(255,255,255,0.6); }
+
+/* ─── DATE ROW ─────────────────────────────────────── */
+.date-row {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 16px;
+  margin-bottom: 20px;
+}
+.date-row-label { font-size: 11px; color: var(--text-2); font-weight: 500; }
+.date-row-val   { font-size: 13px; font-weight: 700; color: var(--text-1);
+                  font-family: 'DM Mono', monospace; }
+
+/* ─── EQUIPO ROWS ──────────────────────────────────── */
+.section-label {
+  font-size: 10px; font-weight: 700; color: var(--tsb-blue);
+  text-transform: uppercase; letter-spacing: 0.12em;
+  margin-bottom: 8px; margin-top: 20px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.eq-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.eq-row:last-child { border-bottom: none; }
+.eq-badge {
+  width: 34px; height: 34px; border-radius: var(--radius-sm);
+  background: #e8eef8; color: var(--tsb-blue);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800; flex-shrink: 0;
+  font-family: 'DM Mono', monospace;
+}
+.eq-badge.sinprog { background: #fff3e0; color: var(--warn); }
+.eq-info { flex: 1; }
+.eq-name { font-size: 13px; font-weight: 600; }
+.eq-detail { font-size: 10px; color: var(--text-3); margin-top: 1px;
+             font-family: 'DM Mono', monospace; }
+.eq-toggle {
+  width: 40px; height: 22px; border-radius: 20px;
+  background: var(--border); position: relative;
+  cursor: pointer; transition: background var(--transition); flex-shrink: 0;
+}
+.eq-toggle.on { background: var(--tsb-green); }
+.eq-toggle::after {
+  content: ''; position: absolute;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; top: 2px; left: 2px;
+  transition: left var(--transition);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+.eq-toggle.on::after { left: 20px; }
+.eq-lock { color: var(--text-3); font-size: 14px; }
+
+/* ─── OT DROP ZONE ─────────────────────────────────── */
+.drop-zone {
+  border: 2px dashed var(--border-2);
+  border-radius: var(--radius);
+  padding: 36px 24px; text-align: center;
+  cursor: pointer; background: var(--surface-2);
+  transition: all var(--transition); margin-bottom: 16px;
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--tsb-blue); background: #f0f4ff;
+}
+.drop-zone-icon { font-size: 36px; margin-bottom: 10px; }
+.drop-zone-label { font-size: 14px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; }
+.drop-zone-sub   { font-size: 12px; color: var(--text-2); }
+#ot-file-input { display: none; }
+
+.ot-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.ot-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 14px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); background: var(--surface);
+}
+.ot-item-icon {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: #e8eef8; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0; font-size: 14px;
+}
+.ot-item-info { flex: 1; }
+.ot-item-name { font-size: 12px; font-weight: 600; }
+.ot-item-eq   { font-size: 10px; color: var(--text-2); margin-top: 1px; }
+.ot-item-ok   {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #e8f5e2; display: flex; align-items: center;
+  justify-content: center; font-size: 11px; color: #2e7d32; flex-shrink: 0;
+}
+.ot-item.warn { border-color: #f5c05a; }
+.ot-item.warn .ot-item-eq { color: var(--warn); }
+
+/* ─── NOVEDADES ─────────────────────────────────────── */
+.nov-block {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px; overflow: hidden;
+}
+.nov-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; background: var(--surface-2);
+  cursor: pointer;
+}
+.nov-header:hover { background: #f0f4ff; }
+.nov-eq-name  { font-size: 12px; font-weight: 700; flex: 1; }
+.nov-eq-detail{ font-size: 10px; color: var(--text-3); font-family: 'DM Mono', monospace; }
+.nov-badge-ok { background: #e8f5e2; color: #2e7d32; }
+.nov-badge-warn { background: #fff3e0; color: var(--warn); }
+.nov-badge {
+  font-size: 9px; font-weight: 700; padding: 3px 8px;
+  border-radius: 20px; font-family: 'DM Mono', monospace;
+}
+.nov-body { padding: 12px 14px; border-top: 1px solid var(--border); }
+.field-row { display: flex; gap: 10px; }
+.field-row .field-group { flex: 1; margin-bottom: 10px; }
+
+.cond-selector { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+.cond-chip {
+  padding: 5px 10px; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--surface);
+  font-size: 11px; font-weight: 500; cursor: pointer;
+  transition: all var(--transition);
+}
+.cond-chip:hover { border-color: var(--tsb-blue); color: var(--tsb-blue); }
+.cond-chip.active { background: var(--tsb-blue); color: #fff; border-color: var(--tsb-blue); }
+
+/* ─── ADICIONALES ──────────────────────────────────── */
+.pregunta-box { text-align: center; padding: 20px 0 8px; }
+.pregunta-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.pregunta-sub   { font-size: 13px; color: var(--text-2); margin-bottom: 28px; }
+.chips-list { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
+.chip {
+  padding: 5px 14px; border-radius: 20px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  font-size: 11px; color: var(--text-2);
+}
+
+.btn-yesno { display: flex; flex-direction: column; gap: 10px; }
+.btn-no  { background: var(--tsb-blue); color: #fff; font-weight: 700;
+           padding: 14px; border-radius: var(--radius-sm); font-size: 14px;
+           transition: background var(--transition); }
+.btn-no:hover { background: var(--tsb-blue-d); }
+.btn-si  { background: var(--surface); border: 1.5px solid var(--border);
+           color: var(--text-1); font-weight: 600; padding: 13px;
+           border-radius: var(--radius-sm); font-size: 13px;
+           transition: all var(--transition); }
+.btn-si:hover { border-color: var(--tsb-blue); color: var(--tsb-blue); }
+
+.oncall-card {
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  margin-bottom: 8px; overflow: hidden;
+}
+.oncall-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px;
+}
+.oncall-icon {
+  width: 30px; height: 30px; border-radius: 7px;
+  background: #e8eef8; display: flex; align-items: center;
+  justify-content: center; font-size: 15px; flex-shrink: 0;
+}
+.oncall-name   { font-size: 12px; font-weight: 700; flex: 1; }
+.oncall-pos    { font-size: 10px; color: var(--text-3); margin-top: 1px; }
+.oncall-body   { padding: 10px 14px; border-top: 1px solid var(--border);
+                 background: var(--surface-2); }
+.qty-row       { display: flex; align-items: center; gap: 8px; }
+.qty-input     { flex: 1; padding: 8px 10px; border: 1px solid var(--border);
+                 border-radius: var(--radius-sm); font-size: 13px;
+                 font-family: 'DM Mono', monospace; }
+.qty-unit      { font-size: 11px; font-weight: 700; color: var(--tsb-blue);
+                 background: #e8eef8; padding: 5px 10px;
+                 border-radius: 6px; flex-shrink: 0; }
+
+/* ─── RESUMEN ───────────────────────────────────────── */
+.resumen-header {
+  background: var(--tsb-blue); color: #fff;
+  border-radius: var(--radius); padding: 20px 22px;
+  margin-bottom: 16px;
+}
+.resumen-yac  { font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+                text-transform: uppercase; opacity: 0.7; margin-bottom: 4px; }
+.resumen-fecha{ font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+.resumen-sup  { font-size: 12px; opacity: 0.8; }
+
+.stats-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 10px; margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px; text-align: center;
+}
+.stat-num   { font-size: 26px; font-weight: 800; color: var(--tsb-blue); line-height: 1; }
+.stat-label { font-size: 10px; color: var(--text-3); margin-top: 3px;
+              text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+
+.resumen-eq-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 0; border-bottom: 1px solid var(--border);
+}
+.resumen-eq-row:last-child { border-bottom: none; }
+.resumen-eq-name { font-size: 13px; font-weight: 600; flex: 1; }
+.resumen-eq-ot   { font-size: 10px; color: var(--text-3); font-family: 'DM Mono', monospace; }
+.resumen-hs      { font-size: 12px; font-weight: 700; color: var(--tsb-blue); }
+
+/* ─── GENERACIÓN ────────────────────────────────────── */
+.gen-status {
+  text-align: center; padding: 20px 0 28px;
+}
+.gen-circle {
+  width: 68px; height: 68px; border-radius: 50%;
+  margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px;
+}
+.gen-circle.spin { background: #e8eef8; animation: pulse 1.2s infinite; }
+.gen-circle.ok   { background: #e8f5e2; }
+.gen-circle.err  { background: #fee; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+.gen-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+.gen-sub   { font-size: 12px; color: var(--text-2); margin-bottom: 24px; }
+
+.pasos-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.paso {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--surface-2);
+  transition: all var(--transition);
+}
+.paso.done  { background: #e8f5e2; border-color: #a5d6a7; }
+.paso.active{ background: #e8eef8; border-color: #90caf9; }
+.paso-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 13px;
+}
+.paso.done .paso-dot  { background: var(--tsb-green); color: #fff; }
+.paso.active .paso-dot{ background: var(--tsb-blue);  color: #fff; }
+.paso.pending .paso-dot{ background: var(--border);   color: var(--text-3); }
+.paso-name   { font-size: 12px; font-weight: 600; }
+.paso.done .paso-name  { color: #2e7d32; }
+.paso.active .paso-name{ color: var(--tsb-blue); }
+.paso.pending .paso-name{ color: var(--text-3); }
+.paso-detail { font-size: 10px; margin-top: 2px; color: var(--text-3);
+               font-family: 'DM Mono', monospace; }
+
+/* ─── BUTTONS ───────────────────────────────────────── */
+.btn-row { display: flex; gap: 10px; }
+.btn-primary {
+  flex: 2; padding: 13px; border-radius: var(--radius-sm);
+  background: var(--tsb-blue); color: #fff;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.02em;
+  transition: background var(--transition);
+}
+.btn-primary:hover { background: var(--tsb-blue-d); }
+.btn-primary.green { background: var(--tsb-green); }
+.btn-primary.green:hover { background: var(--tsb-green-d); }
+.btn-secondary {
+  flex: 1; padding: 13px; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1.5px solid var(--border);
+  font-size: 12px; font-weight: 600; color: var(--text-2);
+  transition: all var(--transition);
+}
+.btn-secondary:hover { border-color: var(--tsb-blue); color: var(--tsb-blue); }
+.btn-full { flex: none; width: 100%; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-logo">
+      <div class="topbar-logo-box">
+        <svg viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="5,75 35,5 50,5 20,75" fill="#003896"/>
+          <polygon points="48,5 58,5 85,75 75,75" fill="#003896"/>
+          <polygon points="55,5 65,5 65,22 55,22" fill="#7DC242"/>
+          <polygon points="55,28 75,28 75,45 55,45" fill="#7DC242"/>
+          <polygon points="55,51 85,51 85,68 55,68" fill="#7DC242"/>
+        </svg>
+      </div>
+      <div>
+        <div class="topbar-brand">TSB</div>
+        <div class="topbar-sub">GENERADOR DE PARTES</div>
+      </div>
+    </div>
+    <div class="topbar-sep"></div>
+    <div class="topbar-info">
+      <span class="topbar-badge" id="topbar-yac" style="display:none"></span>
+      <span class="topbar-step" id="topbar-step"></span>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- ── PANTALLA 1: LOGIN ── -->
+    <div class="screen active" id="s1">
+      <div class="card">
+        <div class="card-title">Bienvenido</div>
+        <div class="card-sub">Seleccioná supervisor y yacimiento para comenzar</div>
+
+        <div class="date-row">
+          <span class="date-row-label">📅 Fecha del parte</span>
+          <span class="date-row-val" id="fecha-display"></span>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Supervisor</label>
+          <select class="field-select" id="sel-supervisor">
+            <option value="">Seleccioná tu nombre</option>
+            <option>GONZALES OSCAR ABEL</option>
+            <option>PARIENTE MANUEL ANGEL</option>
+            <option>PINEDA CESAR EDUARDO</option>
+            <option>MESA GONZALO NICOLAS</option>
+            <option>ALVARENGA RICARDO</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Yacimiento</label>
+          <div class="yac-grid">
+            <div class="yac-card active" data-yac="PHZ" onclick="selectYac(this)">
+              <span class="yac-card-icon">⛽</span>
+              <div class="yac-card-name">PHZ</div>
+              <div class="yac-card-detail">Puesto Hernandez</div>
+            </div>
+            <div class="yac-card" data-yac="SP" onclick="selectYac(this)">
+              <span class="yac-card-icon">⛽</span>
+              <div class="yac-card-name">SP</div>
+              <div class="yac-card-detail">Señal Picada</div>
+            </div>
+            <div class="yac-card" data-yac="CHSN" onclick="selectYac(this)">
+              <span class="yac-card-icon">⛽</span>
+              <div class="yac-card-name">Lomita</div>
+              <div class="yac-card-detail">CHSN</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary btn-full" onclick="goTo(2)">Crear parte →</button>
+      </div>
+    </div>
+
+    <!-- ── PANTALLA 2: EQUIPOS ── -->
+    <div class="screen" id="s2">
+      <div class="card">
+        <div class="progress-bar" id="pb2"></div>
+        <div class="card-title">Equipos del día</div>
+        <div class="card-sub">Confirmá los equipos que trabajan hoy</div>
+
+        <div class="section-label" id="s2-activos-label">Activos</div>
+        <div id="s2-activos"></div>
+
+        <div class="section-label" id="s2-sinprog-label" style="display:none">Sin programación (fijos)</div>
+        <div id="s2-sinprog"></div>
+
+        <div class="btn-row" style="margin-top:24px">
+          <button class="btn-secondary" onclick="goTo(1)">← Volver</button>
+          <button class="btn-primary" onclick="goTo(3)">Continuar →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANTALLA 3: OTs ── -->
+    <div class="screen" id="s3">
+      <div class="card">
+        <div class="progress-bar" id="pb3"></div>
+        <div class="card-title">Carga de OTs</div>
+        <div class="card-sub">Subí todos los PDFs de OTs del día de una sola vez</div>
+
+        <div class="drop-zone" id="drop-zone" onclick="document.getElementById('ot-file-input').click()">
+          <div class="drop-zone-icon">📂</div>
+          <div class="drop-zone-label">Seleccionar PDFs</div>
+          <div class="drop-zone-sub">Todas las OTs del día juntas — el sistema detecta cada equipo</div>
+        </div>
+        <input type="file" id="ot-file-input" multiple accept=".pdf" onchange="handleOTFiles(this.files)">
+
+        <div class="ot-list" id="ot-list"></div>
+        <div id="ot-alerta" style="display:none" class="card" style="background:#fff3e0;border-color:#f5c05a;padding:12px 16px;font-size:12px;color:#7a4e0d;"></div>
+
+        <div class="btn-row">
+          <button class="btn-secondary" onclick="goTo(2)">← Volver</button>
+          <button class="btn-primary" onclick="goTo(4)">Continuar →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANTALLA 4: NOVEDADES ── -->
+    <div class="screen" id="s4">
+      <div class="card">
+        <div class="progress-bar" id="pb4"></div>
+        <div class="card-title">Novedades del día</div>
+        <div class="card-sub">Si todos trabajaron normal, solo asigná conductores. Cambiá solo lo que tuvo novedad.</div>
+
+        <div id="s4-equipos"></div>
+
+        <div class="btn-row" style="margin-top:16px">
+          <button class="btn-secondary" onclick="goTo(3)">← Volver</button>
+          <button class="btn-primary" onclick="goTo(5)">Continuar →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANTALLA 5: ADICIONALES ── -->
+    <div class="screen" id="s5">
+      <div class="card">
+        <div class="progress-bar" id="pb5"></div>
+        <div class="pregunta-box">
+          <div class="pregunta-title">¿Hubo servicios adicionales hoy?</div>
+          <div class="pregunta-sub">Servicios fuera de los equipos habituales del parte</div>
+          <div class="chips-list">
+            <span class="chip">Carretón</span>
+            <span class="chip">Hormigón</span>
+            <span class="chip">Malla antipájaro</span>
+            <span class="chip">Geomembrana</span>
+            <span class="chip">Hierro</span>
+          </div>
+        </div>
+
+        <div class="btn-yesno" id="s5-yesno">
+          <button class="btn-no" onclick="goTo(6)">No, continuar →</button>
+          <button class="btn-si" onclick="mostrarAdicionales()">Sí, cargar adicionales</button>
+        </div>
+
+        <div id="s5-adicionales" style="display:none">
+          <!-- Carretón -->
+          <div class="oncall-card">
+            <div class="oncall-header">
+              <div class="oncall-icon">🚛</div>
+              <div style="flex:1">
+                <div class="oncall-name">Carretón</div>
+                <div class="oncall-pos">Pos 81 · DIA · INT 1709</div>
+              </div>
+              <div class="eq-toggle" id="tog-carreton" onclick="togOncall(this,'body-carreton')"></div>
+            </div>
+          </div>
+          <!-- Hormigón -->
+          <div class="oncall-card">
+            <div class="oncall-header">
+              <div class="oncall-icon">🏗️</div>
+              <div style="flex:1">
+                <div class="oncall-name">Hormigón simple</div>
+                <div class="oncall-pos">Pos 105 · M3</div>
+              </div>
+              <div class="eq-toggle" id="tog-horm" onclick="togOncall(this,'body-horm')"></div>
+            </div>
+            <div class="oncall-body" id="body-horm" style="display:none">
+              <div class="qty-row">
+                <span style="font-size:11px;color:var(--text-2);width:60px">Cantidad</span>
+                <input class="qty-input" type="number" placeholder="0" id="qty-horm">
+                <span class="qty-unit">M3</span>
+              </div>
+            </div>
+          </div>
+          <!-- Malla -->
+          <div class="oncall-card">
+            <div class="oncall-header">
+              <div class="oncall-icon">🕸️</div>
+              <div style="flex:1">
+                <div class="oncall-name">Malla antipájaro</div>
+                <div class="oncall-pos">Pos 117 · M2</div>
+              </div>
+              <div class="eq-toggle" id="tog-malla" onclick="togOncall(this,'body-malla')"></div>
+            </div>
+            <div class="oncall-body" id="body-malla" style="display:none">
+              <div class="qty-row">
+                <span style="font-size:11px;color:var(--text-2);width:60px">Cantidad</span>
+                <input class="qty-input" type="number" placeholder="0" id="qty-malla">
+                <span class="qty-unit">M2</span>
+              </div>
+            </div>
+          </div>
+          <!-- Geomembrana -->
+          <div class="oncall-card">
+            <div class="oncall-header">
+              <div class="oncall-icon">🛡️</div>
+              <div style="flex:1">
+                <div class="oncall-name">Geomembrana</div>
+                <div class="oncall-pos">Pos 97 · M2</div>
+              </div>
+              <div class="eq-toggle" id="tog-geo" onclick="togOncall(this,'body-geo')"></div>
+            </div>
+            <div class="oncall-body" id="body-geo" style="display:none">
+              <div class="qty-row">
+                <span style="font-size:11px;color:var(--text-2);width:60px">Cantidad</span>
+                <input class="qty-input" type="number" placeholder="0" id="qty-geo">
+                <span class="qty-unit">M2</span>
+              </div>
+            </div>
+          </div>
+          <!-- Hierro -->
+          <div class="oncall-card">
+            <div class="oncall-header">
+              <div class="oncall-icon">⚙️</div>
+              <div style="flex:1">
+                <div class="oncall-name">Provisión de hierro</div>
+                <div class="oncall-pos">Pos 107 · KG</div>
+              </div>
+              <div class="eq-toggle" id="tog-hierro" onclick="togOncall(this,'body-hierro')"></div>
+            </div>
+            <div class="oncall-body" id="body-hierro" style="display:none">
+              <div class="qty-row">
+                <span style="font-size:11px;color:var(--text-2);width:60px">Cantidad</span>
+                <input class="qty-input" type="number" placeholder="0" id="qty-hierro">
+                <span class="qty-unit">KG</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row" style="margin-top:16px">
+            <button class="btn-secondary" onclick="ocultarAdicionales()">← Volver</button>
+            <button class="btn-primary" onclick="goTo(6)">Continuar →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANTALLA 6: RESUMEN ── -->
+    <div class="screen" id="s6">
+      <div class="card">
+        <div class="progress-bar" id="pb6"></div>
+
+        <div class="resumen-header" id="res-header"></div>
+
+        <div class="stats-row" id="res-stats"></div>
+
+        <div class="section-label">Equipos activos</div>
+        <div id="res-equipos"></div>
+
+        <div id="res-adicionales-wrap" style="display:none">
+          <div class="section-label" style="margin-top:16px">Adicionales</div>
+          <div id="res-adicionales"></div>
+        </div>
+
+        <div style="margin-top:20px;padding:12px 16px;background:#e8f5e2;border-radius:var(--radius-sm);display:flex;align-items:center;gap:8px;font-size:12px;color:#2e7d32;font-weight:600;">
+          ✅ Todo listo — revisá y confirmá para generar
+        </div>
+
+        <div class="btn-row" style="margin-top:16px">
+          <button class="btn-secondary" onclick="goTo(5)">← Editar</button>
+          <button class="btn-primary green" onclick="goTo(7)">Generar parte →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANTALLA 7: GENERACIÓN ── -->
+    <div class="screen" id="s7">
+      <div class="card">
+        <div class="gen-status">
+          <div class="gen-circle ok" id="gen-circle">✅</div>
+          <div class="gen-title" id="gen-title">Parte generado y enviado</div>
+          <div class="gen-sub" id="gen-sub"></div>
+        </div>
+
+        <div class="pasos-list" id="pasos-list">
+          <div class="paso done" data-paso="excel">
+            <div class="paso-dot">✓</div>
+            <div>
+              <div class="paso-name">Excel generado</div>
+              <div class="paso-detail" id="paso-excel-det">—</div>
+            </div>
+          </div>
+          <div class="paso done" data-paso="pdf">
+            <div class="paso-dot">✓</div>
+            <div>
+              <div class="paso-name">PDF exportado</div>
+              <div class="paso-detail" id="paso-pdf-det">—</div>
+            </div>
+          </div>
+          <div class="paso done" data-paso="ots">
+            <div class="paso-dot">✓</div>
+            <div>
+              <div class="paso-name">OTs editadas y unidas</div>
+              <div class="paso-detail" id="paso-ots-det">—</div>
+            </div>
+          </div>
+          <div class="paso done" data-paso="mail1">
+            <div class="paso-dot">✓</div>
+            <div>
+              <div class="paso-name">Email parte enviado</div>
+              <div class="paso-detail" id="paso-mail1-det">—</div>
+            </div>
+          </div>
+          <div class="paso done" data-paso="mail2">
+            <div class="paso-dot">✓</div>
+            <div>
+              <div class="paso-name">Email OTs enviado</div>
+              <div class="paso-detail" id="paso-mail2-det">—</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary btn-full" onclick="goTo(1)" style="margin-bottom:10px">Nuevo parte →</button>
+        <button class="btn-secondary btn-full" onclick="salir()">Finalizar y salir</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ── DATOS ──────────────────────────────────────────────────────
+const EQUIPOS = {
+  PHZ: [
+    {id:"4659 -Atg",      interno:226,  tipo:"ATG",   pos_a:243,pos_c:3,   tg:true},
+    {id:"4656 -Atg",      interno:5154, tipo:"ATG",   pos_a:243,pos_c:3,   tg:true},
+    {id:"4663 -Retro",    interno:7609, tipo:"Retro", pos_a:237,pos_c:35},
+    {id:"4664 -Retro",    interno:7613, tipo:"Retro", pos_a:237,pos_c:35},
+    {id:"4689 -Cargadora",interno:7604, tipo:"CAR",   pos_a:225,pos_c:27},
+    {id:"4669 -Moto",     interno:7616, tipo:"MOT",   pos_a:233,pos_c:19},
+    {id:"4687 -traker",   interno:9226, tipo:"TRK",   pos_a:215,pos_c:67},
+    {id:"4693 -Topadora", interno:5736, tipo:"TOP",   pos_c:11, sinprog:true},
+    {id:"4680 -Batea",    interno:1472, tipo:"BAT",   pos_c:75, sinprog:true},
+    {id:"4691 -Vibro",    interno:7630, tipo:"VIB",   pos_c:51, sinprog:true},
+    {id:"4692 -Vibro",    interno:7631, tipo:"VIB",   pos_c:51, sinprog:true},
+  ],
+  SP: [
+    {id:"5555 -Atg",           interno:197,  tipo:"ATG",   pos_a:243,pos_c:3,  tg:true},
+    {id:"4666 -retro",         interno:7614, tipo:"Retro", pos_a:237,pos_c:35},
+    {id:"4671 -motoniveladora",interno:7563, tipo:"MOT",   pos_a:233,pos_c:19},
+    {id:"4683 -batea",         interno:1391, tipo:"BAT",   pos_a:181,pos_c:75},
+    {id:"4678 -excavadora",    interno:9704, tipo:"EXC",   pos_a:257,pos_c:197,condicional:true},
+  ],
+  CHSN: [
+    {id:"4657 -ATG",           interno:174,  tipo:"ATG",   pos_a:243,pos_c:3,  tg:true},
+    {id:"4673 -Regador 35m3",  interno:1552, tipo:"REG",   pos_a:207,pos_c:59},
+    {id:"4674 -Regador 35m3",  interno:1566, tipo:"REG",   pos_a:207,pos_c:59},
+    {id:"4668 -Motoniveladora",interno:7564, tipo:"MOT",   pos_a:233,pos_c:19},
+    {id:"4690 -Cargadora",     interno:7576, tipo:"CAR",   pos_a:225,pos_c:27},
+    {id:"4679 -excavadora",    interno:7596, tipo:"EXC",   pos_a:257,pos_c:197},
+    {id:"5255 -Motoniveladora",interno:7618, tipo:"MOT",   pos_a:233,pos_c:19},
+    {id:"4662 -Retro",         interno:7624, tipo:"Retro", pos_a:237,pos_c:35},
+    {id:"4684 -Tracker",       interno:9228, tipo:"TRK",   pos_a:215,pos_c:67},
+    {id:"4685 -Tracker",       interno:9238, tipo:"TRK",   pos_a:215,pos_c:67},
+  ],
+};
+
+const ACTIVIDADES = [
+  "Tarea","Desplazamiento","Espera OT","Permiso de Trabajo",
+  "Espera de entrega de Instalación","Asamblea Gremial Ext.","Capacitación YPF",
+  "Búsqueda de Material","Recupera materiales","Falla Equipo","Descanso de Guardia",
+  "Refrigerio","Falta de Personal","Incomunicación","Capacitación interna",
+  "Asamblea Gremial Int.","Falta de Insumos","Corte Ruta","Factor Climatico",
+];
+
+const CONDUCTORES = [
+  "DIAZ CARLOS RAUL","POULAGE JULIO HECTOR","VALENZUELA CARLOS RAUL","VILLAROEL DANIEL ANGEL",
+  "COFRE JAVIER NICOLAS","GUAJARDO SERGIO DANIEL","VIZCARRA WALTER ANDRES","ZOZAYA HECTOR JULIAN",
+  "NAHUELÑIR JULIO ALBERTO","ZUÑIGA JORGE DANIEL","ZUÑIGA CLAUDIO ALEJANDRO","HERNANDEZ HECTOR ADRIAN",
+  "PACHECO JORGE DANIEL","AVILA DANIEL ANTONIO","MUÑOZ DAVID","TORRES DARDO EZEQUIEL",
+  "PROCOPIO DE ALMEIDA ANTONIO EDUARDO","CHIRINO GABRIEL","HERNANDEZ FRANCISCO JAIME",
+  "SUAREZ FABIAN ERNESTO","POGGI MAURICIO IVAN","BRAVO MATIAS ALEJANDRO","GUAJARDO ALEJANDRO ANTONIO",
+  "VILLALVA JAVIER FRANCISCO","MOLINA PEDRO SEBASTIAN","RIQUELME FRANCO EMANUEL","VALDEZ DIEGO ALBERTO",
+  "ETAYO ALEJANDRO GONZALO","KEODUANGSA PAIWAN","ALFARO CLAUDIO JAVIER","GALVAN JOSE FERNANDO",
+  "PARIENTE MANUEL ANGEL","ARANGO EMMA MARISA","CANTERO MARCOS JAVIER","GOMEZ PABLO JAVIER",
+  "GORDILLO LUIS ALBERTO","VILLALBA ANIBAL","PEREZ MARCOS EXEQUIEL","POBLETE CESAR",
+  "PERALTA JUAN CARLOS","MARANGEL SANTANA CARLOS OMAR","FUSTER DIEGO HERNAN","JARA GUSTAVO ADRIANO",
+  "GUERRA OSCAR MARCELO","QUIROGA JUAN JOSE","ESPINOZA JUAN RAMON","PEÑALVE IGNACIO BENJAMIN",
+  "HERNANDEZ JOAN MANUEL","LAGOS FACUNDO LUIS ALBERTO","JARA PLACIDO MARIO ALBERTO","PINEDA CESAR EDUARDO",
+  "PADILLA AGUSTIN LEONARDO","CERDA NESTOR SEGUNDO","REVECO LUIS EDUARDO","VELAZQUEZ ELIAS MATEO",
+  "LOPEZ GABRIEL OSCAR","URPIANELLO RODRIGO ALEJANDRO","PENAYO GUSTAVO HORACIO","LLANTEN GERARDO MARTIN MANUEL",
+  "MESA GONZALO NICOLAS","YOBANOLO VANESA LILIANA",
+];
+
+// ── ESTADO ─────────────────────────────────────────────────────
+let state = {
+  supervisor: "",
+  yacimiento: "PHZ",
+  fecha:      new Date(),
+  equipos_activos: [],  // IDs activos
+  ots:        {},       // {id_ypf: [{ot, operacion, ubicacion, descripcion}]}
+  ot_files:   [],       // File objects
+  actividades:{},       // {id_ypf: {mañana, tarde, desc_mañana, desc_tarde}}
+  conductores:{},       // {id_ypf: nombre}
+  oncall:     {},       // {carreton, hormigon, malla, geomembrana, hierro}
+};
+
+// ── UTILIDADES ─────────────────────────────────────────────────
+function formatDate(d) {
+  const dias = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+  const meses= ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  return `${dias[d.getDay()]} ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
+}
+
+function ddmmyy(d) {
+  return `${String(d.getDate()).padStart(2,'0')}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getFullYear()).slice(2)}`;
+}
+
+function getNombreYac(yac) {
+  return {PHZ:"Puesto Hernandez", SP:"Señal Picada", CHSN:"Lomita"}[yac] || yac;
+}
+
+function buildProgressBar(id, currentStep, total=7) {
+  const pb = document.getElementById(id);
+  pb.innerHTML = '';
+  for (let i=1; i<=total; i++) {
+    const d = document.createElement('div');
+    d.className = 'progress-step ' + (i < currentStep ? 'done' : i === currentStep ? 'current' : '');
+    pb.appendChild(d);
+  }
+}
+
+// ── NAVEGACIÓN ─────────────────────────────────────────────────
+function goTo(step) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('s'+step).classList.add('active');
+
+  const topbarStep = document.getElementById('topbar-step');
+  const topbarYac  = document.getElementById('topbar-yac');
+
+  if (step > 1) {
+    topbarYac.textContent = getNombreYac(state.yacimiento).toUpperCase();
+    topbarYac.style.display = 'inline-block';
+    topbarStep.textContent  = `Paso ${step} / 7`;
+  } else {
+    topbarYac.style.display = 'none';
+    topbarStep.textContent  = '';
+  }
+
+  if (step === 2) renderEquipos();
+  if (step === 4) renderNovedades();
+  if (step === 6) renderResumen();
+  if (step === 7) renderGeneracion();
+
+  [2,3,4,5,6].forEach(s => {
+    const pb = document.getElementById('pb'+s);
+    if (pb) buildProgressBar('pb'+s, step);
+  });
+}
+
+// ── PANTALLA 1 ──────────────────────────────────────────────────
+function selectYac(el) {
+  document.querySelectorAll('.yac-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  state.yacimiento = el.dataset.yac;
+}
+
+// Init fecha
+document.getElementById('fecha-display').textContent = formatDate(state.fecha);
+
+// ── PANTALLA 2: EQUIPOS ─────────────────────────────────────────
+function renderEquipos() {
+  const eqs = EQUIPOS[state.yacimiento] || [];
+  const activos  = eqs.filter(e => !e.sinprog);
+  const sinprog  = eqs.filter(e => e.sinprog);
+
+  // Init estado activos
+  if (state.equipos_activos.length === 0)
+    state.equipos_activos = activos.map(e => e.id);
+
+  const cont_a = document.getElementById('s2-activos');
+  cont_a.innerHTML = '';
+  activos.forEach(eq => {
+    const on = state.equipos_activos.includes(eq.id);
+    cont_a.insertAdjacentHTML('beforeend', `
+      <div class="eq-row">
+        <div class="eq-badge">${eq.tipo}</div>
+        <div class="eq-info">
+          <div class="eq-name">${eq.id}</div>
+          <div class="eq-detail">Interno ${eq.interno} · Pos ${eq.pos_a||'-'}</div>
+        </div>
+        <div class="eq-toggle ${on?'on':''}" onclick="toggleEquipo('${eq.id}',this)"></div>
+      </div>
+    `);
+  });
+
+  const cont_sp = document.getElementById('s2-sinprog');
+  cont_sp.innerHTML = '';
+  const spLabel = document.getElementById('s2-sinprog-label');
+  if (sinprog.length > 0) {
+    spLabel.style.display = 'flex';
+    sinprog.forEach(eq => {
+      cont_sp.insertAdjacentHTML('beforeend', `
+        <div class="eq-row">
+          <div class="eq-badge sinprog">${eq.tipo}</div>
+          <div class="eq-info">
+            <div class="eq-name">${eq.id}</div>
+            <div class="eq-detail">Interno ${eq.interno} · Espera OT</div>
+          </div>
+          <span class="eq-lock">🔒</span>
+        </div>
+      `);
+    });
+  } else {
+    spLabel.style.display = 'none';
+  }
+}
+
+function toggleEquipo(id, el) {
+  el.classList.toggle('on');
+  if (el.classList.contains('on')) {
+    if (!state.equipos_activos.includes(id)) state.equipos_activos.push(id);
+  } else {
+    state.equipos_activos = state.equipos_activos.filter(x => x !== id);
+  }
+}
+
+// ── PANTALLA 3: OTs ─────────────────────────────────────────────
+function handleOTFiles(files) {
+  state.ot_files = Array.from(files);
+  renderOTList();
+}
+
+function renderOTList() {
+  const list = document.getElementById('ot-list');
+  list.innerHTML = '';
+  const eqMap = {};
+  (EQUIPOS[state.yacimiento]||[]).forEach(e => {
+    const num = e.id.match(/(\d+)/)[1];
+    eqMap[num] = e;
+  });
+
+  state.ot_files.forEach(f => {
+    const m = f.name.match(/(\d{10})_(\d{4})/);
+    const otNum = m ? m[1] : f.name;
+    const eqNum = m ? m[2] : '';
+    const eq    = eqMap[eqNum];
+    const ok    = !!eq && state.equipos_activos.includes(eq.id);
+
+    list.insertAdjacentHTML('beforeend', `
+      <div class="ot-item ${!ok?'warn':''}">
+        <div class="ot-item-icon">📄</div>
+        <div class="ot-item-info">
+          <div class="ot-item-name">OT ${otNum}</div>
+          <div class="ot-item-eq">${eq ? eq.id : '⚠️ Equipo no reconocido: '+eqNum}</div>
+        </div>
+        <div class="ot-item-ok">${ok?'✓':'⚠'}</div>
+      </div>
+    `);
+  });
+}
+
+// Drag & drop
+const dropZone = document.getElementById('drop-zone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  state.ot_files = Array.from(e.dataTransfer.files).filter(f => f.name.toLowerCase().endsWith('.pdf'));
+  renderOTList();
+});
+
+// ── PANTALLA 4: NOVEDADES ───────────────────────────────────────
+function renderNovedades() {
+  const cont = document.getElementById('s4-equipos');
+  cont.innerHTML = '';
+  const eqs = (EQUIPOS[state.yacimiento]||[]).filter(e => !e.sinprog && state.equipos_activos.includes(e.id));
+
+  eqs.forEach(eq => {
+    const act = state.actividades[eq.id] || {};
+    const actMañana = act.mañana || 'Tarea';
+    const conductor = state.conductores[eq.id] || '';
+    const tieneNovedad = actMañana !== 'Tarea';
+
+    cont.insertAdjacentHTML('beforeend', `
+      <div class="nov-block" id="nov-${eq.id.replace(/[^a-z0-9]/gi,'_')}">
+        <div class="nov-header" onclick="toggleNovedad('${eq.id}')">
+          <div class="eq-badge">${eq.tipo}</div>
+          <div style="flex:1">
+            <div class="nov-eq-name">${eq.id}</div>
+            <div class="nov-eq-detail">Interno ${eq.interno}</div>
+          </div>
+          <span class="nov-badge ${tieneNovedad?'nov-badge-warn':'nov-badge-ok'}">${tieneNovedad?'NOVEDAD':'TAREA'}</span>
+        </div>
+        <div class="nov-body" id="nbody-${eq.id.replace(/[^a-z0-9]/gi,'_')}" style="display:block">
+          <div class="field-group">
+            <label class="field-label">Conductor</label>
+            <select class="field-select" onchange="state.conductores['${eq.id}']=this.value">
+              <option value="">Sin asignar</option>
+              ${CONDUCTORES.map(c => `<option ${c===conductor?'selected':''}>${c}</option>`).join('')}
+            </select>
+          </div>
+          <div class="field-group" id="act-field-${eq.id.replace(/[^a-z0-9]/gi,'_')}">
+            <label class="field-label">Actividad</label>
+            <div class="cond-selector">
+              ${['Tarea','Espera OT','Falla Equipo','Permiso de Trabajo','Factor Climatico'].map(a =>
+                `<div class="cond-chip ${actMañana===a?'active':''}" onclick="setActividad('${eq.id}','${a}',this)">${a}</div>`
+              ).join('')}
+            </div>
+            <button style="font-size:11px;color:var(--text-2);background:none;border:none;cursor:pointer;padding:4px 0" 
+                    onclick="mostrarTodasActividades('${eq.id.replace(/[^a-z0-9]/gi,'_')}')">
+              + Ver todas las actividades
+            </button>
+          </div>
+        </div>
+      </div>
+    `);
+  });
+}
+
+function toggleNovedad(id) {
+  const key = id.replace(/[^a-z0-9]/gi,'_');
+  const body = document.getElementById('nbody-'+key);
+  body.style.display = body.style.display === 'none' ? 'block' : 'none';
+}
+
+function setActividad(id, act, el) {
+  const key = id.replace(/[^a-z0-9]/gi,'_');
+  if (!state.actividades[id]) state.actividades[id] = {};
+  state.actividades[id].mañana = act;
+  state.actividades[id].tarde  = act;
+  document.querySelectorAll(`#act-field-${key} .cond-chip`).forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const badge = document.querySelector(`#nov-${key} .nov-badge`);
+  badge.textContent = act === 'Tarea' ? 'TAREA' : 'NOVEDAD';
+  badge.className   = 'nov-badge ' + (act === 'Tarea' ? 'nov-badge-ok' : 'nov-badge-warn');
+}
+
+function mostrarTodasActividades(key) {
+  const field = document.getElementById('act-field-'+key);
+  const id    = key.replace(/_/g,' ');
+  const chips = field.querySelector('.cond-selector');
+  chips.innerHTML = ACTIVIDADES.map(a => {
+    const eq  = Object.keys(state.actividades).find(k => k.replace(/[^a-z0-9]/gi,'_')===key) || '';
+    const cur = (state.actividades[eq]||{}).mañana || 'Tarea';
+    return `<div class="cond-chip ${cur===a?'active':''}" onclick="setActividad('${eq}','${a}',this)">${a}</div>`;
+  }).join('');
+}
+
+// ── PANTALLA 5: ADICIONALES ─────────────────────────────────────
+function mostrarAdicionales() {
+  document.getElementById('s5-yesno').style.display = 'none';
+  document.getElementById('s5-adicionales').style.display = 'block';
+}
+function ocultarAdicionales() {
+  document.getElementById('s5-yesno').style.display = 'flex';
+  document.getElementById('s5-adicionales').style.display = 'none';
+}
+function togOncall(tog, bodyId) {
+  tog.classList.toggle('on');
+  const b = document.getElementById(bodyId);
+  if (b) b.style.display = tog.classList.contains('on') ? 'block' : 'none';
+}
+
+// ── PANTALLA 6: RESUMEN ─────────────────────────────────────────
+function renderResumen() {
+  // Cabecera
+  const yac = getNombreYac(state.yacimiento);
+  document.getElementById('res-header').innerHTML = `
+    <div class="resumen-yac">${yac}</div>
+    <div class="resumen-fecha">${formatDate(state.fecha)}</div>
+    <div class="resumen-sup">Supervisor: ${state.supervisor || document.getElementById('sel-supervisor').value}</div>
+  `;
+
+  const eqs = (EQUIPOS[state.yacimiento]||[]).filter(e => !e.sinprog && state.equipos_activos.includes(e.id));
+  const nOTs = state.ot_files.length;
+  const hsTotal = eqs.length * 8;
+
+  document.getElementById('res-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${eqs.length}</div><div class="stat-label">Equipos</div></div>
+    <div class="stat-card"><div class="stat-num">${hsTotal}</div><div class="stat-label">Hs totales</div></div>
+    <div class="stat-card"><div class="stat-num">${nOTs}</div><div class="stat-label">OTs</div></div>
+  `;
+
+  const cont = document.getElementById('res-equipos');
+  cont.innerHTML = '';
+  eqs.forEach(eq => {
+    const cond = state.conductores[eq.id] || '—';
+    const act  = (state.actividades[eq.id]||{}).mañana || 'Tarea';
+    const otCount = state.ot_files.filter(f => f.name.includes(eq.id.match(/(\d+)/)[1])).length;
+    cont.insertAdjacentHTML('beforeend', `
+      <div class="resumen-eq-row">
+        <div class="eq-badge">${eq.tipo}</div>
+        <div style="flex:1">
+          <div class="resumen-eq-name">${eq.id}</div>
+          <div class="resumen-eq-ot">${cond} · ${otCount} OT${otCount!==1?'s':''}</div>
+        </div>
+        <div class="resumen-hs" style="${act!=='Tarea'?'color:var(--warn)':''}">${act==='Tarea'?'8 hs':act}</div>
+      </div>
+    `);
+  });
+}
+
+// ── PANTALLA 7: GENERACIÓN ──────────────────────────────────────
+function renderGeneracion() {
+  const yac   = state.yacimiento;
+  const fecha = state.fecha;
+  const dd    = ddmmyy(fecha);
+  document.getElementById('gen-sub').textContent = `${getNombreYac(yac)} · ${formatDate(fecha)}`;
+  document.getElementById('paso-excel-det').textContent = `4900100500_${dd}_PD_${yac}.xlsx`;
+  document.getElementById('paso-pdf-det').textContent   = `4900100500_${dd}_PD_${yac}.pdf`;
+  document.getElementById('paso-ots-det').textContent   = `OT_4900100500_TSB_${dd}_${yac}.pdf`;
+  const to = {
+    PHZ:  'german.huerta · juan.c.sanchez + CC',
+    SP:   'claudio.mendez · nestor.f.ramirez + CC',
+    CHSN: 'hector.n.cayupan · carlos.a.gatica + CC',
+  }[yac];
+  document.getElementById('paso-mail1-det').textContent = to;
+  document.getElementById('paso-mail2-det').textContent = 'rrodriguez · mrolando + CC';
+}
+
+function salir() {
+  if (confirm('¿Salir del sistema?')) window.close();
+}
+
+// ── INIT ────────────────────────────────────────────────────────
+goTo(1);
+</script>
+</body>
+</html>
